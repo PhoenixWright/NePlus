@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<IceCreamProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>NePlus</Name>
+  <Description>NePlus</Description>
+  <VisualStudioProjectPath>NePlus.csproj</VisualStudioProjectPath>
+  <ContentFolderRelativePath>Content\</ContentFolderRelativePath>
+  <BinaryFolderRelativePath>bin\x86\Debug\</BinaryFolderRelativePath>
+  <LastOpenedScene></LastOpenedScene>
+</IceCreamProject>
