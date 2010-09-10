@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NePlus", "NePlus\NePlus.csproj", "{B53FC32D-4446-44A1-BAF5-0DBE25ED7FB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B53FC32D-4446-44A1-BAF5-0DBE25ED7FB6}.Debug|x86.ActiveCfg = Debug|x86
+		{B53FC32D-4446-44A1-BAF5-0DBE25ED7FB6}.Debug|x86.Build.0 = Debug|x86
+		{B53FC32D-4446-44A1-BAF5-0DBE25ED7FB6}.Release|x86.ActiveCfg = Release|x86
+		{B53FC32D-4446-44A1-BAF5-0DBE25ED7FB6}.Release|x86.Build.0 = Release|x86
+		{5C28D340-71F9-4A26-AE21-AC30AA4F90B7}.Debug|x86.ActiveCfg = Debug|x86
+		{5C28D340-71F9-4A26-AE21-AC30AA4F90B7}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

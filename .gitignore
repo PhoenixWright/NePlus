@@ -1,0 +1,6 @@
+# files and folders to ignore
+*.cachefile
+*.suo
+*.user
+bin
+obj
