@@ -1,6 +1,0 @@
-# files and folders to ignore
-bin
-obj
-*.cachefile
-*.suo
-*.user
