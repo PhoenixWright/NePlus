@@ -16,4 +16,4 @@ The technologies used to create Ne+ include the following:
 Development Blog
 ----------------
 
-For more information on the project, visit achrisfling.com.
+For more information on the project, visit http://achrisfling.com.
