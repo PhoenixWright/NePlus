@@ -8,15 +8,26 @@ using Microsoft.Xna.Framework;
 using IceCream;
 using Microsoft.Xna.Framework.Graphics;
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+
 namespace NePlus.Components
 {
     [IceComponentAttribute("PhysicsComponent")]
     public class PhysicsComponent : IceComponent
     {
+        protected float width;
+        protected float height;
+        public Body body;
+        public Geom geom; 
+        
 
         public PhysicsComponent()
         {
+
         }
+
         public override void OnRegister()
         {
             Enabled = true;
@@ -27,5 +38,9 @@ namespace NePlus.Components
 
         }
 
+        protected virtual void InitializePhysics(World physics, Vector2 position, float width, float height, float mass)
+        {
+            
+        }
     }
 }

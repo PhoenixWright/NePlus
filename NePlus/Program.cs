@@ -9,7 +9,7 @@ namespace NePlus
         /// </summary>
         static void Main(string[] args)
         {
-            using (NePlus game = new NePlus())
+            using (Game game = new Game())
             {
                 game.Run();
             }

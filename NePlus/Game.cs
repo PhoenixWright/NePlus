@@ -20,14 +20,15 @@ using FarseerPhysics.Collision;
 namespace NePlus
 {
 
-    public class NePlus : IceCream.Game
+    public class Game : IceCream.Game
     {
         IceScene scene;
-        World world;
 
-        public NePlus()
+        public World PhysicsSimulator { get; private set; }
+
+        public Game()
         {
-            world = new World(Vector2.UnitY * 500);
+            PhysicsSimulator = new World(Vector2.UnitY * 500);
         }
 
         protected override void LoadContent()
@@ -36,5 +37,11 @@ namespace NePlus
             scene = SceneManager.LoadScene("Content/TestScene.icescene");
         }
 
+        protected override void Update(GameTime gameTime)
+        {
+            PhysicsSimulator.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            base.Update(gameTime);
+        }    
     }
 }
