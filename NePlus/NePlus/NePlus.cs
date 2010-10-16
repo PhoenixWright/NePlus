@@ -9,20 +9,32 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+
 namespace NePlus
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public class NePlus : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game()
+        // farseer stuff
+        World world = new World(new Vector2(0, -20));
+        DebugViewXNA debugView;
+
+        private Fixture rectFix;
+        private Fixture circFix;
+
+        public NePlus()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            debugView = new DebugViewXNA(world);
         }
 
         /// <summary>
@@ -46,6 +58,18 @@ namespace NePlus
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            DebugViewXNA.LoadContent(graphics.GraphicsDevice, Content);
+
+            rectFix = FixtureFactory.CreateRectangle(world, 50, 5, 1, Vector2.Zero);
+            rectFix.Body.IsStatic = true;
+            rectFix.Restitution = 0.3f;
+            rectFix.Friction = 0.5f;
+
+            circFix = FixtureFactory.CreateCircle(world, 2, 1, new Vector2(10, 10));
+            circFix.Body.BodyType = BodyType.Dynamic;
+            circFix.Restitution = 0.3f;
+            circFix.Friction = 0.5f;
 
             // TODO: use this.Content to load your game content here
         }
@@ -71,6 +95,8 @@ namespace NePlus
                 this.Exit();
 
             // TODO: Add your update logic here
+            // update physics sim
+            world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
             base.Update(gameTime);
         }
@@ -84,6 +110,12 @@ namespace NePlus
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            
+            // farseer stuff
+            Matrix proj = Matrix.CreateOrthographic(50 * graphics.GraphicsDevice.Viewport.AspectRatio, 50, 0, 1);
+            Matrix view = Matrix.Identity;
+
+            debugView.RenderDebugData(ref proj, ref view);
 
             base.Draw(gameTime);
         }

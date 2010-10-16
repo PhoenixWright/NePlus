@@ -107,15 +107,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game.cs" />
+    <Compile Include="NePlus.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA.csproj">
+      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
+      <Name>Farseer Physics XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+      <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
+      <Name>DebugView XNA</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
