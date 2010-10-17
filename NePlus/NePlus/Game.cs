@@ -9,32 +9,39 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using FarseerPhysics;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+
+using NePlus.Components;
+using NePlus.Global;
 
 namespace NePlus
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class NePlus : Microsoft.Xna.Framework.Game
+    public class Game : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // input
+        InputComponent input;
+
         // farseer stuff
         World world = new World(new Vector2(0, -20));
         DebugViewXNA debugView;
-
         private Fixture rectFix;
         private Fixture circFix;
 
-        public NePlus()
+        public Game()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            debugView = new DebugViewXNA(world);
+
+            
         }
 
         /// <summary>
@@ -45,7 +52,10 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // initialization
+            input = new InputComponent(this);
+            this.Components.Add(input);
+            debugView = new DebugViewXNA(world);
 
             base.Initialize();
         }
@@ -60,6 +70,19 @@ namespace NePlus
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             DebugViewXNA.LoadContent(graphics.GraphicsDevice, Content);
+            uint flags = 0;
+
+            //flags += (uint)DebugViewFlags.AABB;
+            //flags += (uint)DebugViewFlags.CenterOfMass;
+            //flags += (uint)DebugViewFlags.ContactNormals;
+            //flags += (uint)DebugViewFlags.ContactPoints;
+            //flags += (uint)DebugViewFlags.DebugPanel;
+            //flags += (uint)DebugViewFlags.Joint;
+            //flags += (uint)DebugViewFlags.Pair;
+            //flags += (uint)DebugViewFlags.PolygonPoints; 
+            flags += (uint)DebugViewFlags.Shape;
+                
+            debugView.Flags = (DebugViewFlags) flags;
 
             rectFix = FixtureFactory.CreateRectangle(world, 50, 5, 1, Vector2.Zero);
             rectFix.Body.IsStatic = true;
@@ -91,7 +114,7 @@ namespace NePlus
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (input.GetKeyStateFromAction(GameActions.Action.Exit) == InputComponent.KeyState.Down)
                 this.Exit();
 
             // TODO: Add your update logic here
@@ -107,7 +130,7 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             
@@ -116,7 +139,7 @@ namespace NePlus
             Matrix view = Matrix.Identity;
 
             debugView.RenderDebugData(ref proj, ref view);
-
+            
             base.Draw(gameTime);
         }
     }
