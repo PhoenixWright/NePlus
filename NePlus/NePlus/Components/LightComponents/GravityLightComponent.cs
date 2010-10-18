@@ -48,8 +48,6 @@ namespace NePlus.Components
         {
             // TODO: Add your update code here
 
-            
-
             base.Update(gameTime);
         }
     }

@@ -9,29 +9,16 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using NePlus.Global;
-
-namespace NePlus.Components
+namespace NePlus.Global
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class InputComponent : Microsoft.Xna.Framework.GameComponent
+    public class Input : Microsoft.Xna.Framework.GameComponent
     {
-        /// <summary>
-        /// represents key states that are useful to know
-        /// </summary>
-        public enum KeyState
-        {
-            JustPressed, // key went down this frame
-            JustReleased, // key went up this frame
-            Pressed,      // key is still down this frame
-            Released     // key is still up this frame            
-        };
+        private List<Dictionary<Enums.Action, Enums.KeyState>> inputCollection { get; set; }
 
-        public List<Dictionary<Enums.Action, KeyState>> Input { get; private set; }
-
-        public InputComponent(Game game)
+        public Input(Game game)
             : base(game)
         {
             // TODO: Construct any child components here
@@ -43,7 +30,7 @@ namespace NePlus.Components
         /// </summary>
         public override void Initialize()
         {
-            Input = new List<Dictionary<Enums.Action, KeyState>>();
+            inputCollection = new List<Dictionary<Enums.Action, Enums.KeyState>>();
             UpdateInput();
 
             base.Initialize();
@@ -61,13 +48,13 @@ namespace NePlus.Components
             base.Update(gameTime);
         }
         
-        public KeyState? GetKeyStateFromAction(Enums.Action action)
+        public Enums.KeyState? GetKeyStateFromAction(Enums.Action action)
         {
-            if (Input.Count != 0)
+            if (inputCollection.Count != 0)
             {
                 try
                 {
-                    return Input[Input.Count - 1][action];
+                    return inputCollection[inputCollection.Count - 1][action];
                 }
                 catch
                 {
@@ -84,7 +71,7 @@ namespace NePlus.Components
         private void UpdateInput()
         {
             // create a new dictionary to put all the keystates in
-            Dictionary<Enums.Action, KeyState> currentState = new Dictionary<Enums.Action, KeyState>();
+            Dictionary<Enums.Action, Enums.KeyState> currentState = new Dictionary<Enums.Action, Enums.KeyState>();
 
             GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
 
@@ -92,20 +79,36 @@ namespace NePlus.Components
             // eg: currentState.Add(GetActionFromKeyOrButton(keyOrButton), keyState - enum);
             if (currentGamePadState.IsConnected && currentGamePadState.Buttons.A == ButtonState.Pressed)
             {
-                currentState.Add(Enums.Action.Jump, KeyState.Pressed);
+                currentState.Add(Enums.Action.JumpOrAccept, Enums.KeyState.Pressed);
             }
-
+            
             if (currentGamePadState.IsConnected && currentGamePadState.Buttons.Back == ButtonState.Pressed)
             {
-                currentState.Add(Enums.Action.Exit, KeyState.Pressed);
+                currentState.Add(Enums.Action.Exit, Enums.KeyState.Pressed);
+            }
+            
+            if (currentGamePadState.IsConnected && currentGamePadState.Buttons.RightStick == ButtonState.Pressed)
+            {
+                currentState.Add(Enums.Action.ResetCamera, Enums.KeyState.Pressed);
             }
 
-            Input.Add(currentState);
+            if (currentGamePadState.IsConnected && currentGamePadState.DPad.Up == ButtonState.Pressed)
+            {
+                currentState.Add(Enums.Action.ZoomIn, Enums.KeyState.Pressed);
+            }
+
+            if (currentGamePadState.IsConnected && currentGamePadState.DPad.Down == ButtonState.Pressed)
+            {
+                currentState.Add(Enums.Action.ZoomOut, Enums.KeyState.Pressed);
+            }
+           
+
+            inputCollection.Add(currentState);
             
             // empty some of the input out so it doesn't get too big
-            if (Input.Count > 20)
+            if (inputCollection.Count > 20)
             {
-                Input.RemoveAt(0);
+                inputCollection.RemoveAt(0);
             }
         }
     }

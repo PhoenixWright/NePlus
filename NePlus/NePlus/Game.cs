@@ -33,8 +33,7 @@ namespace NePlus
         Camera camera;
 
         // input
-        InputComponent input;
-        InputHelper inputHelper;
+        Input input;
 
         // farseer stuff
         World physicsWorld = new World(new Vector2(0.0f, 6.0f));
@@ -71,13 +70,11 @@ namespace NePlus
             graphics.ApplyChanges();
 
             // camera
-            camera = new Camera(new Vector2(1280, 720));
-            
+            //camera = new Camera(new Vector2(1280, 720));            
 
             // input
-            input = new InputComponent(this);
-            this.Components.Add(input);
-            inputHelper = new InputHelper();
+            input = new Input(this);
+            input.Initialize();
 
             // farseer
             PixelsPerMeter = 100.0f;
@@ -127,8 +124,8 @@ namespace NePlus
 
             Fixtures.Add(platformFixture);
 
-            camera.TrackingBody = boxFixture.Body;
-            camera.Position = boxPosition;
+            //camera.TrackingBody = boxFixture.Body;
+            //camera.Position = boxPosition;
         }
 
         /// <summary>
@@ -147,17 +144,13 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (input.GetKeyStateFromAction(Enums.Action.Exit) == InputComponent.KeyState.Pressed)
-                this.Exit();
-
             // TODO: Add your update logic here
 
-            inputHelper.Update();
-            camera.Update(inputHelper);
+            input.Update(gameTime);
+            //camera.Update(input);
 
             // jump logic
-            if (input.GetKeyStateFromAction(Enums.Action.Jump) == InputComponent.KeyState.Pressed)
+            if (input.GetKeyStateFromAction(Enums.Action.JumpOrAccept) == Enums.KeyState.Pressed)
                 boxFixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
 
             boxPosition.X = boxFixture.Body.Position.X * PixelsPerMeter;
@@ -165,6 +158,10 @@ namespace NePlus
 
             // update physics sim
             physicsWorld.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+            
+            // Allows the game to exit
+            if (input.GetKeyStateFromAction(Enums.Action.Exit) == Enums.KeyState.Pressed)
+                this.Exit();
 
             base.Update(gameTime);
         }
@@ -178,7 +175,8 @@ namespace NePlus
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.CameraMatrix);
+            //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.CameraMatrix);
+            spriteBatch.Begin();
             spriteBatch.Draw(boxTexture, boxPosition, Color.White);
             spriteBatch.Draw(platformTexture, platformPosition, Color.White);
             spriteBatch.End();
@@ -192,12 +190,12 @@ namespace NePlus
         {
             // TODO: this code is broken
 
-            Matrix view = Matrix.CreateTranslation(camera.Position.X / -PixelsPerMeter, camera.Position.Y / -PixelsPerMeter, 0);
-            Vector2 size = camera.CurSize / (PixelsPerMeter * 2);
-            Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
+            //Matrix view = Matrix.CreateTranslation(camera.Position.X / -PixelsPerMeter, camera.Position.Y / -PixelsPerMeter, 0);
+            //Vector2 size = camera.CurSize / (PixelsPerMeter * 2);
+            //Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
-            //Matrix projection = Matrix.CreateOrthographic(camera.Position.X / -PixelsPerMeter, camera.Position.Y / -PixelsPerMeter, 0, 1);
-            //Matrix view = Matrix.Identity;
+            Matrix proj = Matrix.CreateOrthographic(40, 40, 0, 1);
+            Matrix view = Matrix.Identity;
             debugView.RenderDebugData(ref proj, ref view);
         }
 

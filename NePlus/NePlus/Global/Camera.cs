@@ -10,7 +10,7 @@ namespace NePlus.Global
 {
 
     /// <summary>
-    /// coded by RogueCommanderIX on FarseerPhysics forums
+    /// coded by RogueCommanderIX on FarseerPhysics forums, edited by Christopher Horenstein
     /// </summary>
     public class Camera
     {
@@ -39,13 +39,13 @@ namespace NePlus.Global
         Vector2 _minPosition = Vector2.Zero;
         Vector2 _maxPosition = Vector2.Zero;
         Body _trackingBody;
-        Func<InputHelper, bool> _zoomIn = (InputHelper input) =>
+        Func<Input, bool> _zoomIn = (Input input) =>
         {
-            return input.IsCurPress(Buttons.DPadUp);
+            return input.GetKeyStateFromAction(Enums.Action.ZoomIn) == Enums.KeyState.Pressed;
         };
-        Func<InputHelper, bool> _zoomOut = (InputHelper input) =>
+        Func<Input, bool> _zoomOut = (Input input) =>
         {
-            return input.IsCurPress(Buttons.DPadDown);
+            return input.GetKeyStateFromAction(Enums.Action.ZoomOut) == Enums.KeyState.Pressed;
         };
 
         Func<Camera, bool> _clampingEnabled = (Camera camera) =>
@@ -53,31 +53,35 @@ namespace NePlus.Global
             return (camera._minPosition != camera._maxPosition);
         };
 
-        Func<InputHelper, Camera, float> _horizontalCameraMovement =
-            (InputHelper input, Camera camera) =>
+        Func<Input, Camera, float> _horizontalCameraMovement =
+            (Input input, Camera camera) =>
             {
-                return (input.RightStickPosition.X * camera._moveRate) * camera._zoom;
+                //return (input.RightStickPosition.X * camera._moveRate) * camera._zoom;
+
+                return 0;
             };
 
-        Func<InputHelper, Camera, float> _verticalCameraMovement =
-            (InputHelper input, Camera camera) =>
+        Func<Input, Camera, float> _verticalCameraMovement =
+            (Input input, Camera camera) =>
             {
-                return (input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
+                //return (input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
+
+                return 0;
             };
 
-        Func<InputHelper, bool> _rotateLeft = (InputHelper input) =>
+        Func<Input, bool> _rotateLeft = (Input input) =>
         {
             return false;
         };
 
-        Func<InputHelper, bool> _rotateRight = (InputHelper input) =>
+        Func<Input, bool> _rotateRight = (Input input) =>
         {
             return false;
         };
 
-        Func<InputHelper, bool> _resetCamera = (InputHelper input) =>
+        Func<Input, bool> _resetCamera = (Input input) =>
         {
-            return input.IsCurPress(Buttons.RightStick);
+            return input.GetKeyStateFromAction(Enums.Action.ResetCamera) == Enums.KeyState.Pressed;
         };
 
 
@@ -254,7 +258,7 @@ namespace NePlus.Global
         /// a function that is called to determine if the user wants 
         /// to zoom in.
         /// </summary>
-        public Func<InputHelper, bool> ZoomIn
+        public Func<Input, bool> ZoomIn
         {
             get { return _zoomIn; }
             set { _zoomIn = value; }
@@ -263,7 +267,7 @@ namespace NePlus.Global
         /// a function that is called to determine whether the user wants 
         /// to zoom out.
         /// </summary>
-        public Func<InputHelper, bool> ZoomOut
+        public Func<Input, bool> ZoomOut
         {
             get { return _zoomOut; }
             set { _zoomOut = value; }
@@ -282,7 +286,7 @@ namespace NePlus.Global
         /// movement that the user is requesting that the camera be moved 
         /// by.
         /// </summary>
-        public Func<InputHelper, Camera, float> HorizontalCameraMovement
+        public Func<Input, Camera, float> HorizontalCameraMovement
         {
             get { return _horizontalCameraMovement; }
             set { _horizontalCameraMovement = value; }
@@ -292,7 +296,7 @@ namespace NePlus.Global
         /// movement that the user is requesting that the camera be moved 
         /// by.
         /// </summary>
-        public Func<InputHelper, Camera, float> VerticalCameraMovement
+        public Func<Input, Camera, float> VerticalCameraMovement
         {
             get { return _verticalCameraMovement; }
             set { _verticalCameraMovement = value; }
@@ -301,7 +305,7 @@ namespace NePlus.Global
         /// a function that is called to determine if the user wants to 
         /// rotate the camera left.
         /// </summary>
-        public Func<InputHelper, bool> RotateLeft
+        public Func<Input, bool> RotateLeft
         {
             get { return _rotateLeft; }
             set { _rotateLeft = value; }
@@ -310,7 +314,7 @@ namespace NePlus.Global
         /// a function that is called to determine if the user wants to rotate 
         /// the camera right.
         /// </summary>
-        public Func<InputHelper, bool> RotateRight
+        public Func<Input, bool> RotateRight
         {
             get { return _rotateRight; }
             set { _rotateRight = value; }
@@ -319,7 +323,7 @@ namespace NePlus.Global
         /// A function that is called to determine if the user is requesting 
         /// that the camera be reset to it's original parameters.
         /// </summary>
-        public Func<InputHelper, bool> ResetCamera
+        public Func<Input, bool> ResetCamera
         {
             get { return _resetCamera; }
             set { _resetCamera = value; }
@@ -333,7 +337,7 @@ namespace NePlus.Global
         /// the an InputHelper input representing the current 
         /// input state.
         /// </param>
-        public void Update(InputHelper input)
+        public void Update(Input input)
         {
             if (!_transitioning)
             {
@@ -369,7 +373,7 @@ namespace NePlus.Global
                     _targetRotation = (_rotation + _rotationRate) % (float)(Math.PI * 2);
                 if (_rotateRight(input))
                     _targetRotation = (_rotation - _rotationRate) % (float)(Math.PI * 2);
-                if (input.IsCurPress(Buttons.RightStick))
+                if (input.GetKeyStateFromAction(Enums.Action.ResetCamera) == Enums.KeyState.Pressed)
                 {
                     _transitioning = true;
                     _targetPosition = _origPosition;
