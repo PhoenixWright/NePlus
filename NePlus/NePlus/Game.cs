@@ -27,21 +27,34 @@ namespace NePlus
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public List<Fixture> Fixtures;
+
+        // camera
+        Camera camera;
+
         // input
         InputComponent input;
+        InputHelper inputHelper;
 
         // farseer stuff
-        World world = new World(new Vector2(0, -20));
+        World physicsWorld = new World(new Vector2(0.0f, 6.0f));
         DebugViewXNA debugView;
-        private Fixture rectFix;
-        private Fixture circFix;
+        public float PixelsPerMeter { get; private set; }
+        
+        // textures
+        Texture2D platformTexture, boxTexture;
+
+        // initial texture positions
+        Vector2 platformPosition = Vector2.Zero;
+        Vector2 boxPosition = Vector2.Zero;
+
+        // farseer fixtures
+        Fixture platformFixture, boxFixture;
 
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-
-            
+            Content.RootDirectory = "Content";            
         }
 
         /// <summary>
@@ -52,10 +65,28 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
-            // initialization
+            // graphics
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
+            // camera
+            camera = new Camera(new Vector2(1280, 720));
+            
+
+            // input
             input = new InputComponent(this);
             this.Components.Add(input);
-            debugView = new DebugViewXNA(world);
+            inputHelper = new InputHelper();
+
+            // farseer
+            PixelsPerMeter = 100.0f;
+            debugView = new DebugViewXNA(physicsWorld);
+
+            // light code
+            GravityLightComponent gravityLight = new GravityLightComponent(this);
+            this.Components.Add(gravityLight);
+            Fixtures = new List<Fixture>();
 
             base.Initialize();
         }
@@ -69,32 +100,35 @@ namespace NePlus
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            DebugViewXNA.LoadContent(graphics.GraphicsDevice, Content);
-            uint flags = 0;
-
-            //flags += (uint)DebugViewFlags.AABB;
-            //flags += (uint)DebugViewFlags.CenterOfMass;
-            //flags += (uint)DebugViewFlags.ContactNormals;
-            //flags += (uint)DebugViewFlags.ContactPoints;
-            //flags += (uint)DebugViewFlags.DebugPanel;
-            //flags += (uint)DebugViewFlags.Joint;
-            //flags += (uint)DebugViewFlags.Pair;
-            //flags += (uint)DebugViewFlags.PolygonPoints; 
-            flags += (uint)DebugViewFlags.Shape;
-                
-            debugView.Flags = (DebugViewFlags) flags;
-
-            rectFix = FixtureFactory.CreateRectangle(world, 50, 5, 1, Vector2.Zero);
-            rectFix.Body.IsStatic = true;
-            rectFix.Restitution = 0.3f;
-            rectFix.Friction = 0.5f;
-
-            circFix = FixtureFactory.CreateCircle(world, 2, 1, new Vector2(10, 10));
-            circFix.Body.BodyType = BodyType.Dynamic;
-            circFix.Restitution = 0.3f;
-            circFix.Friction = 0.5f;
-
             // TODO: use this.Content to load your game content here
+            
+            InitializeDebugView();
+
+            // setup box
+            boxTexture = Content.Load<Texture2D>(@"TestContent\TestSquare");
+            boxPosition.X = (1280 / 2) - (boxTexture.Width / 2);
+            boxPosition.Y = 100;
+            // farseer box stuff
+            boxFixture = FixtureFactory.CreateRectangle(physicsWorld, boxTexture.Width / PixelsPerMeter, boxTexture.Height / PixelsPerMeter, 1);
+            boxFixture.Body.Position = new Vector2(boxPosition.X / PixelsPerMeter, boxPosition.Y / PixelsPerMeter);
+            boxFixture.Body.BodyType = BodyType.Dynamic;
+            boxFixture.Restitution = 0.5f;
+
+            Fixtures.Add(boxFixture);
+
+            // set up platform
+            platformTexture = Content.Load<Texture2D>(@"TestContent\TestRectangle");
+            platformPosition.X = (1280 / 2) - (platformTexture.Width / 2);
+            platformPosition.Y = 500;
+            // farseer platform stuff
+            platformFixture = FixtureFactory.CreateRectangle(physicsWorld, platformTexture.Width / PixelsPerMeter, platformTexture.Height / PixelsPerMeter, 1);
+            platformFixture.Body.Position = new Vector2(platformPosition.X / PixelsPerMeter, platformPosition.Y / PixelsPerMeter);
+            platformFixture.Body.BodyType = BodyType.Static;
+
+            Fixtures.Add(platformFixture);
+
+            camera.TrackingBody = boxFixture.Body;
+            camera.Position = boxPosition;
         }
 
         /// <summary>
@@ -114,12 +148,23 @@ namespace NePlus
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (input.GetKeyStateFromAction(GameActions.Action.Exit) == InputComponent.KeyState.Down)
+            if (input.GetKeyStateFromAction(Enums.Action.Exit) == InputComponent.KeyState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here
+
+            inputHelper.Update();
+            camera.Update(inputHelper);
+
+            // jump logic
+            if (input.GetKeyStateFromAction(Enums.Action.Jump) == InputComponent.KeyState.Pressed)
+                boxFixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
+
+            boxPosition.X = boxFixture.Body.Position.X * PixelsPerMeter;
+            boxPosition.Y = boxFixture.Body.Position.Y * PixelsPerMeter;
+
             // update physics sim
-            world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+            physicsWorld.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
 
             base.Update(gameTime);
         }
@@ -133,14 +178,45 @@ namespace NePlus
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            
-            // farseer stuff
-            Matrix proj = Matrix.CreateOrthographic(50 * graphics.GraphicsDevice.Viewport.AspectRatio, 50, 0, 1);
-            Matrix view = Matrix.Identity;
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.CameraMatrix);
+            spriteBatch.Draw(boxTexture, boxPosition, Color.White);
+            spriteBatch.Draw(platformTexture, platformPosition, Color.White);
+            spriteBatch.End();
 
-            debugView.RenderDebugData(ref proj, ref view);
+            DrawDebugView();
             
             base.Draw(gameTime);
+        }
+
+        private void DrawDebugView()
+        {
+            // TODO: this code is broken
+
+            Matrix view = Matrix.CreateTranslation(camera.Position.X / -PixelsPerMeter, camera.Position.Y / -PixelsPerMeter, 0);
+            Vector2 size = camera.CurSize / (PixelsPerMeter * 2);
+            Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
+
+            //Matrix projection = Matrix.CreateOrthographic(camera.Position.X / -PixelsPerMeter, camera.Position.Y / -PixelsPerMeter, 0, 1);
+            //Matrix view = Matrix.Identity;
+            debugView.RenderDebugData(ref proj, ref view);
+        }
+
+        private void InitializeDebugView()
+        {
+            DebugViewXNA.LoadContent(graphics.GraphicsDevice, Content);
+            uint flags = 0;
+
+            flags += (uint)DebugViewFlags.AABB;
+            flags += (uint)DebugViewFlags.CenterOfMass;
+            flags += (uint)DebugViewFlags.ContactNormals;
+            flags += (uint)DebugViewFlags.ContactPoints;
+            flags += (uint)DebugViewFlags.DebugPanel;
+            flags += (uint)DebugViewFlags.Joint;
+            flags += (uint)DebugViewFlags.Pair;
+            flags += (uint)DebugViewFlags.PolygonPoints;
+            flags += (uint)DebugViewFlags.Shape;
+                
+            debugView.Flags = (DebugViewFlags) flags;
         }
     }
 }

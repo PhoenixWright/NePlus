@@ -107,10 +107,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\LightComponents\GravityLightComponent.cs" />
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
+    <Compile Include="Global\Camera.cs" />
     <Compile Include="Global\Configuration.cs" />
-    <Compile Include="Global\GameActions.cs" />
+    <Compile Include="Global\Enums.cs" />
+    <Compile Include="Global\InputHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game.cs" />

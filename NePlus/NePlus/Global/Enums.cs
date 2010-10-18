@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NePlus.Global
 {
-    public static class GameActions
+    public static class Enums
     {
         public enum Action
         {            

@@ -23,14 +23,13 @@ namespace NePlus.Components
         /// </summary>
         public enum KeyState
         {
-            Null,    // null value
-            Up,      // key is still up this frame
-            Down,    // key is still down this frame
-            WentUp,  // key went up this frame
-            WentDown // key went down this frame
+            JustPressed, // key went down this frame
+            JustReleased, // key went up this frame
+            Pressed,      // key is still down this frame
+            Released     // key is still up this frame            
         };
 
-        public List<Dictionary<GameActions.Action, KeyState>> Input { get; private set; }
+        public List<Dictionary<Enums.Action, KeyState>> Input { get; private set; }
 
         public InputComponent(Game game)
             : base(game)
@@ -44,7 +43,7 @@ namespace NePlus.Components
         /// </summary>
         public override void Initialize()
         {
-            Input = new List<Dictionary<GameActions.Action, KeyState>>();
+            Input = new List<Dictionary<Enums.Action, KeyState>>();
             UpdateInput();
 
             base.Initialize();
@@ -62,7 +61,7 @@ namespace NePlus.Components
             base.Update(gameTime);
         }
         
-        public KeyState? GetKeyStateFromAction(GameActions.Action action)
+        public KeyState? GetKeyStateFromAction(Enums.Action action)
         {
             if (Input.Count != 0)
             {
@@ -85,22 +84,26 @@ namespace NePlus.Components
         private void UpdateInput()
         {
             // create a new dictionary to put all the keystates in
-            Dictionary<GameActions.Action, KeyState> currentState = new Dictionary<GameActions.Action, KeyState>();
+            Dictionary<Enums.Action, KeyState> currentState = new Dictionary<Enums.Action, KeyState>();
 
             GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
 
-            // TODO: add a configuration map to populate the dictionary with instead of hard coding controller controls here
+            // TODO: add a configuration map to populate the dictionary with instead of hard coding controller controls here, also see if there's a way to be generic about looping through the buttons
             // eg: currentState.Add(GetActionFromKeyOrButton(keyOrButton), keyState - enum);
+            if (currentGamePadState.IsConnected && currentGamePadState.Buttons.A == ButtonState.Pressed)
+            {
+                currentState.Add(Enums.Action.Jump, KeyState.Pressed);
+            }
 
             if (currentGamePadState.IsConnected && currentGamePadState.Buttons.Back == ButtonState.Pressed)
             {
-                currentState.Add(GameActions.Action.Exit, KeyState.Down);
+                currentState.Add(Enums.Action.Exit, KeyState.Pressed);
             }
 
             Input.Add(currentState);
             
             // empty some of the input out so it doesn't get too big
-            if (Input.Count > 10)
+            if (Input.Count > 20)
             {
                 Input.RemoveAt(0);
             }
