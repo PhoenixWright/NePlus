@@ -194,7 +194,7 @@ namespace NePlus
             //Vector2 size = camera.CurSize / (PixelsPerMeter * 2);
             //Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
-            Matrix proj = Matrix.CreateOrthographic(40, 40, 0, 1);
+            Matrix proj = Matrix.CreateOrthographic(PixelsPerMeter * GraphicsDevice.Viewport.AspectRatio, PixelsPerMeter, 0, 1);
             Matrix view = Matrix.Identity;
             debugView.RenderDebugData(ref proj, ref view);
         }
