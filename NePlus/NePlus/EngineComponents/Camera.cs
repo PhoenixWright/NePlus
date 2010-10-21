@@ -6,12 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
-namespace NePlus.Global
+namespace NePlus.EngineComponents
 {
-
-    /// <summary>
-    /// coded by RogueCommanderIX on FarseerPhysics forums, edited by Christopher Horenstein
-    /// </summary>
     public class Camera
     {
         Vector2 _position = Vector2.Zero;
@@ -41,11 +37,11 @@ namespace NePlus.Global
         Body _trackingBody;
         Func<Input, bool> _zoomIn = (Input input) =>
         {
-            return input.GetKeyStateFromAction(Enums.Action.ZoomIn) == Enums.KeyState.Pressed;
+            return input.IsCurPress(Buttons.DPadUp);
         };
         Func<Input, bool> _zoomOut = (Input input) =>
         {
-            return input.GetKeyStateFromAction(Enums.Action.ZoomOut) == Enums.KeyState.Pressed;
+            return input.IsCurPress(Buttons.DPadDown);
         };
 
         Func<Camera, bool> _clampingEnabled = (Camera camera) =>
@@ -56,17 +52,13 @@ namespace NePlus.Global
         Func<Input, Camera, float> _horizontalCameraMovement =
             (Input input, Camera camera) =>
             {
-                //return (input.RightStickPosition.X * camera._moveRate) * camera._zoom;
-
-                return 0;
+                return (input.RightStickPosition.X * camera._moveRate) * camera._zoom;
             };
 
         Func<Input, Camera, float> _verticalCameraMovement =
             (Input input, Camera camera) =>
             {
-                //return (input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
-
-                return 0;
+                return (input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
             };
 
         Func<Input, bool> _rotateLeft = (Input input) =>
@@ -81,7 +73,7 @@ namespace NePlus.Global
 
         Func<Input, bool> _resetCamera = (Input input) =>
         {
-            return input.GetKeyStateFromAction(Enums.Action.ResetCamera) == Enums.KeyState.Pressed;
+            return input.IsCurPress(Buttons.RightStick);
         };
 
 
@@ -362,7 +354,7 @@ namespace NePlus.Global
                             _minPosition,
                             _maxPosition);
                     else
-                        _targetPosition = _trackingBody.Position;
+                        _targetPosition = _trackingBody.Position * 100.0f;
                 }
                 if (_zoomIn(input))
                     _targetZoom = Math.Min(_maxZoom, _zoom + _zoomRate);
@@ -373,7 +365,7 @@ namespace NePlus.Global
                     _targetRotation = (_rotation + _rotationRate) % (float)(Math.PI * 2);
                 if (_rotateRight(input))
                     _targetRotation = (_rotation - _rotationRate) % (float)(Math.PI * 2);
-                if (input.GetKeyStateFromAction(Enums.Action.ResetCamera) == Enums.KeyState.Pressed)
+                if (input.IsCurPress(Buttons.RightStick))
                 {
                     _transitioning = true;
                     _targetPosition = _origPosition;

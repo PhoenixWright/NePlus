@@ -9,23 +9,24 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using FarseerPhysics;
-using FarseerPhysics.Dynamics;
 
-namespace NePlus.Components
+namespace NePlus.EngineComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class GravityLightComponent : Microsoft.Xna.Framework.GameComponent
+    public class Video : Microsoft.Xna.Framework.GameComponent
     {
-        List<Fixture> fixtures;
-        public GravityLightComponent(Game game)
+        // resolution
+        public int Height { get; private set; }
+        public int Width { get; private set; }
+
+        public Video(Game game)
             : base(game)
         {
-            // TODO: Construct any child components here
-
-            fixtures = game.Fixtures;
+            // resolution
+            Height = 720;
+            Width = 1280;
         }
 
         /// <summary>
@@ -34,8 +35,7 @@ namespace NePlus.Components
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-            Rectangle areaOfEffect = new Rectangle(0, 0, 1280, 720);
+            
 
             base.Initialize();
         }

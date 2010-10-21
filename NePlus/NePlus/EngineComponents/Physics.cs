@@ -9,18 +9,35 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using FarseerPhysics;
+using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.Dynamics;
 
-namespace NePlus.Components
+namespace NePlus.EngineComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class PhysicsComponent : Microsoft.Xna.Framework.GameComponent
+    public class Physics : Microsoft.Xna.Framework.GameComponent
     {
-        public PhysicsComponent(Game game)
+        // used for conversion between game and physics scaling
+        public float PixelsPerMeter { get; private set; }
+
+        // physics world
+        public World World { get; private set; }
+
+        // debug view
+        public DebugViewXNA DebugView { get; private set; }
+        
+        public Physics(Game game)
             : base(game)
         {
-            // TODO: Construct any child components here
+            // this should probably never change
+            PixelsPerMeter = 100.0f;
+
+            World = new World(new Vector2(0.0f, 6.0f));
+
+            DebugView = new DebugViewXNA(World);
         }
 
         /// <summary>
@@ -29,7 +46,7 @@ namespace NePlus.Components
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
+                       
 
             base.Initialize();
         }
@@ -40,9 +57,21 @@ namespace NePlus.Components
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-
+            
+            
             base.Update(gameTime);
         }
+        
+        // conversion functions
+        public Vector2 PositionToGameWorld(Vector2 position)
+        {
+            return position * PixelsPerMeter;
+        }
+        
+        public Vector2 PositionToPhysicsWorld(Vector2 position)
+        {
+            return position / PixelsPerMeter;
+        }
+
     }
 }
