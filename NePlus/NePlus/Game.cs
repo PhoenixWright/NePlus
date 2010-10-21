@@ -15,8 +15,6 @@ using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
-
-
 namespace NePlus
 {
     /// <summary>
@@ -88,8 +86,8 @@ namespace NePlus
 
             // setup box
             boxTexture = Content.Load<Texture2D>(@"TestContent\TestSquare");
-            boxPosition.X = (Engine.Video.Width / 2);
-            boxPosition.Y = 100;
+            boxPosition.X = 800;
+            boxPosition.Y = 0;
 
             // farseer box stuff
             boxFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, boxTexture.Width / Engine.Physics.PixelsPerMeter, boxTexture.Height / Engine.Physics.PixelsPerMeter, 1.0f);
@@ -111,7 +109,7 @@ namespace NePlus
             
             // farseer platform stuff
             platformFixture = FixtureFactory.CreatePolygon(Engine.Physics.World, verts2, 1.0f);
-            platformFixture.Body.Position = new Vector2(platformPosition.X / Engine.Physics.PixelsPerMeter, platformPosition.Y / Engine.Physics.PixelsPerMeter);
+            platformFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(new Vector2(platformPosition.X, platformPosition.Y));
             platformFixture.Body.BodyType = BodyType.Static;
 
             Engine.Camera.Position = boxFixture.Body.Position;
@@ -159,7 +157,8 @@ namespace NePlus
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(0, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            spriteBatch.Draw(boxTexture, boxPosition, Color.White);
+            Vector2 origin = new Vector2(boxTexture.Width / 2, boxTexture.Height / 2);
+            spriteBatch.Draw(boxTexture, boxPosition, null, Color.White, 0.0f, origin, 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(platformTexture, platformPosition, Color.White);
             spriteBatch.End();
 
@@ -167,6 +166,8 @@ namespace NePlus
             Vector2 size = Engine.Camera.CurSize / (Engine.Physics.PixelsPerMeter * 2.0f);
             Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
+            Engine.Physics.DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
+            Engine.Physics.DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
             Engine.Physics.DebugView.RenderDebugData(ref proj, ref view);
             
             base.Draw(gameTime);

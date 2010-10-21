@@ -55,6 +55,9 @@ namespace NePlus.EngineComponents
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            // physics
+            World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+
             base.Update(gameTime);
         }
         

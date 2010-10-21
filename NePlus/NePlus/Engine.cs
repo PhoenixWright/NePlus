@@ -52,9 +52,7 @@ namespace NePlus
         {
             Input.Update();
             Camera.Update(Input);
-
-            // physics
-            Physics.World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+            Physics.Update(gameTime);
 
             base.Update(gameTime);
         }
