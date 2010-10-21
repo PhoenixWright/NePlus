@@ -27,10 +27,7 @@ namespace NePlus
         Engine Engine;
 
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-
-        // farseer stuff
-        DebugViewXNA debugView;        
+        SpriteBatch spriteBatch;       
         
         // textures
         Texture2D platformTexture, boxTexture;
@@ -55,19 +52,17 @@ namespace NePlus
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
+        {    
             Engine = new Engine(this);
 
+            // graphics
             graphics.PreferredBackBufferWidth = Engine.Video.Width;
             graphics.PreferredBackBufferHeight = Engine.Video.Height;
-            graphics.ApplyChanges();
-
+            graphics.ApplyChanges();        
+            
             // farseer
-            debugView = new DebugViewXNA(Engine.Physics.World);
             DebugViewXNA.LoadContent(graphics.GraphicsDevice, Content);
-
             uint flags = 0;
-
             flags += (uint)DebugViewFlags.AABB;
             flags += (uint)DebugViewFlags.CenterOfMass;
             flags += (uint)DebugViewFlags.ContactNormals;
@@ -77,8 +72,7 @@ namespace NePlus
             flags += (uint)DebugViewFlags.Pair;
             flags += (uint)DebugViewFlags.PolygonPoints;
             flags += (uint)DebugViewFlags.Shape;
-
-            Engine.Physics.DebugView.Flags = (DebugViewFlags)flags; 
+            Engine.Physics.DebugView.Flags = (DebugViewFlags)flags;
 
             base.Initialize();
         }
@@ -164,7 +158,7 @@ namespace NePlus
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Engine.Camera.CameraMatrix);
+            spriteBatch.Begin(0, null, null, null, null, null, Engine.Camera.CameraMatrix);
             spriteBatch.Draw(boxTexture, boxPosition, Color.White);
             spriteBatch.Draw(platformTexture, platformPosition, Color.White);
             spriteBatch.End();

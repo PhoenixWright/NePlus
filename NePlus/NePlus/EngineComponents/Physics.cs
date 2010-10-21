@@ -46,8 +46,6 @@ namespace NePlus.EngineComponents
         /// </summary>
         public override void Initialize()
         {
-                       
-
             base.Initialize();
         }
 
@@ -57,8 +55,6 @@ namespace NePlus.EngineComponents
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            
-            
             base.Update(gameTime);
         }
         
