@@ -105,6 +105,14 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
+    <Reference Include="TiledLib, Version=1.5.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLs\TiledLib.dll</HintPath>
+    </Reference>
+    <Reference Include="TiledPipelineExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLs\TiledPipelineExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
@@ -117,6 +125,8 @@
     <Compile Include="Game.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLLs\TiledLib.dll" />
+    <Content Include="DLLs\TiledPipelineExtensions.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
