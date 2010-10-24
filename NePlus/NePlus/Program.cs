@@ -1,5 +1,3 @@
-using System;
-
 namespace NePlus
 {
 #if WINDOWS || XBOX

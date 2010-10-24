@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using NePlus.EngineComponents;
 
@@ -29,8 +21,7 @@ namespace NePlus
             
             Camera = new Camera(new Vector2(Video.Width, Video.Height));
             Input = new Input();
-            Physics = new Physics(game);
-            
+            Physics = new Physics(game);            
         }
 
         /// <summary>
@@ -39,8 +30,6 @@ namespace NePlus
         /// </summary>
         public override void Initialize()
         {
-
-
             base.Initialize();
         }
 
