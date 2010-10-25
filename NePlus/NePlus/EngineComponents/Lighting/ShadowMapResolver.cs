@@ -11,7 +11,7 @@ namespace NePlus.EngineComponents.Lighting
         Size512 = 8,
         Size1024 = 9,
     }
-    class ShadowmapResolver
+    class ShadowMapResolver
     {
         private GraphicsDevice graphicsDevice;
 
@@ -38,7 +38,7 @@ namespace NePlus.EngineComponents.Lighting
         /// <param name="graphicsDevice">the Graphics Device used by the XNA game</param>
         /// <param name="quadRender">the QuadRenderComponent</param>
         /// <param name="baseSize">the size of the light regions </param>
-        public ShadowmapResolver(GraphicsDevice graphicsDevice, QuadRenderComponent quadRender, ShadowMapSize maxShadowmapSize, ShadowMapSize maxDepthBufferSize)
+        public ShadowMapResolver(GraphicsDevice graphicsDevice, QuadRenderComponent quadRender, ShadowMapSize maxShadowmapSize, ShadowMapSize maxDepthBufferSize)
         {
             this.graphicsDevice = graphicsDevice;
             this.quadRender = quadRender;
@@ -50,8 +50,8 @@ namespace NePlus.EngineComponents.Lighting
 
         public void LoadContent(ContentManager content)
         {
-            reductionEffect = content.Load<Effect>("reductionEffect");
-            resolveShadowsEffect = content.Load<Effect>("resolveShadowsEffect");
+            reductionEffect = content.Load<Effect>(@"Effects\ReductionEffect");
+            resolveShadowsEffect = content.Load<Effect>(@"Effects\ResolveShadowsEffect");
 
             distortRT = new RenderTarget2D(graphicsDevice, baseSize, baseSize, false, SurfaceFormat.HalfVector2, DepthFormat.None);
             distancesRT = new RenderTarget2D(graphicsDevice, baseSize, baseSize, false, SurfaceFormat.HalfVector2, DepthFormat.None);

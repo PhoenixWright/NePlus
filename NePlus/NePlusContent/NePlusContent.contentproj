@@ -94,15 +94,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Effects\reductionEffect.fx">
-      <Name>reductionEffect</Name>
+    <Compile Include="Effects\ReductionEffect.fx">
+      <Name>ReductionEffect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\resolveShadowsEffect.fx">
-      <Name>resolveShadowsEffect</Name>
+    <Compile Include="Effects\ResolveShadowsEffect.fx">
+      <Name>ResolveShadowsEffect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>

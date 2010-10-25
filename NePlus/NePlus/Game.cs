@@ -8,6 +8,8 @@ using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
+using NePlus.EngineComponents.Lighting;
+
 namespace NePlus
 {
     /// <summary>
@@ -29,6 +31,13 @@ namespace NePlus
 
         // farseer fixtures
         Fixture platformFixture, boxFixture;
+
+        // lighting
+        Vector2 lightPosition;
+        QuadRenderComponent quadRenderer;
+        ShadowMapResolver shadowMapResolver;
+        LightArea lightArea;
+        RenderTarget2D screenShadows;
 
         public Game()
         {
@@ -65,6 +74,10 @@ namespace NePlus
             flags += (uint)DebugViewFlags.Shape;
             Engine.Physics.DebugView.Flags = (DebugViewFlags)flags;
 
+            // lighting
+            quadRenderer = new QuadRenderComponent(this);
+            this.Components.Add(quadRenderer);
+
             base.Initialize();
         }
 
@@ -79,7 +92,7 @@ namespace NePlus
 
             // setup box
             boxTexture = Content.Load<Texture2D>(@"TestContent\TestSquare");
-            boxPosition.X = 800;
+            boxPosition.X = 720;
             boxPosition.Y = 0;
 
             // farseer box stuff
@@ -104,6 +117,13 @@ namespace NePlus
             platformFixture = FixtureFactory.CreatePolygon(Engine.Physics.World, verts2, 1.0f);
             platformFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(new Vector2(platformPosition.X, platformPosition.Y));
             platformFixture.Body.BodyType = BodyType.Static;
+
+            // lighting
+            shadowMapResolver = new ShadowMapResolver(GraphicsDevice, quadRenderer, ShadowMapSize.Size256, ShadowMapSize.Size1024);
+            shadowMapResolver.LoadContent(Content);
+            lightArea = new LightArea(GraphicsDevice, ShadowMapSize.Size512);
+            lightPosition = boxPosition;
+            screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             Engine.Camera.Position = boxFixture.Body.Position;
             Engine.Camera.TrackingBody = boxFixture.Body;
@@ -137,6 +157,7 @@ namespace NePlus
                 this.Exit();
             
             boxPosition = Engine.Physics.PositionToGameWorld(boxFixture.Body.Position);
+            lightPosition = boxPosition;
 
             base.Update(gameTime);
         }
@@ -148,11 +169,35 @@ namespace NePlus
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(0, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Vector2 origin = new Vector2(boxTexture.Width / 2, boxTexture.Height / 2);
+            // lighting
+            lightArea.LightPosition = lightPosition;
+            lightArea.BeginDrawingShadowCasters();
+            spriteBatch.Begin();            
+            spriteBatch.Draw(platformTexture, lightArea.ToRelativePosition(platformPosition), Color.Black);
+            spriteBatch.End();
+            lightArea.EndDrawingShadowCasters();
+            shadowMapResolver.ResolveShadows(lightArea.RenderTarget, lightArea.RenderTarget, lightPosition);
+
+            GraphicsDevice.SetRenderTarget(screenShadows);
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            spriteBatch.Draw(lightArea.RenderTarget, lightArea.LightPosition - lightArea.LightAreaSize * 0.5f, Color.Red);
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
             spriteBatch.Draw(boxTexture, boxPosition, null, Color.White, 0.0f, origin, 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(platformTexture, platformPosition, Color.White);
+            spriteBatch.End();
+
+            BlendState blendState = new BlendState();
+            blendState.ColorSourceBlend = Blend.DestinationColor;
+            blendState.ColorDestinationBlend = Blend.SourceColor;
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, blendState, null, null, null, null, Engine.Camera.CameraMatrix);
+            spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
             spriteBatch.End();
 
             Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -Engine.Physics.PixelsPerMeter, Engine.Camera.Position.Y / -Engine.Physics.PixelsPerMeter, 0);
