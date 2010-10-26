@@ -120,23 +120,25 @@
     <Compile Include="Game.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DLLs\TiledLib.dll" />
-    <Content Include="DLLs\TiledPipelineExtensions.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="WindowsDLLs\TiledLib.dll" />
+    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="XboxDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA.csproj">
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Windows].csproj">
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
-      <Name>Farseer Physics XNA</Name>
+      <Name>Farseer Physics XNA [Windows]</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA [Windows].csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
-      <Name>DebugView XNA</Name>
+      <Name>DebugView XNA [Windows]</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
-      <Name>NePlusContent</Name>
+      <Name>NePlusContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{39BA9AFA-BA10-4AD0-84FB-5BF0EF26E105}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
