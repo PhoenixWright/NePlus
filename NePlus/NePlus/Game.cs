@@ -8,6 +8,11 @@ using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
+using ProjectMercury;
+using ProjectMercury.Emitters;
+using ProjectMercury.Modifiers;
+using ProjectMercury.Renderers;
+
 using NePlus.EngineComponents.Lighting;
 
 namespace NePlus
@@ -39,10 +44,15 @@ namespace NePlus
         LightArea lightArea;
         RenderTarget2D screenShadows;
 
+        // particle effects
+        ParticleEffect particleEffect;
+        Renderer particleRenderer;
+
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";            
+            Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -125,6 +135,17 @@ namespace NePlus
             lightPosition = boxPosition;
             screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
+            // particles
+            particleEffect = Content.Load<ParticleEffect>(@"ParticleEffects\Rain");
+            particleEffect.LoadContent(Content);
+            particleEffect.Initialise();
+
+            particleRenderer = new SpriteBatchRenderer
+            {
+                GraphicsDeviceService = graphics
+            };
+            particleRenderer.LoadContent(Content);
+
             Engine.Camera.Position = boxFixture.Body.Position;
             Engine.Camera.TrackingBody = boxFixture.Body;
         }
@@ -159,6 +180,11 @@ namespace NePlus
             boxPosition = Engine.Physics.PositionToGameWorld(boxFixture.Body.Position);
             lightPosition = boxPosition;
 
+            // particles
+            particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            particleEffect.Update(deltaSeconds);
+
             base.Update(gameTime);
         }
 
@@ -173,7 +199,7 @@ namespace NePlus
             // lighting
             lightArea.LightPosition = lightPosition;
             lightArea.BeginDrawingShadowCasters();
-            spriteBatch.Begin();            
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null);            
             spriteBatch.Draw(platformTexture, lightArea.ToRelativePosition(platformPosition), Color.Black);
             spriteBatch.End();
             lightArea.EndDrawingShadowCasters();
@@ -181,7 +207,7 @@ namespace NePlus
 
             GraphicsDevice.SetRenderTarget(screenShadows);
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Engine.Camera.CameraMatrix);
             spriteBatch.Draw(lightArea.RenderTarget, lightArea.LightPosition - lightArea.LightAreaSize * 0.5f, Color.Red);
             spriteBatch.End();
 
@@ -197,7 +223,7 @@ namespace NePlus
             blendState.ColorDestinationBlend = Blend.SourceColor;
 
             spriteBatch.Begin(SpriteSortMode.Immediate, blendState, null, null, null, null, Engine.Camera.CameraMatrix);
-            spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+            spriteBatch.Draw(screenShadows, Engine.Camera.Position, null, Color.White, 0.0f, new Vector2(screenShadows.Width / 2, screenShadows.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.End();
 
             Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -Engine.Physics.PixelsPerMeter, Engine.Camera.Position.Y / -Engine.Physics.PixelsPerMeter, 0);
@@ -207,6 +233,10 @@ namespace NePlus
             Engine.Physics.DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
             Engine.Physics.DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
             Engine.Physics.DebugView.RenderDebugData(ref proj, ref view);
+
+            // particles
+            Matrix cam = Engine.Camera.CameraMatrix;
+            particleRenderer.RenderEffect(particleEffect, ref cam);
             
             base.Draw(gameTime);
         }

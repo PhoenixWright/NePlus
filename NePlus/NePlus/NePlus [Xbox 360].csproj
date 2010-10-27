@@ -74,9 +74,6 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="WindowsDLLs\TiledLib.dll" />
-    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
-    <Content Include="XboxDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Xbox 360].csproj">
@@ -86,6 +83,10 @@
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA [Xbox 360].csproj">
       <Project>{0D9D021E-C640-45AC-8B90-C465AC7EACD9}</Project>
       <Name>DebugView XNA [Xbox 360]</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Xbox\ProjectMercury [Xbox 360].csproj">
+      <Project>{C3B4F513-2BB0-4F9F-82B7-E5C6B8822D0E}</Project>
+      <Name>ProjectMercury [Xbox 360]</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>
