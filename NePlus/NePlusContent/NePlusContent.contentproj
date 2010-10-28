@@ -93,20 +93,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\ReductionEffect.fx">
-      <Name>ReductionEffect</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Effects\ResolveShadowsEffect.fx">
-      <Name>ResolveShadowsEffect</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="ParticleEffects\Rain.xml">
       <Name>Rain</Name>
       <Importer>XmlImporter</Importer>

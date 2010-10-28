@@ -62,10 +62,7 @@
     <Compile Include="Engine.cs" />
     <Compile Include="EngineComponents\Camera.cs" />
     <Compile Include="EngineComponents\Input.cs" />
-    <Compile Include="EngineComponents\Lighting\LightArea.cs" />
-    <Compile Include="EngineComponents\Lighting\ShadowMapResolver.cs" />
     <Compile Include="EngineComponents\Physics.cs" />
-    <Compile Include="EngineComponents\Lighting\QuadRenderComponent.cs" />
     <Compile Include="EngineComponents\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
