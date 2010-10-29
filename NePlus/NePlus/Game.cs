@@ -150,11 +150,11 @@ namespace NePlus
             Engine.Update(gameTime);
 
             // jump logic
-            if (Engine.Input.IsCurPress(Buttons.A))
+            if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
                 boxFixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
             
             // Allows the game to exit
-            if (Engine.Input.IsCurPress(Buttons.Back))
+            if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
             
             boxPosition = Engine.Physics.PositionToGameWorld(boxFixture.Body.Position);
