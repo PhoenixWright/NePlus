@@ -1,33 +1,16 @@
 using Microsoft.Xna.Framework;
 
-using NePlus.EngineComponents;
-
-namespace NePlus
+namespace NePlus.GameComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Engine : Microsoft.Xna.Framework.GameComponent
+    public class PhysicsComponent : Microsoft.Xna.Framework.GameComponent
     {
-        Game game;
-
-        public Camera Camera { get; private set; }
-        public Configuration Configuration { get; private set; }
-        public Input Input { get; private set; }
-        public Physics Physics { get; private set; }
-        public Video Video { get; private set; }
-
-        public Engine(Game game)
+        public PhysicsComponent(Game game)
             : base(game)
         {
-            this.game = game;
-
-            Video = new Video(game);
-            
-            Camera = new Camera(new Vector2(Video.Width, Video.Height));
-            Configuration = new Configuration();
-            Input = new Input();
-            Physics = new Physics(game);
+            // TODO: Construct any child components here
         }
 
         /// <summary>
@@ -36,6 +19,8 @@ namespace NePlus
         /// </summary>
         public override void Initialize()
         {
+            // TODO: Add your initialization code here
+
             base.Initialize();
         }
 
@@ -45,9 +30,7 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            Input.Update();
-            Camera.Update(this);
-            Physics.Update(gameTime);
+            // TODO: Add your update code here
 
             base.Update(gameTime);
         }

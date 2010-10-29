@@ -20,7 +20,7 @@ namespace NePlus
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
     {
-        Engine Engine;
+        public Engine Engine { get; private set; }
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;       
@@ -43,7 +43,6 @@ namespace NePlus
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
         }
 
         /// <summary>
