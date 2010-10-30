@@ -65,12 +65,12 @@
     <Compile Include="EngineComponents\Input.cs" />
     <Compile Include="EngineComponents\Physics.cs" />
     <Compile Include="EngineComponents\Video.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GameComponents\InputComponent.cs" />
     <Compile Include="GameComponents\PhysicsComponent.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
