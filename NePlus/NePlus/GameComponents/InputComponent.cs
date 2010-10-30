@@ -1,19 +1,16 @@
 using Microsoft.Xna.Framework;
 
+using NePlus.EngineComponents;
+
 namespace NePlus.GameComponents
 {
     public class InputComponent
     {
-        Engine engine;
+        public Input Input { get; private set; }
 
         public InputComponent(Game game)
         {
-            engine = game.Engine;
-        }
-
-        public bool Jump()
-        {
-            return engine.Input.IsCurPress(engine.Configuration.JumpButton) || engine.Input.IsCurPress(engine.Configuration.JumpKey);
+            Input = game.Engine.Input;
         }
     }
 }
