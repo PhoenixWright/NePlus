@@ -19,12 +19,12 @@ namespace NePlus.EngineComponents
     {
         private GamePadState _lastGamepadState;
         private GamePadState _currentGamepadState;
-#if (!XBOX)
+
         private KeyboardState _lastKeyboardState;
         private KeyboardState _currentKeyboardState;
         private MouseState _lastMouseState;
         private MouseState _currentMouseState;
-#endif
+
         private PlayerIndex _index = PlayerIndex.One;
         private bool refreshData = false;
 
@@ -345,7 +345,7 @@ namespace NePlus.EngineComponents
                 _lastGamepadState.IsButtonDown(button) &&
                 _currentGamepadState.IsButtonUp(button));
         }
-#if (!XBOX)
+
         /// <summary>
         /// Checks if the requested key is a new press.
         /// </summary>
@@ -508,6 +508,5 @@ namespace NePlus.EngineComponents
                     return false;
             }
         }
-#endif
     }
 }

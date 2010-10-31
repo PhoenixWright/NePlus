@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,9 +10,6 @@ namespace NePlus.GameObjects
 {
     public class Player : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        // game reference
-        Game game;
-
         // components
         private InputComponent inputComponent;
         public PhysicsComponent PhysicsComponent { get; private set; }
@@ -22,7 +21,6 @@ namespace NePlus.GameObjects
         public Player(Game game, Vector2 position) : base(game)
         {
             this.position = position;
-            this.game = game;
             
             // the physics component needs to know the texture rectangle
             this.LoadContent();
@@ -41,7 +39,7 @@ namespace NePlus.GameObjects
 
         protected override void LoadContent()
         {
-            texture = game.Content.Load<Texture2D>(@"TestContent\TestSquare");
+            texture = Game.Content.Load<Texture2D>(@"TestContent\TestSquare");
 
             base.LoadContent();
         }

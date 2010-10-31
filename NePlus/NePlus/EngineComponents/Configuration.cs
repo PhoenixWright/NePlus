@@ -60,7 +60,5 @@ namespace NePlus.EngineComponents
             ZoomOutButton = Buttons.DPadDown;
             ZoomOutKey = Keys.D2;
         }
-
-
     }
 }

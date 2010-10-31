@@ -62,7 +62,9 @@
     <Compile Include="Engine.cs" />
     <Compile Include="EngineComponents\Camera.cs" />
     <Compile Include="EngineComponents\Configuration.cs" />
-    <Compile Include="EngineComponents\Input.cs" />
+    <Compile Include="EngineComponents\Input.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EngineComponents\Physics.cs" />
     <Compile Include="EngineComponents\Video.cs" />
     <Compile Include="Game.cs" />
