@@ -13,14 +13,16 @@ using ProjectMercury.Emitters;
 using ProjectMercury.Modifiers;
 using ProjectMercury.Renderers;
 
+using NePlus.GameObjects;
+
 namespace NePlus
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
-        public Engine Engine { get; private set; }
+        public static Engine Engine { get; private set; }
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;       
@@ -39,7 +41,10 @@ namespace NePlus
         ParticleEffect particleEffect;
         Renderer particleRenderer;
 
-        public Game()
+        // player
+        Player player;
+
+        public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -74,6 +79,8 @@ namespace NePlus
             flags += (uint)DebugViewFlags.Shape;
             Engine.Physics.DebugView.Flags = (DebugViewFlags)flags;
 
+            player = new Player(this, new Vector2(720, 0));
+
             base.Initialize();
         }
 
@@ -85,17 +92,6 @@ namespace NePlus
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // setup box
-            boxTexture = Content.Load<Texture2D>(@"TestContent\TestSquare");
-            boxPosition.X = 720;
-            boxPosition.Y = 0;
-
-            // farseer box stuff
-            boxFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, boxTexture.Width / Engine.Physics.PixelsPerMeter, boxTexture.Height / Engine.Physics.PixelsPerMeter, 1.0f);
-            boxFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(boxPosition);
-            boxFixture.Body.BodyType = BodyType.Dynamic;
-            boxFixture.Restitution = 0.5f;
 
             // set up platform
             platformTexture = Content.Load<Texture2D>(@"TestContent\TestRectangle");
@@ -125,8 +121,8 @@ namespace NePlus
             };
             particleRenderer.LoadContent(Content);
 
-            Engine.Camera.Position = boxFixture.Body.Position;
-            Engine.Camera.TrackingBody = boxFixture.Body;
+            Engine.Camera.Position = player.PhysicsComponent.Fixture.Body.Position;
+            Engine.Camera.TrackingBody = player.PhysicsComponent.Fixture.Body;
         }
 
         /// <summary>
@@ -147,16 +143,10 @@ namespace NePlus
         {
             // update the engine
             Engine.Update(gameTime);
-
-            // jump logic
-            if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
-                boxFixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
             
             // Allows the game to exit
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
-            
-            boxPosition = Engine.Physics.PositionToGameWorld(boxFixture.Body.Position);
 
             // particles
             particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
@@ -174,13 +164,16 @@ namespace NePlus
         {
             GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.SetRenderTarget(null);
-            Vector2 origin = new Vector2(boxTexture.Width / 2, boxTexture.Height / 2);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            spriteBatch.Draw(boxTexture, boxPosition, null, Color.White, 0.0f, origin, 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(platformTexture, platformPosition, Color.White);
-            spriteBatch.End();
+            spriteBatch.End();            
 
+            // particles
+            Matrix cam = Engine.Camera.CameraMatrix;
+            particleRenderer.RenderEffect(particleEffect, ref cam);
+            
+            base.Draw(gameTime);
+            
             Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -Engine.Physics.PixelsPerMeter, Engine.Camera.Position.Y / -Engine.Physics.PixelsPerMeter, 0);
             Vector2 size = Engine.Camera.CurSize / (Engine.Physics.PixelsPerMeter * 2.0f);
             Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
@@ -188,12 +181,6 @@ namespace NePlus
             Engine.Physics.DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
             Engine.Physics.DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
             Engine.Physics.DebugView.RenderDebugData(ref proj, ref view);
-
-            // particles
-            Matrix cam = Engine.Camera.CameraMatrix;
-            particleRenderer.RenderEffect(particleEffect, ref cam);
-            
-            base.Draw(gameTime);
         }
     }
 }

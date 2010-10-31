@@ -10,6 +10,9 @@ namespace NePlus.GameObjects
 {
     public class Player : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        // sprite batch
+        SpriteBatch spriteBatch;
+
         // components
         private InputComponent inputComponent;
         public PhysicsComponent PhysicsComponent { get; private set; }
@@ -18,22 +21,21 @@ namespace NePlus.GameObjects
         private Vector2 position;
         private Texture2D texture;
 
-        public Player(Game game, Vector2 position) : base(game)
+        public Player(Game1 game, Vector2 position) : base(game)
         {
             this.position = position;
-            
-            // the physics component needs to know the texture rectangle
-            this.LoadContent();
+            spriteBatch = new SpriteBatch(game.GraphicsDevice);
 
-            inputComponent = new InputComponent(game);
-            PhysicsComponent = new PhysicsComponent(game, texture.Bounds, position);
-            
-            // add the component to the game
-            game.Components.Add(this);
+            Game.Components.Add(this);
         }
 
         public override void Initialize()
         {
+            inputComponent = new InputComponent(Game);
+
+            this.LoadContent();
+            PhysicsComponent = new PhysicsComponent(Game, texture.Bounds, position);
+
             base.Initialize();
         }
 
@@ -53,7 +55,9 @@ namespace NePlus.GameObjects
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Game1.Engine.Camera.CameraMatrix);
+            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

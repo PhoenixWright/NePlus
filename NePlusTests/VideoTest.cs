@@ -11,7 +11,7 @@ namespace NePlusTests
         [Test]
         public void TestVideo()
         {
-            Game game = new Game();
+            Game1 game = new Game1();
             Engine engine = new Engine(game);
 
             Assert.AreEqual(engine.Video.Height, 720);

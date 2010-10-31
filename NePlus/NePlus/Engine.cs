@@ -9,8 +9,6 @@ namespace NePlus
     /// </summary>
     public class Engine : Microsoft.Xna.Framework.GameComponent
     {
-        Game game;
-
         public Camera Camera { get; private set; }
         public Configuration Configuration { get; private set; }
         public Input Input { get; private set; }
@@ -20,14 +18,12 @@ namespace NePlus
         public Engine(Game game)
             : base(game)
         {
-            this.game = game;
-
-            Video = new Video(game);
+            Video = new Video(Game);
             
             Camera = new Camera(new Vector2(Video.Width, Video.Height));
             Configuration = new Configuration();
             Input = new Input();
-            Physics = new Physics(game);
+            Physics = new Physics(Game);
         }
 
         /// <summary>

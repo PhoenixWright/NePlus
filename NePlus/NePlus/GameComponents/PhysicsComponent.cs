@@ -24,8 +24,8 @@ namespace NePlus.GameComponents
 
         public PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition) : base(game)
         {
-            physics = game.Engine.Physics;
-            
+            physics = Game1.Engine.Physics;
+
             // create vertices to create a rectangle in Farseer with
             Vertices vertices = new Vertices();
             vertices.Add(physics.PositionToPhysicsWorld(new Vector2(rectangle.Left, rectangle.Top)));
@@ -34,6 +34,9 @@ namespace NePlus.GameComponents
             vertices.Add(physics.PositionToPhysicsWorld(new Vector2(rectangle.Left, rectangle.Bottom)));
 
             Fixture = FixtureFactory.CreatePolygon(physics.World, vertices, 1.0f);
+            Fixture.Body.Position = physics.PositionToPhysicsWorld(gameWorldPosition);
+            Fixture.Body.BodyType = BodyType.Dynamic;
+            Fixture.Restitution = 0.5f;
         }
 
         /// <summary>
