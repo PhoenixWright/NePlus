@@ -37,13 +37,13 @@ namespace NePlus.EngineComponents
         Vector2 _maxPosition = Vector2.Zero;
         Body _trackingBody;
 
-        Func<Engine, bool> _zoomIn = (Engine engine) =>
+        Func<bool> _zoomIn = () =>
         {
-            return engine.Input.IsCurPress(engine.Configuration.ZoomInButton) || engine.Input.IsCurPress(engine.Configuration.ZoomInKey);
+            return Engine.Input.IsCurPress(Engine.Configuration.ZoomInButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomInKey);
         };
-        Func<Engine, bool> _zoomOut = (Engine engine) =>
+        Func<bool> _zoomOut = () =>
         {
-            return engine.Input.IsCurPress(engine.Configuration.ZoomOutButton) || engine.Input.IsCurPress(engine.Configuration.ZoomOutKey);
+            return Engine.Input.IsCurPress(Engine.Configuration.ZoomOutButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomOutKey);
         };
 
         Func<Camera, bool> _clampingEnabled = (Camera camera) =>
@@ -51,31 +51,31 @@ namespace NePlus.EngineComponents
             return (camera._minPosition != camera._maxPosition);
         };
 
-        Func<Engine, Camera, float> _horizontalCameraMovement =
-            (Engine engine, Camera camera) =>
+        Func<Camera, float> _horizontalCameraMovement =
+            (Camera camera) =>
             {
-                return (engine.Input.RightStickPosition.X * camera._moveRate) * camera._zoom;
+                return (Engine.Input.RightStickPosition.X * camera._moveRate) * camera._zoom;
             };
 
-        Func<Engine, Camera, float> _verticalCameraMovement =
-            (Engine engine, Camera camera) =>
+        Func<Camera, float> _verticalCameraMovement =
+            (Camera camera) =>
             {
-                return (engine.Input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
+                return (Engine.Input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
             };
 
-        Func<Engine, bool> _rotateLeft = (Engine engine) =>
+        Func<bool> _rotateLeft = () =>
         {
             return false;
         };
 
-        Func<Engine, bool> _rotateRight = (Engine engine) =>
+        Func<bool> _rotateRight = () =>
         {
             return false;
         };
 
-        Func<Engine, bool> _resetCamera = (Engine engine) =>
+        Func<bool> _resetCamera = () =>
         {
-            return engine.Input.IsCurPress(Buttons.RightStick);
+            return Engine.Input.IsCurPress(Buttons.RightStick);
         };
 
 
@@ -252,7 +252,7 @@ namespace NePlus.EngineComponents
         /// a function that is called to determine if the user wants 
         /// to zoom in.
         /// </summary>
-        public Func<Engine, bool> ZoomIn
+        public Func<bool> ZoomIn
         {
             get { return _zoomIn; }
             set { _zoomIn = value; }
@@ -261,7 +261,7 @@ namespace NePlus.EngineComponents
         /// a function that is called to determine whether the user wants 
         /// to zoom out.
         /// </summary>
-        public Func<Engine, bool> ZoomOut
+        public Func<bool> ZoomOut
         {
             get { return _zoomOut; }
             set { _zoomOut = value; }
@@ -280,7 +280,7 @@ namespace NePlus.EngineComponents
         /// movement that the user is requesting that the camera be moved 
         /// by.
         /// </summary>
-        public Func<Engine, Camera, float> HorizontalCameraMovement
+        public Func<Camera, float> HorizontalCameraMovement
         {
             get { return _horizontalCameraMovement; }
             set { _horizontalCameraMovement = value; }
@@ -290,7 +290,7 @@ namespace NePlus.EngineComponents
         /// movement that the user is requesting that the camera be moved 
         /// by.
         /// </summary>
-        public Func<Engine, Camera, float> VerticalCameraMovement
+        public Func<Camera, float> VerticalCameraMovement
         {
             get { return _verticalCameraMovement; }
             set { _verticalCameraMovement = value; }
@@ -299,7 +299,7 @@ namespace NePlus.EngineComponents
         /// a function that is called to determine if the user wants to 
         /// rotate the camera left.
         /// </summary>
-        public Func<Engine, bool> RotateLeft
+        public Func<bool> RotateLeft
         {
             get { return _rotateLeft; }
             set { _rotateLeft = value; }
@@ -308,7 +308,7 @@ namespace NePlus.EngineComponents
         /// a function that is called to determine if the user wants to rotate 
         /// the camera right.
         /// </summary>
-        public Func<Engine, bool> RotateRight
+        public Func<bool> RotateRight
         {
             get { return _rotateRight; }
             set { _rotateRight = value; }
@@ -317,7 +317,7 @@ namespace NePlus.EngineComponents
         /// A function that is called to determine if the user is requesting 
         /// that the camera be reset to it's original parameters.
         /// </summary>
-        public Func<Engine, bool> ResetCamera
+        public Func<bool> ResetCamera
         {
             get { return _resetCamera; }
             set { _resetCamera = value; }
@@ -330,7 +330,7 @@ namespace NePlus.EngineComponents
         /// <param name="engine">
         /// the game engine
         /// </param>
-        public void Update(Engine engine)
+        public void Update()
         {
             if (!_transitioning)
             {
@@ -338,14 +338,14 @@ namespace NePlus.EngineComponents
                 {
                     if (_clampingEnabled(this))
                         _targetPosition = Vector2.Clamp(_position + new Vector2(
-                                _horizontalCameraMovement(engine, this),
-                                _verticalCameraMovement(engine, this)),
+                                _horizontalCameraMovement(this),
+                                _verticalCameraMovement(this)),
                                 _minPosition,
                                 _maxPosition);
                     else
                         _targetPosition += new Vector2(
-                            _horizontalCameraMovement(engine, this),
-                            _verticalCameraMovement(engine, this));
+                            _horizontalCameraMovement(this),
+                            _verticalCameraMovement(this));
                 }
                 else
                 {
@@ -357,16 +357,16 @@ namespace NePlus.EngineComponents
                     else
                         _targetPosition = _trackingBody.Position * 100.0f;
                 }
-                if (_zoomIn(engine))
+                if (_zoomIn())
                     _targetZoom = Math.Min(_maxZoom, _zoom + _zoomRate);
-                if (_zoomOut(engine))
+                if (_zoomOut())
                     _targetZoom = Math.Max(_minZoom, _zoom - _zoomRate);
                 //these might need to be swapped
-                if (_rotateLeft(engine))
+                if (_rotateLeft())
                     _targetRotation = (_rotation + _rotationRate) % (float)(Math.PI * 2);
-                if (_rotateRight(engine))
+                if (_rotateRight())
                     _targetRotation = (_rotation - _rotationRate) % (float)(Math.PI * 2);
-                if (engine.Input.IsCurPress(engine.Configuration.ResetCameraButton) || engine.Input.IsCurPress(engine.Configuration.ResetCameraKey))
+                if (Engine.Input.IsCurPress(Engine.Configuration.ResetCameraButton) || Engine.Input.IsCurPress(Engine.Configuration.ResetCameraKey))
                 {
                     _transitioning = true;
                     _targetPosition = _origPosition;

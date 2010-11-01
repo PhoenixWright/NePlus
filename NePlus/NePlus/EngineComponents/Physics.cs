@@ -10,7 +10,7 @@ namespace NePlus.EngineComponents
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Physics : Microsoft.Xna.Framework.GameComponent
+    public class Physics : Microsoft.Xna.Framework.DrawableGameComponent
     {
         // used for conversion between game and physics scaling
         public float PixelsPerMeter { get; private set; }
@@ -24,12 +24,10 @@ namespace NePlus.EngineComponents
         public Physics(Game game)
             : base(game)
         {
-            // this should probably never change
-            PixelsPerMeter = 100.0f;
+            // make the debug view draw last
+            this.DrawOrder = int.MaxValue;
 
-            World = new World(new Vector2(0.0f, 6.0f));
-
-            DebugView = new DebugViewXNA(World);
+            Game.Components.Add(this);
         }
 
         /// <summary>
@@ -38,6 +36,27 @@ namespace NePlus.EngineComponents
         /// </summary>
         public override void Initialize()
         {
+            // this should probably never change
+            PixelsPerMeter = 100.0f;
+
+            World = new World(new Vector2(0.0f, 6.0f));
+
+            DebugView = new DebugViewXNA(World);
+
+            // TODO: make this a little more dynamic as far as options go
+            DebugViewXNA.LoadContent(Game.GraphicsDevice, Game.Content);
+            uint flags = 0;
+            flags += (uint)DebugViewFlags.AABB;
+            flags += (uint)DebugViewFlags.CenterOfMass;
+            flags += (uint)DebugViewFlags.ContactNormals;
+            flags += (uint)DebugViewFlags.ContactPoints;
+            flags += (uint)DebugViewFlags.DebugPanel;
+            flags += (uint)DebugViewFlags.Joint;
+            flags += (uint)DebugViewFlags.Pair;
+            flags += (uint)DebugViewFlags.PolygonPoints;
+            flags += (uint)DebugViewFlags.Shape;
+            DebugView.Flags = (DebugViewFlags)flags;
+            
             base.Initialize();
         }
 
@@ -52,6 +71,19 @@ namespace NePlus.EngineComponents
 
             base.Update(gameTime);
         }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
+            Vector2 size = Engine.Camera.CurSize / (PixelsPerMeter * 2.0f);
+            Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
+
+            DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
+            DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
+            DebugView.RenderDebugData(ref proj, ref view);
+
+            base.Draw(gameTime);
+        }
         
         // conversion functions
         public Vector2 PositionToGameWorld(Vector2 position)
@@ -63,6 +95,5 @@ namespace NePlus.EngineComponents
         {
             return position / PixelsPerMeter;
         }
-
     }
 }

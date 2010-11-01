@@ -113,7 +113,6 @@
     <Compile Include="EngineComponents\Input.cs" />
     <Compile Include="EngineComponents\Physics.cs" />
     <Compile Include="EngineComponents\Video.cs" />
-    <Compile Include="GameComponents\InputComponent.cs" />
     <Compile Include="GameComponents\PhysicsComponent.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

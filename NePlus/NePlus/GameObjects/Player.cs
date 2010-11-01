@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using NePlus.EngineComponents;
 using NePlus.GameComponents;
 
 namespace NePlus.GameObjects
@@ -14,14 +15,13 @@ namespace NePlus.GameObjects
         SpriteBatch spriteBatch;
 
         // components
-        private InputComponent inputComponent;
         public PhysicsComponent PhysicsComponent { get; private set; }
 
         // variables
         private Vector2 position;
         private Texture2D texture;
 
-        public Player(Game1 game, Vector2 position) : base(game)
+        public Player(Game game, Vector2 position) : base(game)
         {
             this.position = position;
             spriteBatch = new SpriteBatch(game.GraphicsDevice);
@@ -31,8 +31,6 @@ namespace NePlus.GameObjects
 
         public override void Initialize()
         {
-            inputComponent = new InputComponent(Game);
-
             this.LoadContent();
             PhysicsComponent = new PhysicsComponent(Game, texture.Bounds, position);
 
@@ -50,13 +48,18 @@ namespace NePlus.GameObjects
         {
             position = PhysicsComponent.Position;
 
+            if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
+            {
+                PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
+            }
+
             base.Update(gameTime);
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Game1.Engine.Camera.CameraMatrix);
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
+            spriteBatch.Draw(texture, position, null, Color.White, PhysicsComponent.Fixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
             spriteBatch.End();
 
             base.Draw(gameTime);

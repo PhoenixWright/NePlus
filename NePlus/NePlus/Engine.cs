@@ -4,21 +4,23 @@ using NePlus.EngineComponents;
 
 namespace NePlus
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
-    public class Engine : Microsoft.Xna.Framework.GameComponent
+    public static class Engine
     {
-        public Camera Camera { get; private set; }
-        public Configuration Configuration { get; private set; }
-        public Input Input { get; private set; }
-        public Physics Physics { get; private set; }
-        public Video Video { get; private set; }
+        // game reference
+        public static Game1 Game { get; private set; }
 
-        public Engine(Game game)
-            : base(game)
+        public static Camera Camera { get; private set; }
+        public static Configuration Configuration { get; private set; }
+        public static Input Input { get; private set; }
+        public static Physics Physics { get; private set; }
+        public static Video Video { get; private set; }
+        
+        public static void Initialize(Game1 game)
         {
-            Video = new Video(Game);
+            Game = game;
+
+            Video = new Video();
+            Video.Initialize();
             
             Camera = new Camera(new Vector2(Video.Width, Video.Height));
             Configuration = new Configuration();
@@ -26,26 +28,10 @@ namespace NePlus
             Physics = new Physics(Game);
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
             Input.Update();
-            Camera.Update(this);
-            Physics.Update(gameTime);
-
-            base.Update(gameTime);
+            Camera.Update();
         }
     }
 }

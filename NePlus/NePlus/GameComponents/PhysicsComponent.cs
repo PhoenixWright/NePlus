@@ -24,7 +24,7 @@ namespace NePlus.GameComponents
 
         public PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition) : base(game)
         {
-            physics = Game1.Engine.Physics;
+            physics = Engine.Physics;
 
             // create vertices to create a rectangle in Farseer with
             Vertices vertices = new Vertices();

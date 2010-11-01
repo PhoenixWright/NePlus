@@ -4,6 +4,9 @@ namespace NePlus.EngineComponents
 {
     public class Configuration
     {
+        // debug view
+        public bool ShowDebugView { get; private set; }
+
         /* Menu Actions */
         // accept (confirm)
         public Buttons AcceptButton { get; private set; }
@@ -37,6 +40,8 @@ namespace NePlus.EngineComponents
 
         public Configuration()
         {
+            ShowDebugView = true;
+
             // menu actions
             AcceptButton = Buttons.A;
             AcceptKey = Keys.Enter;
