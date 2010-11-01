@@ -22,8 +22,8 @@ namespace NePlus
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        SpriteBatch spriteBatch;       
-        
+        public GraphicsDeviceManager graphics;
+
         // textures
         Texture2D platformTexture;
 
@@ -43,9 +43,8 @@ namespace NePlus
 
         public Game1()
         {
-            Engine.Initialize(this);
-
-            Content.RootDirectory = "Content";
+            // tried to move this code, but it seems that nothing will draw unless it is located here
+            graphics = new GraphicsDeviceManager(this);
         }
 
         /// <summary>
@@ -56,8 +55,10 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
+            Engine.Initialize(this);
+            
             player = new Player(this, new Vector2(720, 0));
-
+            
             base.Initialize();
         }
 
@@ -67,8 +68,7 @@ namespace NePlus
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Engine.LoadContent();
 
             // set up platform
             platformTexture = Content.Load<Texture2D>(@"TestContent\TestRectangle");
@@ -94,7 +94,7 @@ namespace NePlus
 
             particleRenderer = new SpriteBatchRenderer
             {
-                GraphicsDeviceService = Engine.Video.Graphics
+                GraphicsDeviceService = Engine.Video.GraphicsDeviceManager
             };
             particleRenderer.LoadContent(Content);
 
@@ -139,11 +139,11 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            Engine.Video.GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            spriteBatch.Draw(platformTexture, platformPosition, Color.White);
-            spriteBatch.End();            
+            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
+            Engine.Video.SpriteBatch.Draw(platformTexture, platformPosition, Color.White);
+            Engine.Video.SpriteBatch.End();
 
             // particles
             Matrix cam = Engine.Camera.CameraMatrix;
