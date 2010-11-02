@@ -13,6 +13,8 @@ using ProjectMercury.Emitters;
 using ProjectMercury.Modifiers;
 using ProjectMercury.Renderers;
 
+using TiledLib;
+
 using NePlus.GameObjects;
 
 namespace NePlus

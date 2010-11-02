@@ -1,0 +1,28 @@
+What I Did
+    -Integrated the Mercury Particle Engine into my project and proved it worked with a rain effect
+    -Tested project on a new laptop and found out that I was using the XNA HiDef profile when I should have been using the more widely supported Reach profile
+        -Ripped out the lighting code in the project as it wasn't compatible with the Reach profile
+        -Researched lighting some more because it is such a big part of the project
+        -Found Krypton XNA, a lighting library that is currently only compatible with XNA 3.1, but the author is currently updating the code. This puts lighting on hold.
+            -If this project is not updated soon enough for me, I have the source code and can port it to XNA 4.0 myself if necessary
+    -Began journal article
+    -Refactored engine a ton to create a Player class that manages a player object's drawing, input, physics, and so forth, refactored classes a lot as well and made the engine static for accessibility
+    -Created a test map with Tiled map editor, but have not yet got it working
+    -Installed NUNit and TestDriven.NET and started writing some basic tests to use with my project
+        -Created a test project that I am keeping in source control with everything else
+    
+What I'm Going To Do
+    -Continue Tiled work, integrate it fully into my engine so that maps are loaded instead of hard-coding creating a platform and physics for the platform
+        -Need to figure out how to properly manage Tiled assets, how to use the Tiled application, how to properly create tiles for use with it, and so forth
+        -Need to figure out how to create physics components for the map
+    -Continue monitoring the progress of Krypton XNA to get the lighting re-implemented as soon as possible
+    -Create a light object with everything but actual drawing of dynamic lighting with a placeholder sprite
+        -Be able to turn the light on and off, and be able to affect objects that it is touching with an anti-gravity effect
+            -This will provide the necessary proof of concept for this term, hopefully I can get it done by the 9th
+    -Continue with NUnit test writing
+            
+Obstacles
+    -The discovery that the lighting method I was using is not compatible with most graphics cards was a big blow to the project
+        -However, it is extremely lucky that I found out about this isssue early on in the project, because it would have been much harder to deal with if I had made more progress with the lighting components
+    -The Krypton XNA project is not currently 4.0 compatible, but I should be able to port it myself if it takes too long to become 4.0 compatible
+    -There is extremely little documentation on Tiled and TiledLib, although I think everything is clear-cut enough that if I just sit down with it I should be able to figure it out
