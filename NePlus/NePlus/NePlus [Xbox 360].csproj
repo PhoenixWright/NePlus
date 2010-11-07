@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>d1b7f13f-f3be-45f3-8f89-12fb71a982c0</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -76,6 +76,9 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Xbox360DLLs\TiledLib.dll" />
+    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Xbox 360].csproj">
@@ -89,10 +92,6 @@
     <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Xbox\ProjectMercury [Xbox 360].csproj">
       <Project>{C3B4F513-2BB0-4F9F-82B7-E5C6B8822D0E}</Project>
       <Name>ProjectMercury [Xbox 360]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\tiledlib\GS4\TiledLib\TiledLib [Xbox].csproj">
-      <Project>{04D1EBF2-1229-4A55-A0A2-AC613B9BD1FF}</Project>
-      <Name>TiledLib [Xbox]</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>
@@ -171,6 +170,10 @@
     </Reference>
     <Reference Include="System.Xml.Linq">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="TiledLib, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>Xbox360DLLs\TiledLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

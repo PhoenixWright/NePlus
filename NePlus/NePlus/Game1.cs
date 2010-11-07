@@ -74,7 +74,7 @@ namespace NePlus
         protected override void LoadContent()
         {
             Engine.LoadContent();
-            map = Content.Load<Map>("TestMap");
+            map = Content.Load<Map>(@"Maps\TestMap");
 
             // set up platform
             platformTexture = Content.Load<Texture2D>(@"TestRectangle");
