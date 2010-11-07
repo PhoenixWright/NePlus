@@ -39,7 +39,7 @@ namespace NePlus.GameObjects
 
         protected override void LoadContent()
         {
-            texture = Game.Content.Load<Texture2D>(@"TestContent\TestSquare");
+            texture = Game.Content.Load<Texture2D>(@"TestSquare");
 
             base.LoadContent();
         }
@@ -50,7 +50,8 @@ namespace NePlus.GameObjects
 
             if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
             {
-                PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(0.0f, -10.0f));
+                // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
+                PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(0.0f, -10.0f), PhysicsComponent.Fixture.Body.WorldCenter);
             }
 
             base.Update(gameTime);

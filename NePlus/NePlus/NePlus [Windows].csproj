@@ -105,10 +105,6 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
-    <Reference Include="TiledLib, Version=1.5.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>WindowsDLLs\TiledLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
@@ -126,9 +122,6 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="WindowsDLLs\TiledLib.dll" />
-    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
-    <Content Include="XboxDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Windows].csproj">
@@ -142,6 +135,10 @@
     <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Windows\ProjectMercury [Windows].csproj">
       <Project>{1E3FDDBD-A15F-42CF-A83E-754476079B30}</Project>
       <Name>ProjectMercury [Windows]</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\tiledlib\GS4\TiledLib\TiledLib [Windows].csproj">
+      <Project>{5C081229-C1AA-4D40-A307-9264F7509158}</Project>
+      <Name>TiledLib [Windows]</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>

@@ -79,14 +79,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestContent\TestSquare.png">
+    <Compile Include="TestSquare.png">
       <Name>TestSquare</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestContent\TestRectangle.png">
+    <Compile Include="TestRectangle.png">
       <Name>TestRectangle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -109,6 +109,10 @@
       <Project>{1E3FDDBD-A15F-42CF-A83E-754476079B30}</Project>
       <Name>ProjectMercury [Windows]</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\tiledlib\GS4\TiledPipelineExtensions\TiledPipelineExtensions.csproj">
+      <Project>{3AC723BC-8AE2-4ED8-ABE2-DA3532E87118}</Project>
+      <Name>TiledPipelineExtensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParticleEffects\BeamBlurred.png">
@@ -118,8 +122,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Maps\" />
+    <Compile Include="TestMap.tmx">
+      <Name>TestMap</Name>
+      <SubType>Designer</SubType>
+      <Importer>TmxImporter</Importer>
+      <Processor>TmxProcessor</Processor>
+    </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

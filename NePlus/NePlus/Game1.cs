@@ -40,6 +40,9 @@ namespace NePlus
         ParticleEffect particleEffect;
         Renderer particleRenderer;
 
+        // map
+        Map map;
+
         // player
         Player player;
 
@@ -71,9 +74,10 @@ namespace NePlus
         protected override void LoadContent()
         {
             Engine.LoadContent();
+            map = Content.Load<Map>("TestMap");
 
             // set up platform
-            platformTexture = Content.Load<Texture2D>(@"TestContent\TestRectangle");
+            platformTexture = Content.Load<Texture2D>(@"TestRectangle");
             platformPosition.X = (Engine.Video.Width / 2);
             platformPosition.Y = 500;
 
@@ -122,7 +126,9 @@ namespace NePlus
         {
             // update the engine
             Engine.Update(gameTime);
+
             
+
             // Allows the game to exit
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
@@ -145,6 +151,7 @@ namespace NePlus
 
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.Video.SpriteBatch.Draw(platformTexture, platformPosition, Color.White);
+            map.Draw(Engine.Video.SpriteBatch);
             Engine.Video.SpriteBatch.End();
 
             // particles
