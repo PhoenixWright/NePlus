@@ -74,13 +74,16 @@ namespace NePlus.EngineComponents
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
-            Vector2 size = Engine.Camera.CurSize / (PixelsPerMeter * 2.0f);
-            Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
+            if (Engine.Configuration.ShowDebugView)
+            {
+                Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
+                Vector2 size = Engine.Camera.CurSize / (PixelsPerMeter * 2.0f);
+                Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
-            DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
-            DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
-            DebugView.RenderDebugData(ref proj, ref view);
+                DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
+                DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
+                DebugView.RenderDebugData(ref proj, ref view);
+            }
 
             base.Draw(gameTime);
         }

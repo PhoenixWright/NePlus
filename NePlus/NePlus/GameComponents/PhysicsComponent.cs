@@ -15,10 +15,7 @@ namespace NePlus.GameComponents
     {
         private Physics physics;
 
-        public Vector2 Position
-        {
-            get { return physics.PositionToGameWorld(Fixture.Body.Position); }
-        }
+        public Vector2 Position { get { return physics.PositionToGameWorld(Fixture.Body.Position); } }
 
         public Fixture Fixture { get; private set; }
 
@@ -37,27 +34,6 @@ namespace NePlus.GameComponents
             Fixture.Body.Position = physics.PositionToPhysicsWorld(gameWorldPosition);
             Fixture.Body.BodyType = BodyType.Dynamic;
             Fixture.Restitution = 0.5f;
-        }
-
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
-        {
-            // TODO: Add your initialization code here
-
-            base.Initialize();
-        }
-
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
-        {
-
-            base.Update(gameTime);
         }
     }
 }

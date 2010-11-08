@@ -15,12 +15,12 @@ namespace NePlus.GameObjects
         public PhysicsComponent PhysicsComponent { get; private set; }
 
         // variables
-        private Vector2 position;
+        public Vector2 Position { get; private set; }
         private Texture2D texture;
 
         public Player(Game game, Vector2 position) : base(game)
         {
-            this.position = position;
+            Position = position;
 
             // need to load the texture before the PhysicsComponent
             this.LoadContent();
@@ -43,7 +43,7 @@ namespace NePlus.GameObjects
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            position = PhysicsComponent.Position;
+            Position = PhysicsComponent.Position;
 
             if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
             {
@@ -67,7 +67,7 @@ namespace NePlus.GameObjects
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.Draw(texture, position, null, Color.White, PhysicsComponent.Fixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+            Engine.Video.SpriteBatch.Draw(texture, Position, null, Color.White, PhysicsComponent.Fixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
             Engine.Video.SpriteBatch.End();
 
             base.Draw(gameTime);

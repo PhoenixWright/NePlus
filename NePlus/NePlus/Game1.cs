@@ -33,6 +33,10 @@ namespace NePlus
         // player
         Player player;
 
+        // light stuff
+        Vector2 lightPosition;
+        Texture2D lightTexture;
+
         public Game1()
         {
             // tried to move this code, but it seems that nothing will draw unless it is located here
@@ -61,6 +65,10 @@ namespace NePlus
             Engine.LoadContent();
             Engine.Level.LoadContent(@"Maps\TestMap");
             player = new Player(this, Engine.Level.GetSpawnPoint());
+
+            // light
+            lightTexture = Content.Load<Texture2D>("BlueTriangle");
+            lightPosition = Engine.Level.GetSpawnPoint() + new Vector2(475, 0);
 
             // particles
             particleEffect = Content.Load<ParticleEffect>(@"ParticleEffects\Rain");
@@ -100,6 +108,15 @@ namespace NePlus
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
+            // check if the light is hitting the player
+            if (player.Position.X > lightPosition.X - lightTexture.Width / 2
+                && player.Position.X < lightPosition.X + lightTexture.Width / 2 
+                && player.Position.Y > lightPosition.Y - lightTexture.Height / 2
+                && player.Position.Y < lightPosition.Y + lightTexture.Height / 2)
+            {
+                player.PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(0.0f, -8.0f));
+            }
+
             // particles
             particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -115,6 +132,10 @@ namespace NePlus
         protected override void Draw(GameTime gameTime)
         {
             Engine.Video.GraphicsDevice.Clear(Color.Black);
+
+            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
+            Engine.Video.SpriteBatch.Draw(lightTexture, lightPosition, null, Color.White, 0.0f, new Vector2(lightTexture.Bounds.Center.X, lightTexture.Bounds.Center.Y), 1.0f, SpriteEffects.None, 0.0f);
+            Engine.Video.SpriteBatch.End();
 
             // particles
             Matrix cam = Engine.Camera.CameraMatrix;
