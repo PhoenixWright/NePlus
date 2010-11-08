@@ -82,15 +82,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Maps\TestMap.tmx">
+      <SubType>Designer</SubType>
+      <Name>TestMap</Name>
+      <Importer>TmxImporter</Importer>
+      <Processor>TmxProcessor</Processor>
+    </Compile>
     <Compile Include="TestSquare.png">
       <Name>TestSquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TestRectangle.png">
-      <Name>TestRectangle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -118,14 +117,6 @@
       <Name>BeamBlurred</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Maps\TestMap.tmx">
-      <Name>TestMap</Name>
-      <SubType>Designer</SubType>
-      <Importer>TmxImporter</Importer>
-      <Processor>TmxProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup />

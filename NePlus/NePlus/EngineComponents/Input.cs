@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 namespace NePlus.EngineComponents
 {
     /// <summary>
-    /// an enum of all available mouse buttons.
+    /// An enum of all available mouse buttons.
     /// </summary>
     public enum MouseButtons
     {
@@ -75,7 +75,7 @@ namespace NePlus.EngineComponents
             get { return _lastGamepadState; }
         }
         /// <summary>
-        /// the current state of the gamepad.
+        /// The current state of the gamepad.
         /// Exposed only for convenience.
         /// </summary>
         public GamePadState CurrentGamepadState
@@ -83,7 +83,7 @@ namespace NePlus.EngineComponents
             get { return _currentGamepadState; }
         }
         /// <summary>
-        /// the index that is used to poll the gamepad. 
+        /// The index that is used to poll the gamepad. 
         /// </summary>
         public PlayerIndex Index
         {

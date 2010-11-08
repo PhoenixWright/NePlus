@@ -26,22 +26,9 @@ namespace NePlus
     {
         public GraphicsDeviceManager graphics;
 
-        // textures
-        Texture2D platformTexture;
-
-        // initial texture positions
-        Vector2 platformPosition = Vector2.Zero;
-        Vector2 boxPosition = Vector2.Zero;
-
-        // farseer fixtures
-        Fixture platformFixture;
-
         // particle effects
         ParticleEffect particleEffect;
         Renderer particleRenderer;
-
-        // map
-        Map map;
 
         // player
         Player player;
@@ -62,8 +49,6 @@ namespace NePlus
         {
             Engine.Initialize(this);
             
-            player = new Player(this, new Vector2(720, 0));
-            
             base.Initialize();
         }
 
@@ -74,24 +59,8 @@ namespace NePlus
         protected override void LoadContent()
         {
             Engine.LoadContent();
-            map = Content.Load<Map>(@"Maps\TestMap");
-
-            // set up platform
-            platformTexture = Content.Load<Texture2D>(@"TestRectangle");
-            platformPosition.X = (Engine.Video.Width / 2);
-            platformPosition.Y = 500;
-
-            Rectangle rect2 = platformTexture.Bounds;
-            Vertices verts2 = new Vertices();
-            verts2.Add(Engine.Physics.PositionToPhysicsWorld(new Vector2(rect2.Left, rect2.Top)));
-            verts2.Add(Engine.Physics.PositionToPhysicsWorld(new Vector2(rect2.Right, rect2.Top)));
-            verts2.Add(Engine.Physics.PositionToPhysicsWorld(new Vector2(rect2.Right, rect2.Bottom)));
-            verts2.Add(Engine.Physics.PositionToPhysicsWorld(new Vector2(rect2.Left, rect2.Bottom)));
-            
-            // farseer platform stuff
-            platformFixture = FixtureFactory.CreatePolygon(Engine.Physics.World, verts2, 1.0f);
-            platformFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(new Vector2(platformPosition.X, platformPosition.Y));
-            platformFixture.Body.BodyType = BodyType.Static;
+            Engine.Level.LoadContent(@"Maps\TestMap");
+            player = new Player(this, Engine.Level.GetSpawnPoint());
 
             // particles
             particleEffect = Content.Load<ParticleEffect>(@"ParticleEffects\Rain");
@@ -125,11 +94,9 @@ namespace NePlus
         protected override void Update(GameTime gameTime)
         {
             // update the engine
-            Engine.Update(gameTime);
+            Engine.Update(gameTime);            
 
-            
-
-            // Allows the game to exit
+            // allows the game to exit
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
@@ -148,11 +115,6 @@ namespace NePlus
         protected override void Draw(GameTime gameTime)
         {
             Engine.Video.GraphicsDevice.Clear(Color.Black);
-
-            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.Draw(platformTexture, platformPosition, Color.White);
-            map.Draw(Engine.Video.SpriteBatch);
-            Engine.Video.SpriteBatch.End();
 
             // particles
             Matrix cam = Engine.Camera.CameraMatrix;

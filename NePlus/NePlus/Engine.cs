@@ -16,6 +16,7 @@ namespace NePlus
         public static Camera Camera { get; private set; }
         public static Configuration Configuration { get; private set; }
         public static Input Input { get; private set; }
+        public static Level Level { get; private set; }
         public static Physics Physics { get; private set; }
         public static Video Video { get; private set; }
         
@@ -32,6 +33,7 @@ namespace NePlus
             Camera = new Camera(new Vector2(Video.Width, Video.Height));
             Configuration = new Configuration();
             Input = new Input();
+            Level = new Level(Game);
             Physics = new Physics(Game);
         }
 

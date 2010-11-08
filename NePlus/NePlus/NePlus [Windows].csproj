@@ -115,6 +115,7 @@
     <Compile Include="EngineComponents\Camera.cs" />
     <Compile Include="EngineComponents\Configuration.cs" />
     <Compile Include="EngineComponents\Input.cs" />
+    <Compile Include="EngineComponents\Level.cs" />
     <Compile Include="EngineComponents\Physics.cs" />
     <Compile Include="EngineComponents\Video.cs" />
     <Compile Include="GameComponents\PhysicsComponent.cs" />

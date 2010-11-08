@@ -39,7 +39,7 @@ namespace NePlus.EngineComponents
             // this should probably never change
             PixelsPerMeter = 100.0f;
 
-            World = new World(new Vector2(0.0f, 6.0f));
+            World = new World(new Vector2(0.0f, 9.8f));
 
             DebugView = new DebugViewXNA(World);
 
@@ -66,7 +66,7 @@ namespace NePlus.EngineComponents
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // physics
+            // update the physics world
             World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
 
             base.Update(gameTime);
@@ -85,12 +85,21 @@ namespace NePlus.EngineComponents
             base.Draw(gameTime);
         }
         
-        // conversion functions
+        /// <summary>
+        /// Conversion function to calculate the game world position of a Farseer physics position.
+        /// </summary>
+        /// <param name="position">The physics world position.</param>
+        /// <returns>The game world position.</returns>
         public Vector2 PositionToGameWorld(Vector2 position)
         {
             return position * PixelsPerMeter;
         }
         
+        /// <summary>
+        /// Conversion function to calculate the physics world position of a game world position.
+        /// </summary>
+        /// <param name="position">The game world position.</param>
+        /// <returns>The physics world position.</returns>
         public Vector2 PositionToPhysicsWorld(Vector2 position)
         {
             return position / PixelsPerMeter;

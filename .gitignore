@@ -1,5 +1,6 @@
 # files and folders to ignore
 *.cachefile
+*.db
 *.suo
 *.user
 bin

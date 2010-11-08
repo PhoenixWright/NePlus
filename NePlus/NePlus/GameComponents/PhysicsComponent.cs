@@ -22,11 +22,11 @@ namespace NePlus.GameComponents
 
         public Fixture Fixture { get; private set; }
 
-        public PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition) : base(game)
+        public  PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition) : base(game)
         {
             physics = Engine.Physics;
 
-            // create vertices to create a rectangle in Farseer with
+            // create vertices to create a rectangle in the physics world with
             Vertices vertices = new Vertices();
             vertices.Add(physics.PositionToPhysicsWorld(new Vector2(rectangle.Left, rectangle.Top)));
             vertices.Add(physics.PositionToPhysicsWorld(new Vector2(rectangle.Right, rectangle.Top)));

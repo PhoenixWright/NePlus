@@ -7,25 +7,46 @@ namespace NePlus.EngineComponents
         // debug view
         public bool ShowDebugView { get; private set; }
 
-        /* Menu Actions */
+
+        #region Menu Actions
         // accept (confirm)
         public Buttons AcceptButton { get; private set; }
         public Keys AcceptKey { get; private set; }
 
         // back (reject/deny)
         public Buttons BackButton { get; private set; }
-        public Keys BackKey { get; private set; }
-        
+        public Keys BackKey { get; private set; } 
+        #endregion
 
-        /* Game Actions */
+        #region Movement
+        // down
+        public Buttons DownButton { get; private set; }
+        public Keys DownKey { get; private set; }
+
+        // left
+        public Buttons LeftButton { get; private set; }
+        public Keys LeftKey { get; private set; }
+
+        // right
+        public Buttons RightButton { get; private set; }
+        public Keys RightKey { get; private set; }
+
+        // up
+        public Buttons UpButton { get; private set; }
+        public Keys UpKey { get; private set; } 
+        #endregion
+
+        #region Game Actions
         // jump
         public Buttons JumpButton { get; private set; }
         public Keys JumpKey { get; private set; }
 
         // quit
         public Buttons QuitButton { get; private set; }
-        public Keys QuitKey { get; private set; }
+        public Keys QuitKey { get; private set; }        
+        #endregion
 
+        #region Camera
         // reset camera
         public Buttons ResetCameraButton { get; private set; }
         public Keys ResetCameraKey { get; private set; }
@@ -36,7 +57,8 @@ namespace NePlus.EngineComponents
 
         // zoom out
         public Buttons ZoomOutButton { get; private set; }
-        public Keys ZoomOutKey { get; private set; }
+        public Keys ZoomOutKey { get; private set; } 
+        #endregion
 
         public Configuration()
         {
@@ -49,13 +71,28 @@ namespace NePlus.EngineComponents
             BackButton = Buttons.B;
             BackKey = Keys.Back;
 
+            
             // game actions
+            DownButton = Buttons.LeftThumbstickDown;
+            DownKey = Keys.Down;
+
             JumpButton = Buttons.A;
             JumpKey = Keys.Space;
+
+            LeftButton = Buttons.LeftThumbstickLeft;
+            LeftKey = Keys.Left;
 
             QuitButton = Buttons.Back;
             QuitKey = Keys.Escape;
 
+            RightButton = Buttons.LeftThumbstickRight;
+            RightKey = Keys.Right;
+
+            UpButton = Buttons.LeftThumbstickUp;
+            UpKey = Keys.Up;
+
+
+            // camera actions
             ResetCameraButton = Buttons.RightStick;
             ResetCameraKey = Keys.R;
 
