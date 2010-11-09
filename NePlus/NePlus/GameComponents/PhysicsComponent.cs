@@ -34,6 +34,9 @@ namespace NePlus.GameComponents
             Fixture.Body.Position = physics.PositionToPhysicsWorld(gameWorldPosition);
             Fixture.Body.BodyType = BodyType.Dynamic;
             Fixture.Restitution = 0.5f;
+
+            // adding some linear damping gives a max speed and seems to smooth out player motion really well
+            Fixture.Body.LinearDamping = 1.0f;
         }
     }
 }

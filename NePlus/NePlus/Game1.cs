@@ -33,10 +33,6 @@ namespace NePlus
         // player
         Player player;
 
-        // light stuff
-        Vector2 lightPosition;
-        Texture2D lightTexture;
-
         public Game1()
         {
             // tried to move this code, but it seems that nothing will draw unless it is located here
@@ -52,7 +48,7 @@ namespace NePlus
         protected override void Initialize()
         {
             Engine.Initialize(this);
-            
+            Engine.Level = new EngineComponents.Level(this, @"Maps\TestMap");
             base.Initialize();
         }
 
@@ -63,12 +59,8 @@ namespace NePlus
         protected override void LoadContent()
         {
             Engine.LoadContent();
-            Engine.Level.LoadContent(@"Maps\TestMap");
+            
             player = new Player(this, Engine.Level.GetSpawnPoint());
-
-            // light
-            lightTexture = Content.Load<Texture2D>("BlueTriangle");
-            lightPosition = Engine.Level.GetSpawnPoint() + new Vector2(475, 0);
 
             // particles
             particleEffect = Content.Load<ParticleEffect>(@"ParticleEffects\Rain");
@@ -108,6 +100,10 @@ namespace NePlus
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
+            // grab gravity light position from level
+            Vector2 lightPosition = Engine.Level.Lights[0].LightPosition;
+            Texture2D lightTexture = Engine.Level.Lights[0].LightTexture;
+
             // check if the light is hitting the player
             if (player.Position.X > lightPosition.X - lightTexture.Width / 2
                 && player.Position.X < lightPosition.X + lightTexture.Width / 2 
@@ -134,7 +130,6 @@ namespace NePlus
             Engine.Video.GraphicsDevice.Clear(Color.Black);
 
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.Draw(lightTexture, lightPosition, null, Color.White, 0.0f, new Vector2(lightTexture.Bounds.Center.X, lightTexture.Bounds.Center.Y), 1.0f, SpriteEffects.None, 0.0f);
             Engine.Video.SpriteBatch.End();
 
             // particles
