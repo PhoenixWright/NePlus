@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 
 using FarseerPhysics;
+using FarseerPhysics.Collision;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 
@@ -106,6 +107,31 @@ namespace NePlus.EngineComponents
         public Vector2 PositionToPhysicsWorld(Vector2 position)
         {
             return position / PixelsPerMeter;
+        }
+
+        /// <summary>
+        /// Conversion function to calculate the game world value of a physics world value.
+        /// </summary>
+        /// <param name="value">The physics world value.</param>
+        /// <returns>The game world value.</returns>
+        public float ValueToGameWorld(float value)
+        {
+            return value * PixelsPerMeter;
+        }
+
+        /// <summary>
+        /// Conversion function to calculate the physics world value of a game world value.
+        /// </summary>
+        /// <param name="value">The game world value.</param>
+        /// <returns>The physics world value.</returns>
+        public float ValueToPhysicsWorld(float value)
+        {
+            return value / PixelsPerMeter;
+        }
+
+        public AABB CreateAABB(float gameWorldWidth, float gameWorldHeight, Vector2 gameWorldPosition)
+        {
+            return new AABB(ValueToPhysicsWorld(gameWorldWidth), ValueToPhysicsWorld(gameWorldHeight), PositionToPhysicsWorld(gameWorldPosition));
         }
     }
 }

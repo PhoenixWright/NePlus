@@ -28,7 +28,6 @@ namespace NePlus
 
         // particle effects
         ParticleEffect particleEffect;
-        Renderer particleRenderer;
 
         // player
         Player player;
@@ -62,17 +61,6 @@ namespace NePlus
             
             player = new Player(this, Engine.Level.GetSpawnPoint());
 
-            // particles
-            particleEffect = Content.Load<ParticleEffect>(@"ParticleEffects\Rain");
-            particleEffect.LoadContent(Content);
-            particleEffect.Initialise();
-
-            particleRenderer = new SpriteBatchRenderer
-            {
-                GraphicsDeviceService = Engine.Video.GraphicsDeviceManager
-            };
-            particleRenderer.LoadContent(Content);
-
             Engine.Camera.Position = player.PhysicsComponent.Fixture.Body.Position;
             Engine.Camera.TrackingBody = player.PhysicsComponent.Fixture.Body;
         }
@@ -100,23 +88,7 @@ namespace NePlus
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
-            // grab gravity light position from level
-            Vector2 lightPosition = Engine.Level.Lights[0].LightPosition;
-            Texture2D lightTexture = Engine.Level.Lights[0].LightTexture;
 
-            // check if the light is hitting the player
-            if (player.Position.X > lightPosition.X - lightTexture.Width / 2
-                && player.Position.X < lightPosition.X + lightTexture.Width / 2 
-                && player.Position.Y > lightPosition.Y - lightTexture.Height / 2
-                && player.Position.Y < lightPosition.Y + lightTexture.Height / 2)
-            {
-                player.PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(0.0f, -8.0f));
-            }
-
-            // particles
-            particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            particleEffect.Update(deltaSeconds);
 
             base.Update(gameTime);
         }
@@ -129,12 +101,10 @@ namespace NePlus
         {
             Engine.Video.GraphicsDevice.Clear(Color.Black);
 
+            // this code is placeholder code for testing
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.Video.SpriteBatch.End();
 
-            // particles
-            Matrix cam = Engine.Camera.CameraMatrix;
-            particleRenderer.RenderEffect(particleEffect, ref cam);
             
             base.Draw(gameTime);
         }

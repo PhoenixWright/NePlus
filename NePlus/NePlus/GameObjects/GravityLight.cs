@@ -1,37 +1,46 @@
 using Microsoft.Xna.Framework;
 
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics;
+
 using NePlus.GameComponents;
 
 namespace NePlus.GameObjects
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class GravityLight : Light
     {
         public float GravityValue { get; private set; }
 
+        private Vector2 gravityVector;
+        public Vector2 GravityVector { get { return gravityVector; } }
+
         public GravityLight(Vector2 position, float gravityValue) : base(Engine.Game, position)
         {
             GravityValue = gravityValue;
+            gravityVector = new Vector2(0.0f, GravityValue);
+
+            EffectDelegate = GravityEffect;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
+        public override void ResolveLightEffect()
         {
-            base.Initialize();
+            // create an AABB representing the light, and apply the gravity effect to anything in it
+            AABB aabb = Engine.Physics.CreateAABB(LightTexture.Width, LightTexture.Height, LightPosition);
+
+            Engine.Physics.World.QueryAABB(EffectDelegate, ref aabb);
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        private bool GravityEffect(Fixture fixture)
         {
-            base.Update(gameTime);
+            // check to make sure that the fixture is dynamic
+            if (fixture.Body.BodyType == BodyType.Dynamic)
+            {
+                fixture.Body.ApplyForce(ref gravityVector);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

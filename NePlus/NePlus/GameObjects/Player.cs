@@ -24,7 +24,7 @@ namespace NePlus.GameObjects
 
             // need to load the texture before the PhysicsComponent
             this.LoadContent();
-            PhysicsComponent = new PhysicsComponent(Game, texture.Bounds, position);
+            PhysicsComponent = new PhysicsComponent(Game, texture.Bounds, position, true);
 
             Game.Components.Add(this);
         }

@@ -19,7 +19,7 @@ namespace NePlus.GameComponents
 
         public Fixture Fixture { get; private set; }
 
-        public  PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition) : base(game)
+        public  PhysicsComponent(Game game, Rectangle rectangle, Vector2 gameWorldPosition, bool dynamic) : base(game)
         {
             physics = Engine.Physics;
 
@@ -32,7 +32,14 @@ namespace NePlus.GameComponents
 
             Fixture = FixtureFactory.CreatePolygon(physics.World, vertices, 1.0f);
             Fixture.Body.Position = physics.PositionToPhysicsWorld(gameWorldPosition);
-            Fixture.Body.BodyType = BodyType.Dynamic;
+            if (dynamic)
+            {
+                Fixture.Body.BodyType = BodyType.Dynamic;
+            }
+            else
+            {
+                Fixture.Body.BodyType = BodyType.Static;
+            }
             Fixture.Restitution = 0.5f;
 
             // adding some linear damping gives a max speed and seems to smooth out player motion really well

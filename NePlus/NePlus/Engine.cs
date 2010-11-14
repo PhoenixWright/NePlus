@@ -27,7 +27,7 @@ namespace NePlus
             Content = game.Content;
             Content.RootDirectory = "Content";
 
-            Video = new Video();
+            Video = new Video(Game);
             Video.Initialize(Game);
             
             Camera = new Camera(new Vector2(Video.Width, Video.Height));

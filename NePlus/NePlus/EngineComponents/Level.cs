@@ -10,6 +10,7 @@ using FarseerPhysics.Factories;
 
 using TiledLib;
 
+using NePlus.GameComponents;
 using NePlus.GameObjects;
 
 namespace NePlus.EngineComponents
@@ -19,11 +20,11 @@ namespace NePlus.EngineComponents
     /// </summary>
     public class Level : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        string mapFilePath;
-
-        Map map;
-
         public List<Light> Lights { get; private set; }
+        
+        private string mapFilePath;
+        private Map map;
+        private List<ParticleEffectComponent> levelParticleEffects;
 
         /// <summary>
         /// Loads and manages maps.
@@ -34,6 +35,7 @@ namespace NePlus.EngineComponents
         {
             mapFilePath = mapPath;
             Lights = new List<Light>();
+            levelParticleEffects = new List<ParticleEffectComponent>();
 
             Game.Components.Add(this);
         }
@@ -44,8 +46,6 @@ namespace NePlus.EngineComponents
         /// </summary>
         public override void Initialize()
         {
-            LoadContent();
-
             base.Initialize();
         }
         
@@ -53,6 +53,19 @@ namespace NePlus.EngineComponents
         {
             map = Game.Content.Load<Map>(mapFilePath);
             
+            // loop through the map properties and handle them
+            foreach (Property property in map.Properties)
+            {
+                switch (property.Name)
+                {
+                    case "ParticleEffect":
+                        CreateParticleEffect(property.RawValue);
+                        break;
+                    default:
+                        throw new Exception("Map property " + property.Name + " not recognized in map file " + mapFilePath);
+                }
+            }
+
             // loop through the collision objects and create physics fixtures for them
             MapObjectLayer collisionLayer = map.GetLayer("CollisionObjects") as MapObjectLayer;            
             foreach (MapObject collisionObject in collisionLayer.Objects)
@@ -141,6 +154,11 @@ namespace NePlus.EngineComponents
                 default:
                     throw new Exception("Failed to instantiate light with type of " + lightObject.Name + " in map " + mapFilePath);
             }
+        }
+
+        public void CreateParticleEffect(string particleEffectName)
+        {
+            levelParticleEffects.Add(new ParticleEffectComponent(Game, particleEffectName));
         }
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died
