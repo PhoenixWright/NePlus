@@ -81,22 +81,15 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="Xbox360DLLs\TiledLib.dll" />
-    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="Xbox360DLLs\Farseer Physics 3.0 XNA.dll" />
+    <Content Include="Xbox360DLLs\ProjectMercury.dll" />
     <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Xbox 360].csproj">
-      <Project>{A0F79473-A3E5-4C2D-B45A-C845D5261D4A}</Project>
-      <Name>Farseer Physics XNA [Xbox 360]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA [Xbox 360].csproj">
-      <Project>{0D9D021E-C640-45AC-8B90-C465AC7EACD9}</Project>
-      <Name>DebugView XNA [Xbox 360]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Xbox\ProjectMercury [Xbox 360].csproj">
-      <Project>{C3B4F513-2BB0-4F9F-82B7-E5C6B8822D0E}</Project>
-      <Name>ProjectMercury [Xbox 360]</Name>
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\Xbox 360 Copy of DebugView XNA.csproj">
+      <Project>{67805EDE-E1D6-477C-B75E-DC373B596003}</Project>
+      <Name>Xbox 360 Copy of DebugView XNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>
@@ -133,6 +126,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38758, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
@@ -163,6 +157,7 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ProjectMercury, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>

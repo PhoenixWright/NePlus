@@ -60,6 +60,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38757, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>WindowsDLLs\Farseer Physics 3.0 XNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -89,6 +93,10 @@
     </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ProjectMercury, Version=3.1.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>WindowsDLLs\ProjectMercury.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -131,22 +139,18 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="WindowsDLLs\Farseer Physics 3.0 XNA.dll" />
+    <Content Include="WindowsDLLs\ProjectMercury.dll" />
     <Content Include="WindowsDLLs\TiledLib.dll" />
-    <Content Include="WindowsDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="Xbox360DLLs\Farseer Physics 3.0 XNA.dll" />
+    <Content Include="Xbox360DLLs\ProjectMercury.dll" />
     <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\Branches\XNA\Farseer Physics XNA [Windows].csproj">
-      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
-      <Name>Farseer Physics XNA [Windows]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA [Windows].csproj">
+    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
-      <Name>DebugView XNA [Windows]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Windows\ProjectMercury [Windows].csproj">
-      <Project>{1E3FDDBD-A15F-42CF-A83E-754476079B30}</Project>
-      <Name>ProjectMercury [Windows]</Name>
+      <Name>DebugView XNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>

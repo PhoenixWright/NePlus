@@ -56,7 +56,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="TiledPipelineExtensions">
-      <HintPath>..\NePlus\WindowsDLLs\TiledPipelineExtensions.dll</HintPath>
+      <HintPath>..\NePlus\PipelineDLLs\TiledPipelineExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -103,16 +103,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.ContentPipeline\ProjectMercury.ContentPipeline.csproj">
-      <Project>{5B60FB65-704B-4D28-9117-AF0B25220484}</Project>
-      <Name>ProjectMercury.ContentPipeline</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.Windows\ProjectMercury [Windows].csproj">
-      <Project>{1E3FDDBD-A15F-42CF-A83E-754476079B30}</Project>
-      <Name>ProjectMercury [Windows]</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="ParticleEffects\BeamBlurred.png">
       <Name>BeamBlurred</Name>
       <Importer>TextureImporter</Importer>
@@ -125,6 +115,12 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.ContentPipeline\ProjectMercury.ContentPipeline.csproj">
+      <Project>{5B60FB65-704B-4D28-9117-AF0B25220484}</Project>
+      <Name>ProjectMercury.ContentPipeline</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
