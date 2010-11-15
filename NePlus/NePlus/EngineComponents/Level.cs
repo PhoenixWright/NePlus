@@ -131,6 +131,8 @@ namespace NePlus.EngineComponents
 
         public void CreateLight(MapObject lightObject)
         {
+            Vector2 position = new Vector2(lightObject.Bounds.Center.X, lightObject.Bounds.Center.Y);
+
             Property lightType;
             if (lightObject.Properties.TryGetValue("LightType", out lightType) == false)
             {
@@ -149,7 +151,10 @@ namespace NePlus.EngineComponents
 
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(new Vector2(lightObject.Bounds.X, lightObject.Bounds.Y), gravityValue));
+                    Lights.Add(new GravityLight(position, gravityValue));
+                    break;
+                case "Null":
+                    Lights.Add(new NullLight(position));
                     break;
                 default:
                     throw new Exception("Failed to instantiate light with type of " + lightObject.Name + " in map " + mapFilePath);

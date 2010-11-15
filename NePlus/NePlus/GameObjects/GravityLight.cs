@@ -16,18 +16,21 @@ namespace NePlus.GameObjects
 
         public GravityLight(Vector2 position, float gravityValue) : base(Engine.Game, position)
         {
+            lightTextureName = "BlueTriangle";
+
             GravityValue = gravityValue;
             gravityVector = new Vector2(0.0f, GravityValue);
 
-            EffectDelegate = GravityEffect;
+            OriginalEffectDelegate = GravityEffect;
+            CurrentEffectDelegate = GravityEffect;
         }
 
         public override void ResolveLightEffect()
         {
             // create an AABB representing the light, and apply the gravity effect to anything in it
-            AABB aabb = Engine.Physics.CreateAABB(LightTexture.Width, LightTexture.Height, LightPosition);
+            AABB aabb = Engine.Physics.CreateAABB(CurrentLightTexture.Width, CurrentLightTexture.Height, LightPosition);
 
-            Engine.Physics.World.QueryAABB(EffectDelegate, ref aabb);
+            Engine.Physics.World.QueryAABB(CurrentEffectDelegate, ref aabb);
         }
 
         private bool GravityEffect(Fixture fixture)
@@ -35,7 +38,7 @@ namespace NePlus.GameObjects
             // check to make sure that the fixture is dynamic
             if (fixture.Body.BodyType == BodyType.Dynamic)
             {
-                fixture.Body.ApplyForce(ref gravityVector);
+                 fixture.Body.ApplyForce(ref gravityVector);
 
                 return true;
             }

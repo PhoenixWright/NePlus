@@ -33,7 +33,23 @@ namespace NePlus.EngineComponents
 
         // up
         public Buttons UpButton { get; private set; }
-        public Keys UpKey { get; private set; } 
+        public Keys UpKey { get; private set; }
+
+        // debug down
+        public Buttons DebugDownButton { get; private set; }
+        public Keys DebugDownKey { get; private set; }
+
+        // debug left
+        public Buttons DebugLeftButton { get; private set; }
+        public Keys DebugLeftKey { get; private set; }
+
+        // debug right
+        public Buttons DebugRightButton { get; private set; }
+        public Keys DebugRightKey { get; private set; }
+
+        // debug up
+        public Buttons DebugUpButton { get; private set; }
+        public Keys DebugUpKey { get; private set; }
         #endregion
 
         #region Game Actions
@@ -71,35 +87,46 @@ namespace NePlus.EngineComponents
             BackButton = Buttons.B;
             BackKey = Keys.Back;
 
-            
-            // game actions
+            // movement
+            DebugDownButton = Buttons.DPadDown;
+            DebugDownKey = Keys.O;
+
+            DebugLeftButton = Buttons.DPadLeft;
+            DebugLeftKey = Keys.A;
+
+            DebugRightButton = Buttons.DPadRight;
+            DebugRightKey = Keys.E;
+
+            DebugUpButton = Buttons.DPadUp;
+            DebugUpKey = Keys.OemComma;
+
             DownButton = Buttons.LeftThumbstickDown;
             DownKey = Keys.Down;
 
-            JumpButton = Buttons.A;
-            JumpKey = Keys.Space;
-
             LeftButton = Buttons.LeftThumbstickLeft;
             LeftKey = Keys.Left;
-
-            QuitButton = Buttons.Back;
-            QuitKey = Keys.Escape;
 
             RightButton = Buttons.LeftThumbstickRight;
             RightKey = Keys.Right;
 
             UpButton = Buttons.LeftThumbstickUp;
             UpKey = Keys.Up;
+           
+            // game actions
+            JumpButton = Buttons.A;
+            JumpKey = Keys.Space;
 
-
+            QuitButton = Buttons.Back;
+            QuitKey = Keys.Escape;
+            
             // camera actions
             ResetCameraButton = Buttons.RightStick;
             ResetCameraKey = Keys.R;
 
-            ZoomInButton = Buttons.DPadUp;
+            ZoomInButton = Buttons.RightThumbstickUp;
             ZoomInKey = Keys.D1;
 
-            ZoomOutButton = Buttons.DPadDown;
+            ZoomOutButton = Buttons.RightThumbstickDown;
             ZoomOutKey = Keys.D2;
         }
     }

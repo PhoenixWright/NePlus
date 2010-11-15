@@ -88,8 +88,6 @@ namespace NePlus
             if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
-
-
             base.Update(gameTime);
         }
 
@@ -104,7 +102,6 @@ namespace NePlus
             // this code is placeholder code for testing
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.Video.SpriteBatch.End();
-
             
             base.Draw(gameTime);
         }
