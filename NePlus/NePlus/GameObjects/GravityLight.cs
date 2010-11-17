@@ -9,6 +9,9 @@ namespace NePlus.GameObjects
 {
     public class GravityLight : Light
     {
+        // components
+        private ParticleEffectComponent particleEffectComponent;
+
         public float GravityValue { get; private set; }
 
         private Vector2 gravityVector;
@@ -16,6 +19,8 @@ namespace NePlus.GameObjects
 
         public GravityLight(Vector2 position, float gravityValue) : base(Engine.Game, position)
         {
+            particleEffectComponent = new ParticleEffectComponent(Engine.Game, "BeamMeUp", LightPosition);
+
             lightTextureName = "BlueTriangle";
 
             GravityValue = gravityValue;
@@ -23,6 +28,13 @@ namespace NePlus.GameObjects
 
             OriginalEffectDelegate = GravityEffect;
             CurrentEffectDelegate = GravityEffect;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            particleEffectComponent.Position = LightPosition + LightOrigin;
+
+            base.Update(gameTime);
         }
 
         public override void ResolveLightEffect()

@@ -26,9 +26,6 @@ namespace NePlus
     {
         public GraphicsDeviceManager graphics;
 
-        // particle effects
-        ParticleEffect particleEffect;
-
         // player
         Player player;
 

@@ -12,6 +12,7 @@ namespace NePlus.GameObjects
     public class Player : Microsoft.Xna.Framework.DrawableGameComponent
     {
         // components
+        public ParticleEffectComponent ParticleEffectComponent { get; private set; }
         public PhysicsComponent PhysicsComponent { get; private set; }
 
         // variables
@@ -24,6 +25,7 @@ namespace NePlus.GameObjects
 
             // need to load the texture before the PhysicsComponent
             this.LoadContent();
+            //ParticleEffectComponent = new ParticleEffectComponent(game, "someName", Position);
             PhysicsComponent = new PhysicsComponent(Game, texture.Bounds, position, true);
 
             Game.Components.Add(this);
@@ -60,6 +62,8 @@ namespace NePlus.GameObjects
             {
                 PhysicsComponent.Fixture.Body.ApplyForce(new Vector2(2.0f, 0.0f), PhysicsComponent.Fixture.Body.WorldCenter);
             }
+
+            //ParticleEffectComponent.Position = this.Position;
 
             base.Update(gameTime);
         }

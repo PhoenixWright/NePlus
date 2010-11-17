@@ -103,7 +103,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParticleEffects\BeamBlurred.png">
+    <Compile Include="ParticleEffects\Materials\BeamBlurred.png">
       <Name>BeamBlurred</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -125,6 +125,27 @@
   <ItemGroup>
     <Compile Include="GreyTriangle.png">
       <Name>GreyTriangle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ParticleEffects\BeamMeUp.xml">
+      <Name>BeamMeUp</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ParticleEffects\Materials\LensFlare.png">
+      <Name>LensFlare</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ParticleEffects\Materials\Beam.png">
+      <Name>Beam</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

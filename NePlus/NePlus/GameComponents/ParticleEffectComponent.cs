@@ -10,13 +10,15 @@ namespace NePlus.GameComponents
     /// </summary>
     public class ParticleEffectComponent : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        private string particleEffectName;
         private ParticleEffect particleEffect;
+        private string particleEffectName;
+        public Vector2 Position { get; set; }
 
-        public ParticleEffectComponent(Game game, string effectName)
+        public ParticleEffectComponent(Game game, string effectName, Vector2 initialPosition)
             : base(game)
         {
             particleEffectName = effectName;
+            this.Position = initialPosition;
             Game.Components.Add(this);
         }
 
@@ -44,7 +46,8 @@ namespace NePlus.GameComponents
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
+            //particleEffect.Trigger(new Vector2(Engine.Video.Width / 2, 0.0f));
+            particleEffect.Trigger(Position);
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             particleEffect.Update(deltaSeconds);
 

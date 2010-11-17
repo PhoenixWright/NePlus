@@ -163,7 +163,7 @@ namespace NePlus.EngineComponents
 
         public void CreateParticleEffect(string particleEffectName)
         {
-            levelParticleEffects.Add(new ParticleEffectComponent(Game, particleEffectName));
+            levelParticleEffects.Add(new ParticleEffectComponent(Game, particleEffectName, new Vector2(Engine.Video.Width / 2, 0)));
         }
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died

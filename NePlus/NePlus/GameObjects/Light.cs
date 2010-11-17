@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Dynamics;
-
+ 
 namespace NePlus.GameObjects
 {
     /// <summary>
@@ -42,7 +42,7 @@ namespace NePlus.GameObjects
         protected override void LoadContent()
         {
             OriginalLightTexture = Game.Content.Load<Texture2D>(lightTextureName);
-            LightOrigin = new Vector2(OriginalLightTexture.Width / 2, 0.0f);
+            LightOrigin = new Vector2(OriginalLightTexture.Width / 2, OriginalLightTexture.Height / 2);
             CurrentLightTexture = OriginalLightTexture;
 
             base.LoadContent();
@@ -62,9 +62,7 @@ namespace NePlus.GameObjects
         public override void Draw(GameTime gameTime)
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            //Engine.Video.SpriteBatch.Draw(CurrentLightTexture, LightPosition, null, Color.White, 0.0f, LightOrigin, 1.0f, SpriteEffects.None, 0.0f);
             Engine.Video.SpriteBatch.Draw(CurrentLightTexture, LightPosition, Color.White);
-            //Engine.Physics.DebugView.DrawPoint(Engine.Physics.PositionToPhysicsWorld(LightOrigin + LightPosition), 1.0f, Color.Green);
             Engine.Video.SpriteBatch.End();
 
             base.Draw(gameTime);
