@@ -15,6 +15,7 @@ using ProjectMercury.Renderers;
 
 using TiledLib;
 
+using NePlus.GameComponents;
 using NePlus.GameObjects;
 
 namespace NePlus
@@ -58,8 +59,10 @@ namespace NePlus
             
             player = new Player(this, Engine.Level.GetSpawnPoint());
 
-            Engine.Camera.Position = player.PhysicsComponent.Fixture.Body.Position;
-            Engine.Camera.TrackingBody = player.PhysicsComponent.Fixture.Body;
+            PendulumPhysicsComponent pendulum = new PendulumPhysicsComponent(new Point(0, 0), new Point(90, 90));
+
+            Engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
+            Engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
         }
 
         /// <summary>

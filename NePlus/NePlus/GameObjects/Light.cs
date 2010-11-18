@@ -12,20 +12,24 @@ namespace NePlus.GameObjects
     /// </summary>
     abstract public class Light : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        // configuration for the light
+        public bool DrawLight { get; set; }
+        public bool EffectActive { get; set; }
+
         protected string lightTextureName;
 
-        public Vector2 LightOrigin { get; private set; }
-        public Vector2 LightPosition { get; protected set; }
-        public Texture2D OriginalLightTexture { get; private set; }
-        public Texture2D CurrentLightTexture { get; set; }
-
-        public Func<Fixture, bool> OriginalEffectDelegate { get; protected set; }
-        public Func<Fixture, bool> CurrentEffectDelegate { get; set; }
+        public Vector2 Position { get; protected set; }
+        public Texture2D Texture { get; private set; }
+        public Vector2 TextureOrigin { get; private set; }
+        public Func<Fixture, bool> EffectDelegate { get; protected set; }
 
         public Light(Game game, Vector2 position)
             : base(game)
         {
-            LightPosition = position;
+            DrawLight = true;
+            EffectActive = true;
+
+            Position = position;
             
             Game.Components.Add(this);
         }
@@ -41,9 +45,8 @@ namespace NePlus.GameObjects
 
         protected override void LoadContent()
         {
-            OriginalLightTexture = Game.Content.Load<Texture2D>(lightTextureName);
-            LightOrigin = new Vector2(OriginalLightTexture.Width / 2, OriginalLightTexture.Height / 2);
-            CurrentLightTexture = OriginalLightTexture;
+            Texture = Game.Content.Load<Texture2D>(lightTextureName);
+            TextureOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
             base.LoadContent();
         }
@@ -61,19 +64,29 @@ namespace NePlus.GameObjects
 
         public override void Draw(GameTime gameTime)
         {
-            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.Draw(CurrentLightTexture, LightPosition, Color.White);
-            Engine.Video.SpriteBatch.End();
+            if (DrawLight)
+            {
+                Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
+                Engine.Video.SpriteBatch.Draw(Texture, Position, Color.White);
+                Engine.Video.SpriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }
 
         public bool PositionInLight(Vector2 position)
         {
-            bool positionInLight = position.X > LightPosition.X
-              && position.X < LightPosition.X + CurrentLightTexture.Width
-              && position.Y > LightPosition.Y - CurrentLightTexture.Height
-              && position.Y < LightPosition.Y;
+            //bool positionInLight = position.X > Position.X
+            //  && position.X < Position.X + Texture.Width
+            //  && position.Y > Position.Y - Texture.Height
+            //  && position.Y < Position.Y;
+
+            Vector2 originInGameWorld = Position + TextureOrigin;
+
+            bool positionInLight = position.X > originInGameWorld.X - Texture.Width / 2
+                                && position.X < originInGameWorld.X + Texture.Width / 2
+                                && position.Y > originInGameWorld.Y - Texture.Height / 2
+                                && position.Y < originInGameWorld.Y + Texture.Height / 2;
 
             return positionInLight;
         }

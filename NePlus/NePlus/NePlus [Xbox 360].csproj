@@ -70,7 +70,9 @@
     <Compile Include="EngineComponents\Video.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameComponents\ParticleEffectComponent.cs" />
+    <Compile Include="GameComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="GameComponents\PhysicsComponent.cs" />
+    <Compile Include="GameComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="GameObjects\GravityLight.cs" />
     <Compile Include="GameObjects\Light.cs" />
     <Compile Include="GameObjects\NullLight.cs" />

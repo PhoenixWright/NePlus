@@ -19,30 +19,33 @@ namespace NePlus.GameObjects
 
         public GravityLight(Vector2 position, float gravityValue) : base(Engine.Game, position)
         {
-            particleEffectComponent = new ParticleEffectComponent(Engine.Game, "BeamMeUp", LightPosition);
+            particleEffectComponent = new ParticleEffectComponent(Engine.Game, "BeamMeUp", Position);
 
             lightTextureName = "BlueTriangle";
 
             GravityValue = gravityValue;
             gravityVector = new Vector2(0.0f, GravityValue);
 
-            OriginalEffectDelegate = GravityEffect;
-            CurrentEffectDelegate = GravityEffect;
+            EffectDelegate = GravityEffect;
         }
 
         public override void Update(GameTime gameTime)
         {
-            particleEffectComponent.Position = LightPosition + LightOrigin;
+            particleEffectComponent.Position = Position + TextureOrigin;
+            particleEffectComponent.DrawParticleEffect = EffectActive;
 
             base.Update(gameTime);
         }
-
+        
         public override void ResolveLightEffect()
         {
-            // create an AABB representing the light, and apply the gravity effect to anything in it
-            AABB aabb = Engine.Physics.CreateAABB(CurrentLightTexture.Width, CurrentLightTexture.Height, LightPosition);
+            if (EffectActive)
+            {
+                // create an AABB representing the light, and apply the gravity effect to anything in it
+                AABB aabb = Engine.Physics.CreateAABB(Texture.Width, Texture.Height, Position);
 
-            Engine.Physics.World.QueryAABB(CurrentEffectDelegate, ref aabb);
+                Engine.Physics.World.QueryAABB(EffectDelegate, ref aabb);
+            }
         }
 
         private bool GravityEffect(Fixture fixture)
@@ -50,7 +53,7 @@ namespace NePlus.GameObjects
             // check to make sure that the fixture is dynamic
             if (fixture.Body.BodyType == BodyType.Dynamic)
             {
-                 fixture.Body.ApplyForce(ref gravityVector);
+                fixture.Body.ApplyForce(ref gravityVector);
 
                 return true;
             }

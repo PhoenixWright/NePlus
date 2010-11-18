@@ -8,12 +8,15 @@ namespace NePlus.GameObjects
 {
     class NullLight : Light
     {
+        HashSet<Light> AffectedLights;
+
         public NullLight(Vector2 position) : base(Engine.Game, position)
         {
+            AffectedLights = new HashSet<Light>();
+
             lightTextureName = "GreyTriangle";
 
-            OriginalEffectDelegate = NullEffect;
-            CurrentEffectDelegate = NullEffect;
+            EffectDelegate = NullEffect;
         }
 
         public override void ResolveLightEffect()
@@ -22,17 +25,17 @@ namespace NePlus.GameObjects
             {
                 if (light != this)
                 {
-                    if (PositionInLight(light.LightPosition + new Vector2(light.CurrentLightTexture.Width / 2, -light.CurrentLightTexture.Height)))
+                    if (PositionInLight(light.Position + new Vector2(light.Texture.Width / 2, -light.Texture.Height)))
                     {
-                        light.CurrentEffectDelegate = this.CurrentEffectDelegate;
-                        light.CurrentLightTexture = this.CurrentLightTexture;
-                    }
-                    else
-                    {
-                        light.CurrentEffectDelegate = light.OriginalEffectDelegate;
-                        light.CurrentLightTexture = light.OriginalLightTexture;
+                        AffectedLights.Add(light);
                     }
                 }
+            }
+
+            foreach (Light light in AffectedLights)
+            {
+                // if the light isn't in the null light, EffectActive is set to true
+                light.EffectActive = !PositionInLight(light.Position + new Vector2(light.Texture.Width / 2, 0.0f));
             }
         }
 
@@ -40,22 +43,22 @@ namespace NePlus.GameObjects
         {
             if (Engine.Input.IsCurPress(Engine.Configuration.DebugDownButton) || Engine.Input.IsCurPress(Engine.Configuration.DebugDownKey))
             {
-                LightPosition += new Vector2(0.0f, 10.0f);
+                Position += new Vector2(0.0f, 10.0f);
             }
 
             if (Engine.Input.IsCurPress(Engine.Configuration.DebugUpButton) || Engine.Input.IsCurPress(Engine.Configuration.DebugUpKey))
             {
-                LightPosition += new Vector2(0.0f, -10.0f);
+                Position += new Vector2(0.0f, -10.0f);
             }
 
             if (Engine.Input.IsCurPress(Engine.Configuration.DebugLeftButton) || Engine.Input.IsCurPress(Engine.Configuration.DebugLeftKey))
             {
-                LightPosition += new Vector2(-10.0f, 0.0f);
+                Position += new Vector2(-10.0f, 0.0f);
             }
 
             if (Engine.Input.IsCurPress(Engine.Configuration.DebugRightButton) || Engine.Input.IsCurPress(Engine.Configuration.DebugRightKey))
             {
-                LightPosition += new Vector2(10.0f, 0.0f);
+                Position += new Vector2(10.0f, 0.0f);
             }
 
             base.Update(gameTime);
