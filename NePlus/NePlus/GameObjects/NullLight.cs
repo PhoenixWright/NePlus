@@ -10,7 +10,7 @@ namespace NePlus.GameObjects
     {
         HashSet<Light> AffectedLights;
 
-        public NullLight(Vector2 position) : base(Engine.Game, position)
+        public NullLight(Vector2 position, string motionType) : base(Engine.Game, position, motionType)
         {
             AffectedLights = new HashSet<Light>();
 

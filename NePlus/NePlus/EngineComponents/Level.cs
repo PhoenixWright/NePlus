@@ -133,6 +133,12 @@ namespace NePlus.EngineComponents
         {
             Vector2 position = new Vector2(lightObject.Bounds.Center.X, lightObject.Bounds.Center.Y);
 
+            Property lightMotion;
+            if (lightObject.Properties.TryGetValue("LightMotion", out lightMotion) == false)
+            {
+                throw new Exception("Failed to retrieve light motion from " + lightObject.Name + " in map " + mapFilePath);
+            }
+
             Property lightType;
             if (lightObject.Properties.TryGetValue("LightType", out lightType) == false)
             {
@@ -151,11 +157,13 @@ namespace NePlus.EngineComponents
 
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(position, gravityValue));
+                    Lights.Add(new GravityLight(position, lightMotion.RawValue, gravityValue));
                     break;
+                    
                 case "Null":
-                    Lights.Add(new NullLight(position));
+                    Lights.Add(new NullLight(position, lightMotion.RawValue));
                     break;
+
                 default:
                     throw new Exception("Failed to instantiate light with type of " + lightObject.Name + " in map " + mapFilePath);
             }

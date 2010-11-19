@@ -27,6 +27,7 @@ namespace NePlus.GameObjects
             this.LoadContent();
             //ParticleEffectComponent = new ParticleEffectComponent(game, "someName", Position);
             PhysicsComponent = new RectanglePhysicsComponent(texture.Bounds, position, true);
+            PhysicsComponent.MainFixture.CollidesWith = FarseerPhysics.Dynamics.CollisionCategory.Cat1;
 
             Game.Components.Add(this);
         }

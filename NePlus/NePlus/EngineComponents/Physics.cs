@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 using FarseerPhysics;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 

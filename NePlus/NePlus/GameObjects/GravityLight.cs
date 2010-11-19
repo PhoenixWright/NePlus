@@ -17,7 +17,7 @@ namespace NePlus.GameObjects
         private Vector2 gravityVector;
         public Vector2 GravityVector { get { return gravityVector; } }
 
-        public GravityLight(Vector2 position, float gravityValue) : base(Engine.Game, position)
+        public GravityLight(Vector2 position, string motion, float gravityValue) : base(Engine.Game, position, motion)
         {
             particleEffectComponent = new ParticleEffectComponent(Engine.Game, "BeamMeUp", Position);
 
@@ -53,8 +53,11 @@ namespace NePlus.GameObjects
             // check to make sure that the fixture is dynamic
             if (fixture.Body.BodyType == BodyType.Dynamic)
             {
-                fixture.Body.ApplyForce(ref gravityVector);
-
+                if (fixture.CollidesWith == CollisionCategory.Cat1)
+                {
+                    fixture.Body.ApplyForce(ref gravityVector);
+                }
+                
                 return true;
             }
 

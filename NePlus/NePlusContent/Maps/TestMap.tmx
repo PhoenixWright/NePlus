@@ -92,11 +92,13 @@
   <object name="GravityLight1" type="LightObject" x="438" y="249" width="72" height="27">
    <properties>
     <property name="GravityValue" value="-5.0"/>
+    <property name="LightMotion" value="None"/>
     <property name="LightType" value="Gravity"/>
    </properties>
   </object>
   <object name="NullLight1" type="LightObject" x="438" y="101" width="68" height="32">
    <properties>
+    <property name="LightMotion" value="Pendulum"/>
     <property name="LightType" value="Null"/>
    </properties>
   </object>

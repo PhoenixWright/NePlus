@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Dynamics;
+
+using NePlus.GameComponents;
  
 namespace NePlus.GameObjects
 {
@@ -19,17 +21,22 @@ namespace NePlus.GameObjects
         protected string lightTextureName;
 
         public Vector2 Position { get; protected set; }
+        public float Rotation { get; protected set; }
         public Texture2D Texture { get; private set; }
         public Vector2 TextureOrigin { get; private set; }
         public Func<Fixture, bool> EffectDelegate { get; protected set; }
 
-        public Light(Game game, Vector2 position)
+        public PhysicsComponent PhysicsComponent;
+
+        public Light(Game game, Vector2 position, string motion)
             : base(game)
         {
             DrawLight = true;
             EffectActive = true;
 
             Position = position;
+
+            CreatePhysicsComponent(motion);
             
             Game.Components.Add(this);
         }
@@ -57,6 +64,11 @@ namespace NePlus.GameObjects
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (PhysicsComponent != null)
+            {
+                Position = PhysicsComponent.Position;
+            }
+
             ResolveLightEffect();
 
             base.Update(gameTime);
@@ -67,20 +79,44 @@ namespace NePlus.GameObjects
             if (DrawLight)
             {
                 Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-                Engine.Video.SpriteBatch.Draw(Texture, Position, Color.White);
+                
+                if (PhysicsComponent != null)
+                {
+                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                }
+                else
+                {
+                    Engine.Video.SpriteBatch.Draw(Texture, Position, Color.White);
+                }
+
                 Engine.Video.SpriteBatch.End();
             }
 
             base.Draw(gameTime);
         }
 
+        private void CreatePhysicsComponent(string motionType)
+        {
+            switch (motionType)
+            {
+                case "None":
+                    //PhysicsComponent = new RectanglePhysicsComponent(new Rectangle((int)Position.X, (int)Position.Y, 10, 10), Position, false);
+                    break;
+                case "Pendulum":
+                    PhysicsComponent = new PendulumPhysicsComponent(new Point((int)Position.X, (int)Position.Y - 200), new Point((int)Position.X, (int)Position.Y));
+                    break;
+                default:
+                    throw new Exception("Physics component type not recognized");
+            }
+
+            if (PhysicsComponent != null)
+            {
+                PhysicsComponent.MainFixture.CollidesWith = CollisionCategory.None;
+            }
+        }
+
         public bool PositionInLight(Vector2 position)
         {
-            //bool positionInLight = position.X > Position.X
-            //  && position.X < Position.X + Texture.Width
-            //  && position.Y > Position.Y - Texture.Height
-            //  && position.Y < Position.Y;
-
             Vector2 originInGameWorld = Position + TextureOrigin;
 
             bool positionInLight = position.X > originInGameWorld.X - Texture.Width / 2

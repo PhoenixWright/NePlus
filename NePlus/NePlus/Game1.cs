@@ -30,6 +30,9 @@ namespace NePlus
         // player
         Player player;
 
+        // farseer testing
+        PendulumPhysicsComponent pendulum;
+
         public Game1()
         {
             // tried to move this code, but it seems that nothing will draw unless it is located here
@@ -46,6 +49,7 @@ namespace NePlus
         {
             Engine.Initialize(this);
             Engine.Level = new EngineComponents.Level(this, @"Maps\TestMap");
+
             base.Initialize();
         }
 
@@ -59,10 +63,10 @@ namespace NePlus
             
             player = new Player(this, Engine.Level.GetSpawnPoint());
 
-            PendulumPhysicsComponent pendulum = new PendulumPhysicsComponent(new Point(0, 0), new Point(90, 90));
-
             Engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
             Engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
+
+            pendulum = new PendulumPhysicsComponent(new Point(0, 0), new Point(50, -100));
         }
 
         /// <summary>
