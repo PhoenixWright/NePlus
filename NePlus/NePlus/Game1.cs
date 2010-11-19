@@ -30,9 +30,6 @@ namespace NePlus
         // player
         Player player;
 
-        // farseer testing
-        PendulumPhysicsComponent pendulum;
-
         public Game1()
         {
             // tried to move this code, but it seems that nothing will draw unless it is located here
@@ -65,8 +62,6 @@ namespace NePlus
 
             Engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
             Engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
-
-            pendulum = new PendulumPhysicsComponent(new Point(0, 0), new Point(50, -100));
         }
 
         /// <summary>

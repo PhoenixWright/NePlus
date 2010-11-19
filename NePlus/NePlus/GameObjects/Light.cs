@@ -102,16 +102,13 @@ namespace NePlus.GameObjects
                 case "None":
                     //PhysicsComponent = new RectanglePhysicsComponent(new Rectangle((int)Position.X, (int)Position.Y, 10, 10), Position, false);
                     break;
-                case "Pendulum":
-                    PhysicsComponent = new PendulumPhysicsComponent(new Point((int)Position.X, (int)Position.Y - 200), new Point((int)Position.X, (int)Position.Y));
+                case "Pendulum":                    
+                    Point pivotPoint = new Point((int)Math.Round(Position.X), (int)Math.Round(Position.Y - 200));
+                    Point weightPoint = new Point((int)Math.Round(Position.X + 200), (int)Math.Round(Position.Y));                    
+                    PhysicsComponent = new PendulumPhysicsComponent(pivotPoint, weightPoint);
                     break;
                 default:
                     throw new Exception("Physics component type not recognized");
-            }
-
-            if (PhysicsComponent != null)
-            {
-                PhysicsComponent.MainFixture.CollidesWith = CollisionCategory.None;
             }
         }
 

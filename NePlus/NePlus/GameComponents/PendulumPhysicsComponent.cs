@@ -24,7 +24,7 @@ namespace NePlus.GameComponents
             pivotFixture.CollidesWith = CollisionCategory.Cat31;
             MainFixture.Body.BodyType = BodyType.Dynamic;
 
-            distanceJoint = JointFactory.CreateDistanceJoint(Engine.Physics.World, pivotFixture.Body, MainFixture.Body, pivotFixture.Body.Position, MainFixture.Body.Position);
+            distanceJoint = JointFactory.CreateDistanceJoint(Engine.Physics.World, pivotFixture.Body, MainFixture.Body, Vector2.Zero, Vector2.Zero);
         }
     }
 }
