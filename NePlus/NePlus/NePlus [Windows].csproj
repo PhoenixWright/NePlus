@@ -132,6 +132,7 @@
     <Compile Include="GameComponents\ParticleEffectComponent.cs" />
     <Compile Include="GameComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="GameObjects\GravityLight.cs" />
+    <Compile Include="GameObjects\MovingPlatform.cs" />
     <Compile Include="GameObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
