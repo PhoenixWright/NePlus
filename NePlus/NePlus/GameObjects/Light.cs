@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Dynamics;
 
-using NePlus.GameComponents;
+using NePlus.GameComponents.PhysicsComponents;
  
 namespace NePlus.GameObjects
 {

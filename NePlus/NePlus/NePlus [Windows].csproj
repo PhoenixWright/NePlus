@@ -126,13 +126,14 @@
     <Compile Include="EngineComponents\Level.cs" />
     <Compile Include="EngineComponents\Physics.cs" />
     <Compile Include="EngineComponents\Video.cs" />
-    <Compile Include="GameComponents\PendulumPhysicsComponent.cs" />
-    <Compile Include="GameComponents\PhysicsComponent.cs" />
-    <Compile Include="GameObjects\Light.cs" />
     <Compile Include="GameComponents\ParticleEffectComponent.cs" />
-    <Compile Include="GameComponents\RectanglePhysicsComponent.cs" />
+    <Compile Include="GameComponents\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
+    <Compile Include="GameComponents\PhysicsComponents\PhysicsComponent.cs" />
+    <Compile Include="GameComponents\PhysicsComponents\PendulumPhysicsComponent.cs" />
+    <Compile Include="GameObjects\Light.cs" />
+    <Compile Include="GameComponents\PhysicsComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="GameObjects\GravityLight.cs" />
-    <Compile Include="GameObjects\MovingPlatform.cs" />
+    <Compile Include="GameObjects\Platform.cs" />
     <Compile Include="GameObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -154,6 +155,11 @@
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BloomPostProcessContent\BloomPostprocessContent.contentproj">
+      <Project>{D82A1C97-4FF3-440C-A58F-A1CB9135D0AC}</Project>
+      <Name>BloomPostprocessContent %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
       <Name>NePlusContent %28Content%29</Name>
