@@ -1,11 +1,14 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
 using NePlus.GameComponents;
 
-namespace NePlus.GameObjects
+using NePlusEngine;
+
+namespace NePlus.GameComponents.LightComponents
 {
     public class GravityLight : Light
     {
@@ -17,11 +20,14 @@ namespace NePlus.GameObjects
         private Vector2 gravityVector;
         public Vector2 GravityVector { get { return gravityVector; } }
 
-        public GravityLight(Vector2 position, string motion, float gravityValue) : base(Engine.Game, position, motion)
+        public GravityLight(Engine engine, Vector2 position, string motion, float gravityValue) : base(engine, position, motion)
         {
-            particleEffectComponent = new ParticleEffectComponent(Engine.Game, "BeamMeUp", Position);
+            particleEffectComponent = new ParticleEffectComponent(Engine, "BeamMeUp", Position);
 
             lightTextureName = "BlueTriangle";
+
+            Texture = Engine.Content.Load<Texture2D>(lightTextureName);
+            TextureOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
             GravityValue = gravityValue;
             gravityVector = new Vector2(0.0f, GravityValue);
@@ -29,12 +35,12 @@ namespace NePlus.GameObjects
             EffectDelegate = GravityEffect;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             particleEffectComponent.Position = Position + TextureOrigin;
             particleEffectComponent.DrawParticleEffect = EffectActive;
 
-            base.Update(gameTime);
+            base.Update();
         }
         
         public override void ResolveLightEffect()

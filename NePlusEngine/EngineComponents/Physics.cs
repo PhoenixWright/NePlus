@@ -7,12 +7,12 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 
-namespace NePlus.EngineComponents
+namespace NePlusEngine.EngineComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Physics : Microsoft.Xna.Framework.DrawableGameComponent
+    public class Physics : Component
     {
         // used for conversion between game and physics scaling
         public float PixelsPerMeter { get; private set; }
@@ -23,20 +23,7 @@ namespace NePlus.EngineComponents
         // debug view
         public DebugViewXNA DebugView { get; private set; }
         
-        public Physics(Game game)
-            : base(game)
-        {
-            // make the debug view draw last
-            this.DrawOrder = int.MaxValue;
-
-            Game.Components.Add(this);
-        }
-
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
+        public Physics(Engine engine) : base(engine)
         {
             // this should probably never change
             PixelsPerMeter = 100.0f;
@@ -46,7 +33,7 @@ namespace NePlus.EngineComponents
             DebugView = new DebugViewXNA(World);
 
             // TODO: make this a little more dynamic as far as options go
-            DebugViewXNA.LoadContent(Game.GraphicsDevice, Game.Content);
+            DebugViewXNA.LoadContent(Engine.Game.GraphicsDevice, Engine.Content);
             uint flags = 0;
             flags += (uint)DebugViewFlags.AABB;
             flags += (uint)DebugViewFlags.CenterOfMass;
@@ -59,22 +46,22 @@ namespace NePlus.EngineComponents
             flags += (uint)DebugViewFlags.Shape;
             DebugView.Flags = (DebugViewFlags)flags;
             
-            base.Initialize();
+            DrawOrder = int.MaxValue;
+
+            Engine.AddComponent(this);
         }
 
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             // update the physics world
-            World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
-
-            base.Update(gameTime);
+            World.Step(Math.Min((float)Engine.GameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             if (Engine.Configuration.ShowDebugView)
             {
@@ -86,8 +73,6 @@ namespace NePlus.EngineComponents
                 DebugView.DrawSegment(new Vector2(0, -25), new Vector2(0, 25), Color.Green);
                 DebugView.RenderDebugData(ref proj, ref view);
             }
-
-            base.Draw(gameTime);
         }
         
         /// <summary>

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
-namespace NePlus.EngineComponents
+namespace NePlusEngine.EngineComponents
 {
     public class Camera
     {
@@ -39,11 +39,11 @@ namespace NePlus.EngineComponents
 
         Func<bool> _zoomIn = () =>
         {
-            return Engine.Input.IsCurPress(Engine.Configuration.ZoomInButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomInKey);
+            return false; //return Engine.Input.IsCurPress(Engine.Configuration.ZoomInButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomInKey);
         };
         Func<bool> _zoomOut = () =>
         {
-            return Engine.Input.IsCurPress(Engine.Configuration.ZoomOutButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomOutKey);
+            return false; //return Engine.Input.IsCurPress(Engine.Configuration.ZoomOutButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomOutKey);
         };
 
         Func<Camera, bool> _clampingEnabled = (Camera camera) =>
@@ -54,13 +54,13 @@ namespace NePlus.EngineComponents
         Func<Camera, float> _horizontalCameraMovement =
             (Camera camera) =>
             {
-                return (Engine.Input.RightStickPosition.X * camera._moveRate) * camera._zoom;
+                return 0.0f; //return (Engine.Input.RightStickPosition.X * camera._moveRate) * camera._zoom;
             };
 
         Func<Camera, float> _verticalCameraMovement =
             (Camera camera) =>
             {
-                return (Engine.Input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
+                return 0.0f; //return (Engine.Input.RightStickPosition.Y * camera._moveRate) * camera.Zoom;
             };
 
         Func<bool> _rotateLeft = () =>
@@ -75,7 +75,7 @@ namespace NePlus.EngineComponents
 
         Func<bool> _resetCamera = () =>
         {
-            return Engine.Input.IsCurPress(Buttons.RightStick);
+            return true; //return Engine.Input.IsCurPress(Buttons.RightStick);
         };
 
 
@@ -366,7 +366,8 @@ namespace NePlus.EngineComponents
                     _targetRotation = (_rotation + _rotationRate) % (float)(Math.PI * 2);
                 if (_rotateRight())
                     _targetRotation = (_rotation - _rotationRate) % (float)(Math.PI * 2);
-                if (Engine.Input.IsCurPress(Engine.Configuration.ResetCameraButton) || Engine.Input.IsCurPress(Engine.Configuration.ResetCameraKey))
+                //if (Engine.Input.IsCurPress(Engine.Configuration.ResetCameraButton) || Engine.Input.IsCurPress(Engine.Configuration.ResetCameraKey))
+                if (false)
                 {
                     _transitioning = true;
                     _targetPosition = _origPosition;

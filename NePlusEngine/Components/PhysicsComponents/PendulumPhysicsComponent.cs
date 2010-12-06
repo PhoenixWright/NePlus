@@ -5,14 +5,14 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 
-namespace NePlus.GameComponents.PhysicsComponents
+namespace NePlusEngine.Components.PhysicsComponents
 {
     public class PendulumPhysicsComponent : PhysicsComponent
     {
         private Fixture pivotFixture;
         DistanceJoint distanceJoint;
 
-        public PendulumPhysicsComponent(Point gameWorldPivotPosition, Point gameWorldWeightPosition)
+        public PendulumPhysicsComponent(Engine engine, Point gameWorldPivotPosition, Point gameWorldWeightPosition) : base(engine)
         {
             pivotFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, 0.8f, 0.8f, 1.0f);
             MainFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, 0.8f, 0.8f, 1.0f);

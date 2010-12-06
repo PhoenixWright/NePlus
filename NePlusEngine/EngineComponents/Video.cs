@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 using ProjectMercury.Renderers;
 
-namespace NePlus.EngineComponents
+namespace NePlusEngine.EngineComponents
 {
-    public class Video : Microsoft.Xna.Framework.GameComponent
+    public class Video
     {
         // graphics device
         public GraphicsDevice GraphicsDevice { get; private set; }
@@ -23,16 +23,14 @@ namespace NePlus.EngineComponents
         public int Height { get; private set; }
         public int Width { get; private set; }
 
-        public Video(Game1 game) : base(game) { }
-
-        public void Initialize(Game1 game)
+        public Video(GraphicsDeviceManager gdm)
         {
+            // TODO: create this stuff somewhere other than Game1
+            GraphicsDeviceManager = gdm;
+            
             // resolution
             Height = 720;
-            Width = 1280;
-
-            // TODO: create this stuff somewhere other than Game1
-            GraphicsDeviceManager = game.graphics;
+            Width = 1280;            
 
             // graphics device manager
             GraphicsDeviceManager.PreferredBackBufferWidth = Width;
@@ -42,16 +40,16 @@ namespace NePlus.EngineComponents
             // particle effects
             ParticleRenderer = new SpriteBatchRenderer
             {
-                GraphicsDeviceService = Engine.Video.GraphicsDeviceManager
+                GraphicsDeviceService = GraphicsDeviceManager
             };
         }
 
-        public void LoadContent(Game1 game)
+        public void LoadContent(Game game)
         {
             // grab the graphicsdevice from the Game class, which is first available during LoadContent which is why the code is here
             GraphicsDevice = game.GraphicsDevice;
 
-            ParticleRenderer.LoadContent(Game.Content);
+            ParticleRenderer.LoadContent(game.Content);
 
             // now that the GraphicsDevice exists we can create the game's SpriteBatch
             SpriteBatch = new SpriteBatch(GraphicsDevice);

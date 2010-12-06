@@ -11,14 +11,17 @@ using FarseerPhysics.Factories;
 using TiledLib;
 
 using NePlus.GameComponents;
+using NePlus.GameComponents.LightComponents;
 using NePlus.GameObjects;
 
-namespace NePlus.EngineComponents
+using NePlusEngine;
+
+namespace NePlus.GameObjects
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Level : Microsoft.Xna.Framework.DrawableGameComponent
+    public class Level : Component
     {
         public List<Light> Lights { get; private set; }
         
@@ -31,27 +34,21 @@ namespace NePlus.EngineComponents
         /// </summary>
         /// <param name="game">Game reference.</param>
         /// <param name="mapPath">The relative path to the map.</param>
-        public Level(Game game, string mapPath) : base(game)
+        public Level(Engine engine, string mapPath) : base(engine)
         {
+            Engine = engine;
             mapFilePath = mapPath;
             Lights = new List<Light>();
             levelParticleEffects = new List<ParticleEffectComponent>();
 
-            Game.Components.Add(this);
+            LoadLevel();
+
+            Engine.AddComponent(this);
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
+        private void LoadLevel()
         {
-            base.Initialize();
-        }
-        
-        protected override void LoadContent()
-        {
-            map = Game.Content.Load<Map>(mapFilePath);
+            map = Engine.Content.Load<Map>(mapFilePath);
             
             // loop through the map properties and handle them
             foreach (Property property in map.Properties)
@@ -95,22 +92,11 @@ namespace NePlus.EngineComponents
             }
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
             map.Draw(Engine.Video.SpriteBatch);
             Engine.Video.SpriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
 
@@ -157,11 +143,11 @@ namespace NePlus.EngineComponents
 
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(position, lightMotion.RawValue, gravityValue));
+                    Lights.Add(new GravityLight(Engine, position, lightMotion.RawValue, gravityValue));
                     break;
                     
                 case "Null":
-                    Lights.Add(new NullLight(position, lightMotion.RawValue));
+                    Lights.Add(new NullLight(Engine, Lights, position, lightMotion.RawValue));
                     break;
 
                 default:
@@ -171,7 +157,7 @@ namespace NePlus.EngineComponents
 
         public void CreateParticleEffect(string particleEffectName)
         {
-            levelParticleEffects.Add(new ParticleEffectComponent(Game, particleEffectName, new Vector2(Engine.Video.Width / 2, 0)));
+            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(Engine.Video.Width / 2, 0)));
         }
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died

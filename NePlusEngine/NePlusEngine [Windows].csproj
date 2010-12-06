@@ -1,38 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{B5933A59-CB77-4E99-BEA0-E57841BF5195}</ProjectGuid>
+    <ProjectGuid>{6BA64029-E6AB-47BA-ABA8-B28B0BA569DB}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NePlus</RootNamespace>
-    <AssemblyName>NePlus</AssemblyName>
+    <RootNamespace>NePlusEngine</RootNamespace>
+    <AssemblyName>NePlusEngine</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
-    <XnaCrossPlatformGroupID>d1b7f13f-f3be-45f3-8f89-12fb71a982c0</XnaCrossPlatformGroupID>
-    <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>3c52b0b3-0795-42e0-866a-727a0032bb54</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,7 +43,7 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38757, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3973.19134, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>WindowsDLLs\Farseer Physics 3.0 XNA.dll</HintPath>
     </Reference>
@@ -105,9 +88,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net">
@@ -119,20 +104,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameComponents\ParticleEffectComponent.cs" />
-    <Compile Include="GameComponents\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
-    <Compile Include="GameComponents\LightComponents\Light.cs" />
-    <Compile Include="GameComponents\LightComponents\GravityLight.cs" />
-    <Compile Include="GameComponents\LightComponents\NullLight.cs" />
-    <Compile Include="GameObjects\Level.cs" />
-    <Compile Include="GameObjects\Player.cs" />
+    <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
+    <Compile Include="EngineComponents\Camera.cs" />
+    <Compile Include="Component.cs" />
+    <Compile Include="EngineComponents\Configuration.cs" />
+    <Compile Include="EngineComponents\Input.cs" />
+    <Compile Include="EngineComponents\Physics.cs" />
+    <Compile Include="EngineComponents\Video.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
     <Content Include="WindowsDLLs\Farseer Physics 3.0 XNA.dll" />
@@ -143,51 +127,10 @@
     <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+    <ProjectReference Include="..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NePlusEngine\NePlusEngine [Windows].csproj">
-      <Project>{6BA64029-E6AB-47BA-ABA8-B28B0BA569DB}</Project>
-      <Name>NePlusEngine [Windows]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BloomPostProcessContent\BloomPostprocessContent.contentproj">
-      <Project>{D82A1C97-4FF3-440C-A58F-A1CB9135D0AC}</Project>
-      <Name>BloomPostprocessContent %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-    <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">
-      <Name>NePlusContent %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-      <Project>{39BA9AFA-BA10-4AD0-84FB-5BF0EF26E105}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Xna.Framework.4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft XNA Framework Redistributable 4.0</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

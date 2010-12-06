@@ -5,14 +5,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Dynamics;
 
-using NePlus.GameComponents.PhysicsComponents;
+using NePlusEngine;
+using NePlusEngine.Components.PhysicsComponents;
  
-namespace NePlus.GameObjects
+namespace NePlus.GameComponents.LightComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    abstract public class Light : Microsoft.Xna.Framework.DrawableGameComponent
+    abstract public class Light : Component
     {
         // configuration for the light
         public bool DrawLight { get; set; }
@@ -22,14 +23,14 @@ namespace NePlus.GameObjects
 
         public Vector2 Position { get; protected set; }
         public float Rotation { get; protected set; }
-        public Texture2D Texture { get; private set; }
-        public Vector2 TextureOrigin { get; private set; }
+        public Texture2D Texture { get; protected set; }
+        public Vector2 TextureOrigin { get; protected set; }
         public Func<Fixture, bool> EffectDelegate { get; protected set; }
 
         public PhysicsComponent PhysicsComponent;
 
-        public Light(Game game, Vector2 position, string motion)
-            : base(game)
+        public Light(Engine engine, Vector2 position, string motion)
+            : base(engine)
         {
             DrawLight = true;
             EffectActive = true;
@@ -37,32 +38,15 @@ namespace NePlus.GameObjects
             Position = position;
 
             CreatePhysicsComponent(motion);
-            
-            Game.Components.Add(this);
-        }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            Texture = Game.Content.Load<Texture2D>(lightTextureName);
-            TextureOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
-
-            base.LoadContent();
+            Engine.AddComponent(this);
         }
 
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             if (PhysicsComponent != null)
             {
@@ -70,11 +54,9 @@ namespace NePlus.GameObjects
             }
 
             ResolveLightEffect();
-
-            base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             if (DrawLight)
             {
@@ -91,8 +73,6 @@ namespace NePlus.GameObjects
 
                 Engine.Video.SpriteBatch.End();
             }
-
-            base.Draw(gameTime);
         }
 
         private void CreatePhysicsComponent(string motionType)
@@ -105,7 +85,7 @@ namespace NePlus.GameObjects
                 case "Pendulum":                    
                     Point pivotPoint = new Point((int)Math.Round(Position.X), (int)Math.Round(Position.Y - 200));
                     Point weightPoint = new Point((int)Math.Round(Position.X + 200), (int)Math.Round(Position.Y));                    
-                    PhysicsComponent = new PendulumPhysicsComponent(pivotPoint, weightPoint);
+                    PhysicsComponent = new PendulumPhysicsComponent(Engine, pivotPoint, weightPoint);
                     break;
                 default:
                     throw new Exception("Physics component type not recognized");

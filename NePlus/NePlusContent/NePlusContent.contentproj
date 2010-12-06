@@ -55,6 +55,15 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ProjectMercury">
+      <HintPath>..\NePlus\WindowsDLLs\ProjectMercury.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjectMercury">
+      <HintPath>..\NePlus\Xbox360DLLs\ProjectMercury.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjectMercury.ContentPipeline">
+      <HintPath>..\NePlus\PipelineDLLs\ProjectMercury.ContentPipeline.dll</HintPath>
+    </Reference>
     <Reference Include="TiledPipelineExtensions">
       <HintPath>..\NePlus\PipelineDLLs\TiledPipelineExtensions.dll</HintPath>
     </Reference>
@@ -117,12 +126,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\MercuryParticleRepository\ProjectMercury %284.0%29\ProjectMercury.ContentPipeline\ProjectMercury.ContentPipeline.csproj">
-      <Project>{5B60FB65-704B-4D28-9117-AF0B25220484}</Project>
-      <Name>ProjectMercury.ContentPipeline</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="GreyTriangle.png">
       <Name>GreyTriangle</Name>
       <Importer>TextureImporter</Importer>
@@ -149,6 +152,9 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Shaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

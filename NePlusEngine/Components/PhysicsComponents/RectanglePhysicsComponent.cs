@@ -4,13 +4,11 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
-using NePlus.EngineComponents;
-
-namespace NePlus.GameComponents.PhysicsComponents
+namespace NePlusEngine.Components.PhysicsComponents
 {
     public class RectanglePhysicsComponent : PhysicsComponent
     {
-        public RectanglePhysicsComponent(Rectangle rectangle, Vector2 gameWorldPosition, bool dynamic)
+        public RectanglePhysicsComponent(Engine engine, Rectangle rectangle, Vector2 gameWorldPosition, bool dynamic) : base(engine)
         {
             // create vertices to create a rectangle in the physics world with
             Vertices vertices = new Vertices();

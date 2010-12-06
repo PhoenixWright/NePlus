@@ -1,17 +1,15 @@
 ﻿using NePlus;
-using NePlus.EngineComponents;
 
 using NUnit.Framework;
 
-namespace NePlusTests
+namespace NePlusTests.EngineTests
 {
     [TestFixture]
-    public class VideoTest
+    public class VideoTests
     {
         [Test]
         public void TestVideo()
         {
-            Game1 game = new Game1();
         }
     }
 }

@@ -15,6 +15,8 @@ using ProjectMercury.Renderers;
 
 using TiledLib;
 
+using NePlusEngine;
+
 using NePlus.GameComponents;
 using NePlus.GameObjects;
 
@@ -27,8 +29,14 @@ namespace NePlus
     {
         public GraphicsDeviceManager graphics;
 
+        // engine
+        NePlusEngine.Engine engine;
+
         // player
         Player player;
+
+        // level
+        Level level;
 
         public Game1()
         {
@@ -44,8 +52,8 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
-            Engine.Initialize(this);
-            Engine.Level = new EngineComponents.Level(this, @"Maps\TestMap");
+            engine = new NePlusEngine.Engine(this, graphics);
+            level = new Level(engine, @"Maps\TestMap");
 
             base.Initialize();
         }
@@ -56,12 +64,12 @@ namespace NePlus
         /// </summary>
         protected override void LoadContent()
         {
-            Engine.LoadContent();
+            engine.LoadContent(this);
             
-            player = new Player(this, Engine.Level.GetSpawnPoint());
+            player = new Player(engine, level.GetSpawnPoint());
 
-            Engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
-            Engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
+            engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
+            engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
         }
 
         /// <summary>
@@ -81,10 +89,10 @@ namespace NePlus
         protected override void Update(GameTime gameTime)
         {
             // update the engine
-            Engine.Update(gameTime);            
+            engine.Update(gameTime);            
 
             // allows the game to exit
-            if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
+            if (engine.Input.IsCurPress(engine.Configuration.QuitButton) || engine.Input.IsCurPress(engine.Configuration.QuitKey))
                 this.Exit();
 
             base.Update(gameTime);
@@ -96,11 +104,13 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Engine.Video.GraphicsDevice.Clear(Color.Black);
+            engine.Video.GraphicsDevice.Clear(Color.Black);
+
+            engine.Draw();
 
             // this code is placeholder code for testing
-            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.End();
+            engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, engine.Camera.CameraMatrix);
+            engine.Video.SpriteBatch.End();
             
             base.Draw(gameTime);
         }

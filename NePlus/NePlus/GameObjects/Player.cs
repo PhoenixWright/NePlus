@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-using NePlus.EngineComponents;
 using NePlus.GameComponents;
-using NePlus.GameComponents.PhysicsComponents;
+
+using NePlusEngine;
+using NePlusEngine.Components.PhysicsComponents;
 
 namespace NePlus.GameObjects
 {
-    public class Player : Microsoft.Xna.Framework.DrawableGameComponent
+    public class Player : Component
     {
         // components
         public ParticleEffectComponent ParticleEffectComponent { get; private set; }
@@ -20,32 +21,20 @@ namespace NePlus.GameObjects
         public Vector2 Position { get; private set; }
         private Texture2D texture;
 
-        public Player(Game game, Vector2 position) : base(game)
+        public Player(Engine engine, Vector2 position) : base(engine)
         {
             Position = position;
 
-            // need to load the texture before the PhysicsComponent
-            this.LoadContent();
+            texture = Engine.Content.Load<Texture2D>(@"TestSquare");
+
             //ParticleEffectComponent = new ParticleEffectComponent(game, "someName", Position);
-            PhysicsComponent = new RectanglePhysicsComponent(texture.Bounds, position, true);
+            PhysicsComponent = new RectanglePhysicsComponent(engine, texture.Bounds, position, true);
             PhysicsComponent.MainFixture.CollidesWith = FarseerPhysics.Dynamics.CollisionCategory.Cat1;
 
-            Game.Components.Add(this);
+            Engine.AddComponent(this);
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            texture = Game.Content.Load<Texture2D>(@"TestSquare");
-
-            base.LoadContent();
-        }
-
-        public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Update()
         {
             Position = PhysicsComponent.Position;
 
@@ -66,17 +55,13 @@ namespace NePlus.GameObjects
             }
 
             //ParticleEffectComponent.Position = this.Position;
-
-            base.Update(gameTime);
         }
 
-        public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Draw()
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.Video.SpriteBatch.Draw(texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
             Engine.Video.SpriteBatch.End();
-
-            base.Draw(gameTime);
         }
     }
 }
