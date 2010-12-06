@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 
 using NePlusEngine;
+using NePlusEngine.Components.GameComponents;
 using NePlusEngine.Components.PhysicsComponents;
  
 namespace NePlus.GameComponents.LightComponents
@@ -19,8 +20,6 @@ namespace NePlus.GameComponents.LightComponents
         public bool DrawLight { get; set; }
         public bool EffectActive { get; set; }
 
-        protected string lightTextureName;
-
         public Vector2 Position { get; protected set; }
         public float Rotation { get; protected set; }
         public Texture2D Texture { get; protected set; }
@@ -29,9 +28,14 @@ namespace NePlus.GameComponents.LightComponents
 
         public PhysicsComponent PhysicsComponent;
 
-        public Light(Engine engine, Vector2 position, string motion)
+        public Light(Engine engine, string lightTextureFilePath, Vector2 position, string motion)
             : base(engine)
         {
+            Texture = Engine.Content.Load<Texture2D>(lightTextureFilePath);
+
+            // set the origin to the top of the light texture in the middle
+            TextureOrigin = new Vector2(Texture.Width / 2, 0);
+
             DrawLight = true;
             EffectActive = true;
 
@@ -64,11 +68,11 @@ namespace NePlus.GameComponents.LightComponents
                 
                 if (PhysicsComponent != null)
                 {
-                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
                 }
                 else
                 {
-                    Engine.Video.SpriteBatch.Draw(Texture, Position, Color.White);
+                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, 0.0f, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
                 }
 
                 Engine.Video.SpriteBatch.End();
@@ -92,14 +96,23 @@ namespace NePlus.GameComponents.LightComponents
             }
         }
 
+        public bool CollidingWithRectangle(RotatedRectangle rectangle)
+        {
+            RotatedRectangle myRectangle = new RotatedRectangle(new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height), PhysicsComponent.MainFixture.Body.Rotation);
+
+            return myRectangle.Intersects(rectangle);
+        }
+
         public bool PositionInLight(Vector2 position)
         {
-            Vector2 originInGameWorld = Position + TextureOrigin;
+            Vector2 middleInGameWorld = Position + new Vector2(0.0f, Texture.Height / 2);
 
-            bool positionInLight = position.X > originInGameWorld.X - Texture.Width / 2
-                                && position.X < originInGameWorld.X + Texture.Width / 2
-                                && position.Y > originInGameWorld.Y - Texture.Height / 2
-                                && position.Y < originInGameWorld.Y + Texture.Height / 2;
+            Engine.Physics.DebugView.DrawPoint(Engine.Physics.PositionToPhysicsWorld(middleInGameWorld), 0.1f, Color.Yellow);
+
+            bool positionInLight = position.X > middleInGameWorld.X - Texture.Width / 2
+                                && position.X < middleInGameWorld.X + Texture.Width / 2
+                                && position.Y > middleInGameWorld.Y - Texture.Height / 2
+                                && position.Y < middleInGameWorld.Y + Texture.Height / 2;
 
             return positionInLight;
         }

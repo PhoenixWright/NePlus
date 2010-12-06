@@ -25,9 +25,9 @@ namespace NePlus.GameObjects
         {
             Position = position;
 
-            texture = Engine.Content.Load<Texture2D>(@"TestSquare");
+            texture = Engine.Content.Load<Texture2D>(@"Characters\TestSquare");
 
-            //ParticleEffectComponent = new ParticleEffectComponent(game, "someName", Position);
+            //ParticleEffectComponent = new ParticleEffectComponent(engine, "someName", Position);
             PhysicsComponent = new RectanglePhysicsComponent(engine, texture.Bounds, position, true);
             PhysicsComponent.MainFixture.CollidesWith = FarseerPhysics.Dynamics.CollisionCategory.Cat1;
 

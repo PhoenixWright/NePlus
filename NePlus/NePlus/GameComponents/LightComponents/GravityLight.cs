@@ -20,14 +20,9 @@ namespace NePlus.GameComponents.LightComponents
         private Vector2 gravityVector;
         public Vector2 GravityVector { get { return gravityVector; } }
 
-        public GravityLight(Engine engine, Vector2 position, string motion, float gravityValue) : base(engine, position, motion)
+        public GravityLight(Engine engine, Vector2 position, string motion, float gravityValue) : base(engine, @"Lights\BlueSpotlight", position, motion)
         {
             particleEffectComponent = new ParticleEffectComponent(Engine, "BeamMeUp", Position);
-
-            lightTextureName = "BlueTriangle";
-
-            Texture = Engine.Content.Load<Texture2D>(lightTextureName);
-            TextureOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
             GravityValue = gravityValue;
             gravityVector = new Vector2(0.0f, GravityValue);
@@ -37,7 +32,7 @@ namespace NePlus.GameComponents.LightComponents
 
         public override void Update()
         {
-            particleEffectComponent.Position = Position + TextureOrigin;
+            particleEffectComponent.Position = Position - new Vector2(0.0f, -200.0f);
             particleEffectComponent.DrawParticleEffect = EffectActive;
 
             base.Update();

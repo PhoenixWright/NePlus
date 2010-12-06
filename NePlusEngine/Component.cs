@@ -1,4 +1,4 @@
-﻿using NePlusEngine.EngineComponents;
+﻿using NePlusEngine.Components.EngineComponents;
 
 namespace NePlusEngine
 {

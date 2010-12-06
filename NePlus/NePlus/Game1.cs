@@ -30,13 +30,13 @@ namespace NePlus
         public GraphicsDeviceManager graphics;
 
         // engine
-        NePlusEngine.Engine engine;
+        public NePlusEngine.Engine Engine;
 
         // player
         Player player;
 
         // level
-        Level level;
+        public Level Level;
 
         public Game1()
         {
@@ -52,8 +52,8 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
-            engine = new NePlusEngine.Engine(this, graphics);
-            level = new Level(engine, @"Maps\TestMap");
+            Engine = new NePlusEngine.Engine(this, graphics);
+            Level = new Level(Engine, @"Maps\TestMap");
 
             base.Initialize();
         }
@@ -64,12 +64,12 @@ namespace NePlus
         /// </summary>
         protected override void LoadContent()
         {
-            engine.LoadContent(this);
+            Engine.LoadContent(this);
             
-            player = new Player(engine, level.GetSpawnPoint());
+            player = new Player(Engine, Level.GetSpawnPoint());
 
-            engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
-            engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
+            Engine.Camera.Position = player.PhysicsComponent.MainFixture.Body.Position;
+            Engine.Camera.TrackingBody = player.PhysicsComponent.MainFixture.Body;
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace NePlus
         protected override void Update(GameTime gameTime)
         {
             // update the engine
-            engine.Update(gameTime);            
+            Engine.Update(gameTime);            
 
             // allows the game to exit
-            if (engine.Input.IsCurPress(engine.Configuration.QuitButton) || engine.Input.IsCurPress(engine.Configuration.QuitKey))
+            if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
                 this.Exit();
 
             base.Update(gameTime);
@@ -104,13 +104,13 @@ namespace NePlus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            engine.Video.GraphicsDevice.Clear(Color.Black);
+            Engine.Video.GraphicsDevice.Clear(Color.Black);
 
-            engine.Draw();
+            Engine.Draw();
 
             // this code is placeholder code for testing
-            engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, engine.Camera.CameraMatrix);
-            engine.Video.SpriteBatch.End();
+            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
+            Engine.Video.SpriteBatch.End();
             
             base.Draw(gameTime);
         }

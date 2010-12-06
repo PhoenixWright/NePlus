@@ -2,7 +2,7 @@
 
 using FarseerPhysics.Dynamics;
 
-using NePlusEngine.EngineComponents;
+using NePlusEngine.Components.EngineComponents;
 
 namespace NePlusEngine.Components.PhysicsComponents
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-using NePlusEngine.EngineComponents;
+using NePlusEngine.Components.EngineComponents;
 
 namespace NePlusEngine
 {

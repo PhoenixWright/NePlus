@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NePlusContent", "NePlus\NeP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NePlus [Xbox 360]", "NePlus\NePlus\NePlus [Xbox 360].csproj", "{0946CFB4-7FD5-4031-A5D5-2045174BF4BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NePlusTests", "NePlusTests\NePlusTests.csproj", "{671951E3-7114-48B2-89AA-8699C6785DC8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA", "..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj", "{FC7845FA-13FE-4FF8-822A-A577F3F59B00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of DebugView XNA", "..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\Xbox 360 Copy of DebugView XNA.csproj", "{67805EDE-E1D6-477C-B75E-DC373B596003}"
@@ -92,24 +90,6 @@ Global
 		{0946CFB4-7FD5-4031-A5D5-2045174BF4BB}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 		{0946CFB4-7FD5-4031-A5D5-2045174BF4BB}.Release|Xbox 360.Build.0 = Release|Xbox 360
 		{0946CFB4-7FD5-4031-A5D5-2045174BF4BB}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|Any CPU.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|Any CPU.Build.0 = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|Mixed Platforms.Build.0 = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|x86.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Reference|Xbox 360.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|x86.ActiveCfg = Release|Any CPU
-		{671951E3-7114-48B2-89AA-8699C6785DC8}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00}.Debug|Mixed Platforms.Build.0 = Debug|x86

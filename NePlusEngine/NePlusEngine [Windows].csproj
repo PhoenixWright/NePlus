@@ -104,15 +104,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
-    <Compile Include="EngineComponents\Camera.cs" />
+    <Compile Include="Components\EngineComponents\Camera.cs" />
     <Compile Include="Component.cs" />
-    <Compile Include="EngineComponents\Configuration.cs" />
-    <Compile Include="EngineComponents\Input.cs" />
-    <Compile Include="EngineComponents\Physics.cs" />
-    <Compile Include="EngineComponents\Video.cs" />
+    <Compile Include="Components\EngineComponents\Configuration.cs" />
+    <Compile Include="Components\EngineComponents\Input.cs" />
+    <Compile Include="Components\EngineComponents\Physics.cs" />
+    <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

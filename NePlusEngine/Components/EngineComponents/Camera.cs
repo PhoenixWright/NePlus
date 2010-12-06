@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
-namespace NePlusEngine.EngineComponents
+namespace NePlusEngine.Components.EngineComponents
 {
     public class Camera
     {

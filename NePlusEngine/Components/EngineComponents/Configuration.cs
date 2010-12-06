@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace NePlusEngine.EngineComponents
+namespace NePlusEngine.Components.EngineComponents
 {
     public class Configuration
     {

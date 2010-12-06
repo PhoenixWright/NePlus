@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using ProjectMercury.Renderers;
 
-namespace NePlusEngine.EngineComponents
+namespace NePlusEngine.Components.EngineComponents
 {
     public class Video
     {

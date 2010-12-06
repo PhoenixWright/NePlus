@@ -97,7 +97,7 @@
       <Importer>TmxImporter</Importer>
       <Processor>TmxProcessor</Processor>
     </Compile>
-    <Compile Include="TestSquare.png">
+    <Compile Include="Characters\TestSquare.png">
       <Name>TestSquare</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -114,20 +114,6 @@
   <ItemGroup>
     <Compile Include="ParticleEffects\Materials\BeamBlurred.png">
       <Name>BeamBlurred</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BlueTriangle.png">
-      <Name>BlueTriangle</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="GreyTriangle.png">
-      <Name>GreyTriangle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -155,6 +141,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Shaders\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Lights\BlueSpotlight.png">
+      <Name>BlueSpotlight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Lights\GreySpotlight.png">
+      <Name>GreySpotlight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
