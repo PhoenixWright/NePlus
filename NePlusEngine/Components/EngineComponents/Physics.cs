@@ -47,14 +47,8 @@ namespace NePlusEngine.Components.EngineComponents
             DebugView.Flags = (DebugViewFlags)flags;
             
             DrawOrder = int.MaxValue;
-
-            Engine.AddComponent(this);
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update()
         {
             // update the physics world

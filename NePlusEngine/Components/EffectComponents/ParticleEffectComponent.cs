@@ -5,7 +5,7 @@ using ProjectMercury.Renderers;
 
 using NePlusEngine;
 
-namespace NePlus.GameComponents
+namespace NePlusEngine.Components.EffectComponents
 {
     public class ParticleEffectComponent : Component
     {

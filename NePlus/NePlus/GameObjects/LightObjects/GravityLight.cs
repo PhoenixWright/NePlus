@@ -4,11 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
-using NePlus.GameComponents;
-
 using NePlusEngine;
+using NePlusEngine.Components.EffectComponents;
 
-namespace NePlus.GameComponents.LightComponents
+namespace NePlus.GameObjects.LightObjects
 {
     public class GravityLight : Light
     {
@@ -43,7 +42,9 @@ namespace NePlus.GameComponents.LightComponents
             if (EffectActive)
             {
                 // create an AABB representing the light, and apply the gravity effect to anything in it
-                AABB aabb = Engine.Physics.CreateAABB(Texture.Width, Texture.Height, Position);
+                AABB aabb = Engine.Physics.CreateAABB(Texture.Width, Texture.Height, Position + new Vector2(-Texture.Width / 2, 0.0f));
+
+                Engine.Physics.DebugView.DrawAABB(ref aabb, Color.Yellow);
 
                 Engine.Physics.World.QueryAABB(EffectDelegate, ref aabb);
             }
@@ -57,6 +58,8 @@ namespace NePlus.GameComponents.LightComponents
                 if (fixture.CollidesWith == CollisionCategory.Cat1)
                 {
                     fixture.Body.ApplyForce(ref gravityVector);
+
+                    Engine.Physics.DebugView.DrawPoint(fixture.Body.Position, 0.05f, Color.Yellow);
                 }
                 
                 return true;

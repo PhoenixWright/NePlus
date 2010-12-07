@@ -9,7 +9,7 @@ using NePlusEngine;
 using NePlusEngine.Components.GameComponents;
 using NePlusEngine.Components.PhysicsComponents;
  
-namespace NePlus.GameComponents.LightComponents
+namespace NePlus.GameObjects.LightObjects
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.

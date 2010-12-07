@@ -3,12 +3,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
 using NePlusEngine;
 using NePlusEngine.Components.GameComponents;
 
-namespace NePlus.GameComponents.LightComponents
+namespace NePlus.GameObjects.LightObjects
 {
     class NullLight : Light
     {
@@ -31,7 +32,6 @@ namespace NePlus.GameComponents.LightComponents
                 {
                     RotatedRectangle rectangle = new RotatedRectangle(new Rectangle((int)light.Position.X + (int)light.TextureOrigin.X, (int)light.Position.Y, light.Texture.Width, light.Texture.Height), PhysicsComponent.MainFixture.Body.Rotation);
 
-                    //if (PositionInLight(light.Position + light.TextureOrigin))
                     if (CollidingWithRectangle(rectangle))
                     {
                         AffectedLights.Add(light);
@@ -42,7 +42,6 @@ namespace NePlus.GameComponents.LightComponents
             foreach (Light light in AffectedLights)
             {
                 // if the light isn't in the null light, EffectActive is set to true
-                //light.EffectActive = !PositionInLight(light.Position + light.TextureOrigin);
                 RotatedRectangle rectangle = new RotatedRectangle(new Rectangle((int)light.Position.X + (int)light.TextureOrigin.X, (int)light.Position.Y, light.Texture.Width, light.Texture.Height), PhysicsComponent.MainFixture.Body.Rotation);
                 light.EffectActive = !CollidingWithRectangle(rectangle);
             }

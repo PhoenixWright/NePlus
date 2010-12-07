@@ -54,6 +54,7 @@ namespace NePlusEngine
 
             Input.Update();
             Camera.Update();
+            Physics.Update();
 
             // Copy the list of components so the game won't crash if the original
             // is modified while updating
@@ -70,6 +71,8 @@ namespace NePlusEngine
         {
             foreach (Component c in components)
                 c.Draw();
+
+            Physics.Draw();
         }
 
         public void AddComponent(Component Component)

@@ -60,12 +60,10 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="GameComponents\LightComponents\GravityLight.cs" />
-    <Compile Include="GameComponents\LightComponents\Light.cs" />
-    <Compile Include="GameComponents\LightComponents\NullLight.cs" />
-    <Compile Include="GameComponents\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
-    <Compile Include="GameComponents\ParticleEffectComponent.cs" />
     <Compile Include="GameObjects\Level.cs" />
+    <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
+    <Compile Include="GameObjects\LightObjects\Light.cs" />
+    <Compile Include="GameObjects\LightObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

@@ -10,11 +10,11 @@ using FarseerPhysics.Factories;
 
 using TiledLib;
 
-using NePlus.GameComponents;
-using NePlus.GameComponents.LightComponents;
 using NePlus.GameObjects;
+using NePlus.GameObjects.LightObjects;
 
 using NePlusEngine;
+using NePlusEngine.Components.EffectComponents;
 
 namespace NePlus.GameObjects
 {

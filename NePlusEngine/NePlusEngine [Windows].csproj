@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\EffectComponents\ParticleEffectComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />

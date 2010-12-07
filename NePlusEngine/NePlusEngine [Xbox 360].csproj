@@ -47,12 +47,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\EffectComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />
     <Compile Include="Components\EngineComponents\Configuration.cs" />
     <Compile Include="Components\EngineComponents\Input.cs" />
     <Compile Include="Components\EngineComponents\Physics.cs" />
     <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
