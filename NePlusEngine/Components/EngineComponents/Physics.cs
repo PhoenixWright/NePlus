@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using FarseerPhysics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 
 namespace NePlusEngine.Components.EngineComponents
@@ -31,9 +31,7 @@ namespace NePlusEngine.Components.EngineComponents
             World = new World(new Vector2(0.0f, 9.8f));
 
             DebugView = new DebugViewXNA(World);
-
-            // TODO: make this a little more dynamic as far as options go
-            DebugViewXNA.LoadContent(Engine.Game.GraphicsDevice, Engine.Content);
+            DebugView.LoadContent(Engine.Game.GraphicsDevice, Engine.Content);
             uint flags = 0;
             flags += (uint)DebugViewFlags.AABB;
             flags += (uint)DebugViewFlags.CenterOfMass;

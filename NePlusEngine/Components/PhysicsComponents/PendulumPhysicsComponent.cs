@@ -21,7 +21,7 @@ namespace NePlusEngine.Components.PhysicsComponents
             pivotFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(new Vector2(gameWorldPivotPosition.X, gameWorldPivotPosition.Y));
             MainFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(new Vector2(gameWorldWeightPosition.X, gameWorldWeightPosition.Y));
 
-            pivotFixture.CollidesWith = CollisionCategory.Cat31;
+            // FARSEER: pivotFixture.CollidesWith = CollisionCategory.Cat31;
             MainFixture.Body.BodyType = BodyType.Dynamic;
 
             distanceJoint = JointFactory.CreateDistanceJoint(Engine.Physics.World, pivotFixture.Body, MainFixture.Body, Vector2.Zero, MainFixture.Body.LocalCenter - new Vector2(0.0f, 0.4f));

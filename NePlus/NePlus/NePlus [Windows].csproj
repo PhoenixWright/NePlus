@@ -63,9 +63,9 @@
     <Reference Include="EasyConfig">
       <HintPath>WindowsDLLs\EasyConfig.dll</HintPath>
     </Reference>
-    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38757, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="FarseerPhysicsXNA, Version=3.2.4021.35937, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>WindowsDLLs\Farseer Physics 3.0 XNA.dll</HintPath>
+      <HintPath>WindowsDLLs\FarseerPhysicsXNA.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
@@ -142,7 +142,7 @@
     <Content Include="WindowsDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+    <ProjectReference Include="..\..\..\..\Development\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
     </ProjectReference>

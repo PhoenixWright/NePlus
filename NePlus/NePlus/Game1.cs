@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 
 using FarseerPhysics;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 

@@ -41,12 +41,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\Xbox 360 Copy of DebugView XNA.csproj">
-      <Project>{67805EDE-E1D6-477C-B75E-DC373B596003}</Project>
-      <Name>Xbox 360 Copy of DebugView XNA</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Components\EffectComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />
     <Compile Include="Components\EngineComponents\Configuration.cs" />
@@ -65,14 +59,19 @@
   <ItemGroup>
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
-    <Content Include="Xbox360DLLs\Farseer Physics 3.0 XNA.dll" />
+    <Content Include="Xbox360DLLs\FarseerPhysicsXbox360.dll" />
     <Content Include="Xbox360DLLs\ProjectMercury.dll" />
     <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Development\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView XNA Xbox360</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3973.19394, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="FarseerPhysicsXbox360, Version=3.2.4021.35990, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
