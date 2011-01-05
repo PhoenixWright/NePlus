@@ -60,6 +60,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyConfig">
+      <HintPath>WindowsDLLs\EasyConfig.dll</HintPath>
+    </Reference>
     <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38757, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>WindowsDLLs\Farseer Physics 3.0 XNA.dll</HintPath>
@@ -133,12 +136,10 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="WindowsDLLs\EasyConfig.dll" />
     <Content Include="WindowsDLLs\Farseer Physics 3.0 XNA.dll" />
     <Content Include="WindowsDLLs\ProjectMercury.dll" />
     <Content Include="WindowsDLLs\TiledLib.dll" />
-    <Content Include="Xbox360DLLs\Farseer Physics 3.0 XNA.dll" />
-    <Content Include="Xbox360DLLs\ProjectMercury.dll" />
-    <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\FarseerPhysicsRepository\DebugViews\DebugViewXNA\DebugView XNA.csproj">

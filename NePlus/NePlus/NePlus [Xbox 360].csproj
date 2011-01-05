@@ -73,6 +73,7 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="Xbox360DLLs\EasyConfig.dll" />
     <Content Include="Xbox360DLLs\Farseer Physics 3.0 XNA.dll" />
     <Content Include="Xbox360DLLs\ProjectMercury.dll" />
     <Content Include="Xbox360DLLs\TiledLib.dll" />
@@ -126,6 +127,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Reference Include="EasyConfig">
+      <HintPath>Xbox360DLLs\EasyConfig.dll</HintPath>
+    </Reference>
     <Reference Include="Farseer Physics 3.0 XNA, Version=3.1.3969.38758, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
