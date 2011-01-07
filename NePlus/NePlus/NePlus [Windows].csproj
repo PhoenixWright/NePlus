@@ -137,7 +137,7 @@
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
     <Content Include="WindowsDLLs\EasyConfig.dll" />
-    <Content Include="WindowsDLLs\Farseer Physics 3.0 XNA.dll" />
+    <Content Include="WindowsDLLs\FarseerPhysicsXNA.dll" />
     <Content Include="WindowsDLLs\ProjectMercury.dll" />
     <Content Include="WindowsDLLs\TiledLib.dll" />
   </ItemGroup>

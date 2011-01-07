@@ -55,13 +55,12 @@ namespace NePlus.GameObjects.LightObjects
             // check to make sure that the fixture is dynamic
             if (fixture.Body.BodyType == BodyType.Dynamic)
             {
-                // FARSEER:
-                //if (fixture.CollidesWith == CollisionCategory.Cat1)
-                //{
-                //    fixture.Body.ApplyForce(ref gravityVector);
+                if (fixture.CollisionFilter.CollidesWith == Category.Cat1)
+                {
+                    fixture.Body.ApplyForce(ref gravityVector);
 
-                //    Engine.Physics.DebugView.DrawPoint(fixture.Body.Position, 0.05f, Color.Yellow);
-                //}
+                    Engine.Physics.DebugView.DrawPoint(fixture.Body.Position, 0.05f, Color.Yellow);
+                }
                 
                 return true;
             }
