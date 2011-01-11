@@ -3,5 +3,8 @@
 *.db
 *.suo
 *.user
+*.xgs
+*.xsb
+*.xwb
 bin
 obj
