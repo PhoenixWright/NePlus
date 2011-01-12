@@ -1,12 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace NePlusEngine.Components.EngineComponents
+namespace NePlus.Components.EngineComponents
 {
     public class Configuration
     {
-        // debug view
         public bool ShowDebugView { get; private set; }
-
 
         #region Menu Actions
         // accept (confirm)

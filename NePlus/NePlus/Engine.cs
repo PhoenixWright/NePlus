@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-using NePlusEngine.Components.EngineComponents;
+using NePlus.Components.EngineComponents;
 
-namespace NePlusEngine
+namespace NePlus
 {
     public class Engine
     {
@@ -18,6 +18,7 @@ namespace NePlusEngine
         // content reference
         public ContentManager Content { get; private set; }
 
+        public Audio Audio { get; private set; }
         public Camera Camera { get; private set; }
         public Configuration Configuration { get; private set; }
         public Input Input { get; private set; }
@@ -36,6 +37,7 @@ namespace NePlusEngine
             Content = game.Content;
             Content.RootDirectory = "Content";
 
+            Audio = new Audio(this);
             Video = new Video(gdm);
             Camera = new Camera(new Vector2(Video.Width, Video.Height));
             Configuration = new Configuration();
@@ -52,6 +54,7 @@ namespace NePlusEngine
         {            
             GameTime = gameTime;
 
+            Audio.Update();
             Input.Update();
             Camera.Update();
             Physics.Update();

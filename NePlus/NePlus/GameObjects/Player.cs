@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 using NePlus.GameComponents;
 
-using NePlusEngine;
-using NePlusEngine.Components.EffectComponents;
-using NePlusEngine.Components.PhysicsComponents;
+using NePlus;
+using NePlus.Components.EffectComponents;
+using NePlus.Components.PhysicsComponents;
 
 namespace NePlus.GameObjects
 {

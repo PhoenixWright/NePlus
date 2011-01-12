@@ -122,6 +122,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component.cs" />
+    <Compile Include="Components\EffectComponents\ParticleEffectComponent.cs" />
+    <Compile Include="Components\EngineComponents\Audio.cs" />
+    <Compile Include="Components\EngineComponents\Camera.cs" />
+    <Compile Include="Components\EngineComponents\Configuration.cs" />
+    <Compile Include="Components\EngineComponents\Input.cs" />
+    <Compile Include="Components\EngineComponents\Physics.cs" />
+    <Compile Include="Components\EngineComponents\Video.cs" />
+    <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="GameObjects\Level.cs" />
     <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
     <Compile Include="GameObjects\LightObjects\Light.cs" />
@@ -142,13 +156,9 @@
     <Content Include="WindowsDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Development\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+    <ProjectReference Include="..\..\..\..\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NePlusEngine\NePlusEngine [Windows].csproj">
-      <Project>{6BA64029-E6AB-47BA-ABA8-B28B0BA569DB}</Project>
-      <Name>NePlusEngine [Windows]</Name>
     </ProjectReference>
     <ProjectReference Include="..\BloomPostProcessContent\BloomPostprocessContent.contentproj">
       <Project>{D82A1C97-4FF3-440C-A58F-A1CB9135D0AC}</Project>

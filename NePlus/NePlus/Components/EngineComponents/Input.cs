@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace NePlusEngine.Components.EngineComponents
+namespace NePlus.Components.EngineComponents
 {
     /// <summary>
     /// An enum of all available mouse buttons.

@@ -14,7 +14,7 @@ using ProjectMercury.Renderers;
 
 using TiledLib;
 
-using NePlusEngine;
+using NePlus;
 
 using NePlus.GameComponents;
 using NePlus.GameObjects;
@@ -29,7 +29,7 @@ namespace NePlus
         public GraphicsDeviceManager graphics;
 
         // engine
-        public NePlusEngine.Engine Engine;
+        public NePlus.Engine Engine;
 
         // player
         Player player;
@@ -51,7 +51,7 @@ namespace NePlus
         /// </summary>
         protected override void Initialize()
         {
-            Engine = new NePlusEngine.Engine(this, graphics);
+            Engine = new NePlus.Engine(this, graphics);
             Level = new Level(Engine, @"Maps\TestMap");
 
             base.Initialize();

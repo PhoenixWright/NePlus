@@ -13,8 +13,8 @@ using TiledLib;
 using NePlus.GameObjects;
 using NePlus.GameObjects.LightObjects;
 
-using NePlusEngine;
-using NePlusEngine.Components.EffectComponents;
+using NePlus;
+using NePlus.Components.EffectComponents;
 
 namespace NePlus.GameObjects
 {
@@ -55,6 +55,9 @@ namespace NePlus.GameObjects
             {
                 switch (property.Name)
                 {
+                    case "BackgroundTrack":
+                        Engine.Audio.PlaySound("Rain");
+                        break;
                     case "ParticleEffect":
                         CreateParticleEffect(property.RawValue);
                         break;

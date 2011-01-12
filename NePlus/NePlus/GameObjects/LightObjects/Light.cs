@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Dynamics;
 
-using NePlusEngine;
-using NePlusEngine.Components.GameComponents;
-using NePlusEngine.Components.PhysicsComponents;
+using NePlus;
+using NePlus.Components.GameComponents;
+using NePlus.Components.PhysicsComponents;
  
 namespace NePlus.GameObjects.LightObjects
 {

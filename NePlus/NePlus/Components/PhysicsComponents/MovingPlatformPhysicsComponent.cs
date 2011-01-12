@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
-using NePlusEngine;
-using NePlusEngine.Components.PhysicsComponents;
+using NePlus;
+using NePlus.Components.PhysicsComponents;
 
 namespace NePlus.GameComponents.PhysicsComponents
 {

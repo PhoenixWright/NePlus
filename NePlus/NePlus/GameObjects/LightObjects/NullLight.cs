@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
-using NePlusEngine;
-using NePlusEngine.Components.GameComponents;
+using NePlus;
+using NePlus.Components.GameComponents;
 
 namespace NePlus.GameObjects.LightObjects
 {

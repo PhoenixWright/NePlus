@@ -4,7 +4,7 @@ using System.Linq;
 
 using Microsoft.Xna.Framework;
 
-namespace NePlusEngine.Components.GameComponents
+namespace NePlus.Components.GameComponents
 {
     public class RotatedRectangle
     {

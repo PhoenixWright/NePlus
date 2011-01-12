@@ -1,6 +1,6 @@
-﻿using NePlusEngine.Components.EngineComponents;
+﻿using NePlus.Components.EngineComponents;
 
-namespace NePlusEngine
+namespace NePlus
 {
     public class Component
     {

@@ -7,7 +7,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 
-namespace NePlusEngine.Components.EngineComponents
+namespace NePlus.Components.EngineComponents
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.

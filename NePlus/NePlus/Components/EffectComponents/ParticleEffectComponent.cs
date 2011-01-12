@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using ProjectMercury;
 using ProjectMercury.Renderers;
 
-using NePlusEngine;
+using NePlus;
 
-namespace NePlusEngine.Components.EffectComponents
+namespace NePlus.Components.EffectComponents
 {
     public class ParticleEffectComponent : Component
     {

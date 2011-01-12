@@ -4,7 +4,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
-namespace NePlusEngine.Components.PhysicsComponents
+namespace NePlus.Components.PhysicsComponents
 {
     public class RectanglePhysicsComponent : PhysicsComponent
     {
