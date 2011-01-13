@@ -82,7 +82,7 @@ namespace NePlus
             Engine.Update(gameTime);            
 
             // allows the game to exit
-            if (Engine.Input.IsCurPress(Engine.Configuration.QuitButton) || Engine.Input.IsCurPress(Engine.Configuration.QuitKey))
+            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "QuitButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "QuitKey")))
                 this.Exit();
 
             base.Update(gameTime);

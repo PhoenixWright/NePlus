@@ -55,7 +55,7 @@ namespace NePlus.Components.EngineComponents
 
         public override void Draw()
         {
-            if (Engine.Configuration.ShowDebugView)
+            if (Engine.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
             {
                 Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
                 Vector2 size = Engine.Camera.CurSize / (PixelsPerMeter * 2.0f);

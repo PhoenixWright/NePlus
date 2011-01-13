@@ -39,18 +39,18 @@ namespace NePlus.GameObjects
         {
             Position = PhysicsComponent.Position;
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.JumpButton) || Engine.Input.IsCurPress(Engine.Configuration.JumpKey))
+            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "JumpKey")))
             {
                 // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -6.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.LeftButton) || Engine.Input.IsCurPress(Engine.Configuration.LeftKey))
+            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "LeftKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.RightButton) || Engine.Input.IsCurPress(Engine.Configuration.RightKey))
+            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
