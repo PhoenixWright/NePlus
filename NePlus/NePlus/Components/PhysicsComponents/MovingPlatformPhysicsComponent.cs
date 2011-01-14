@@ -2,8 +2,11 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
+using FarseerPhysics.Dynamics;
+
 using NePlus;
 using NePlus.Components.PhysicsComponents;
+using NePlus.ScreenManagement;
 
 namespace NePlus.GameComponents.PhysicsComponents
 {
@@ -14,10 +17,9 @@ namespace NePlus.GameComponents.PhysicsComponents
         public MovingPlatformPhysicsComponent(Engine engine, List<Vector2> gameWorldPositionList, float speed)
             : base(engine)
         {
-            Engine.AddComponent(this);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
         }
     }

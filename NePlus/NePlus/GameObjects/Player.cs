@@ -4,11 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-using NePlus.GameComponents;
+using FarseerPhysics.Dynamics;
 
 using NePlus;
 using NePlus.Components.EffectComponents;
+using NePlus.Components.EngineComponents;
 using NePlus.Components.PhysicsComponents;
+using NePlus.GameComponents;
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects
 {
@@ -26,31 +30,31 @@ namespace NePlus.GameObjects
         {
             Position = position;
 
-            texture = Engine.Content.Load<Texture2D>(@"Characters\TestSquare");
+            texture = Global.Content.Load<Texture2D>(@"Characters\TestSquare");
 
             //ParticleEffectComponent = new ParticleEffectComponent(engine, "someName", Position);
-            PhysicsComponent = new RectanglePhysicsComponent(engine, texture.Bounds, position, true);
+            PhysicsComponent = new RectanglePhysicsComponent(Engine, texture.Bounds, position, true);
             PhysicsComponent.MainFixture.CollisionFilter.CollidesWith = FarseerPhysics.Dynamics.Category.Cat1;
 
             Engine.AddComponent(this);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             Position = PhysicsComponent.Position;
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "JumpKey")))
+            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
             {
                 // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -6.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "LeftKey")))
+            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.IsCurPress(Engine.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsCurPress(Engine.Configuration.GetKeyConfig("GameControls", "RightKey")))
+            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
@@ -58,7 +62,7 @@ namespace NePlus.GameObjects
             //ParticleEffectComponent.Position = this.Position;
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.Video.SpriteBatch.Draw(texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);

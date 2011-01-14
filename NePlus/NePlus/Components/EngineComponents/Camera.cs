@@ -9,7 +9,7 @@ using FarseerPhysics.Dynamics;
 
 namespace NePlus.Components.EngineComponents
 {
-    public class Camera
+    public class Camera : Component
     {
         Vector2 _position = Vector2.Zero;
         Vector2 _origPosition = Vector2.Zero;
@@ -86,9 +86,11 @@ namespace NePlus.Components.EngineComponents
         /// the size of the camera's view when at zoom = 1. This is usually 
         /// set to the viewport's size.
         /// </param>
-        public Camera(Vector2 size)
+        public Camera(Engine engine, Vector2 size) : base(engine)
         {
             _size = size;
+
+            Engine.AddComponent(this);
         }
         /// <summary>
         /// The current position of the camera.
@@ -330,7 +332,7 @@ namespace NePlus.Components.EngineComponents
         /// <param name="engine">
         /// the game engine
         /// </param>
-        public void Update()
+        public override void Update(GameTime gameTime)
         {
             if (!_transitioning)
             {

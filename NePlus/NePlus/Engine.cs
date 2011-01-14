@@ -5,77 +5,66 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
 using NePlus.Components.EngineComponents;
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
 
 namespace NePlus
 {
     public class Engine
     {
-        // game reference
-        public Game Game { get; private set; }
-        // game time
-        public GameTime GameTime { get; private set; }
-
-        // content reference
-        public ContentManager Content { get; private set; }
+        List<Component> components;
 
         public Audio Audio { get; private set; }
         public Camera Camera { get; private set; }
-        public Configuration Configuration { get; private set; }
-        public Input Input { get; private set; }
+        public InputState Input { get; private set; }
         public Physics Physics { get; private set; }
         public Video Video { get; private set; }
 
-        // components
-        List<Component> components;
-
-        public Engine(Game game, GraphicsDeviceManager gdm)
+        public Engine()
         {
             components = new List<Component>();
 
-            Game = game;
-
-            Content = game.Content;
-            Content.RootDirectory = "Content";
-
             Audio = new Audio(this);
-            Video = new Video(gdm);
-            Camera = new Camera(new Vector2(Video.Width, Video.Height));
-            Configuration = new Configuration();
-            Input = new Input();
+            Camera = new Camera(this, new Vector2(Global.Configuration.GetIntConfig("Video", "Width"), Global.Configuration.GetIntConfig("Video", "Height")));
+            Input = new InputState();
             Physics = new Physics(this);
+            Video = new Video(this);                        
         }
 
         public void LoadContent(Game game)
         {
-            Video.LoadContent(game);
+            foreach (Component c in components)
+                c.LoadContent();
+        }
+
+        public void UnloadContent()
+        {
+            foreach (Component c in components)
+                c.UnloadContent();
+        }
+
+        public void Pause()
+        {
+            Audio.Pause();
         }
 
         public void Update(GameTime gameTime)
-        {            
-            GameTime = gameTime;
-
-            Audio.Update();
-            Input.Update();
-            Camera.Update();
-            Physics.Update();
-
-            // Copy the list of components so the game won't crash if the original
-            // is modified while updating
-            List<Component> updating = new List<Component>();
+        {
+            Input.Update(gameTime);
+            Physics.Update(gameTime);
 
             foreach (Component c in components)
-                updating.Add(c);
-
-            foreach (Component c in updating)
-                c.Update();
+                c.Update(gameTime);
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
-            foreach (Component c in components)
-                c.Draw();
+            Video.GraphicsDevice.Clear(Color.Black);
 
-            Physics.Draw();
+            foreach (Component c in components)
+                c.Draw(gameTime);
+
+            Physics.Draw(gameTime);
         }
 
         public void AddComponent(Component Component)
@@ -83,7 +72,8 @@ namespace NePlus
             if (!components.Contains(Component))
             {
                 components.Add(Component);
-                Component.LoadComponent();
+                Component.Initialize();
+                Component.LoadContent();
                 PutComponentInOrder(Component);
             }
         }

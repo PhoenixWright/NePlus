@@ -4,6 +4,9 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
+
 namespace NePlus.Components.PhysicsComponents
 {
     public class RectanglePhysicsComponent : PhysicsComponent

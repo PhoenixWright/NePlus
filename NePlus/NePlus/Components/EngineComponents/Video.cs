@@ -5,13 +5,10 @@ using ProjectMercury.Renderers;
 
 namespace NePlus.Components.EngineComponents
 {
-    public class Video
+    public class Video : Component
     {
         // graphics device
         public GraphicsDevice GraphicsDevice { get; private set; }
-
-        // graphics device manager
-        public GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
 
         // spritebatch
         public SpriteBatch SpriteBatch { get; private set; }
@@ -23,36 +20,23 @@ namespace NePlus.Components.EngineComponents
         public int Height { get; private set; }
         public int Width { get; private set; }
 
-        public Video(GraphicsDeviceManager gdm)
+        public Video(Engine engine) : base(engine)
         {
-            // TODO: create this stuff somewhere other than Game1
-            GraphicsDeviceManager = gdm;
-            
-            // resolution
-            Height = 720;
-            Width = 1280;            
-
-            // graphics device manager
-            GraphicsDeviceManager.PreferredBackBufferWidth = Width;
-            GraphicsDeviceManager.PreferredBackBufferHeight = Height;
-            GraphicsDeviceManager.ApplyChanges();
-
             // particle effects
             ParticleRenderer = new SpriteBatchRenderer
             {
-                GraphicsDeviceService = GraphicsDeviceManager
+                GraphicsDeviceService = Global.GraphicsDeviceManager
             };
+
+            GraphicsDevice = Global.Game.GraphicsDevice;
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Engine.AddComponent(this);
         }
 
-        public void LoadContent(Game game)
+        public override void LoadContent()
         {
-            // grab the graphicsdevice from the Game class, which is first available during LoadContent which is why the code is here
-            GraphicsDevice = game.GraphicsDevice;
-
-            ParticleRenderer.LoadContent(game.Content);
-
-            // now that the GraphicsDevice exists we can create the game's SpriteBatch
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            ParticleRenderer.LoadContent(Global.Game.Content);
         }
     }
 }

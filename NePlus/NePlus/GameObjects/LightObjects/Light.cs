@@ -7,8 +7,11 @@ using FarseerPhysics.Dynamics;
 
 using NePlus;
 using NePlus.Components.GameComponents;
+using NePlus.Components.EngineComponents;
 using NePlus.Components.PhysicsComponents;
- 
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
+
 namespace NePlus.GameObjects.LightObjects
 {
     /// <summary>
@@ -31,7 +34,7 @@ namespace NePlus.GameObjects.LightObjects
         public Light(Engine engine, string lightTextureFilePath, Vector2 position, string motion)
             : base(engine)
         {
-            Texture = Engine.Content.Load<Texture2D>(lightTextureFilePath);
+            Texture = Global.Content.Load<Texture2D>(lightTextureFilePath);
 
             // set the origin to the top of the light texture in the middle
             TextureOrigin = new Vector2(Texture.Width / 2, 0);
@@ -46,11 +49,7 @@ namespace NePlus.GameObjects.LightObjects
             Engine.AddComponent(this);
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             if (PhysicsComponent != null)
             {
@@ -60,7 +59,7 @@ namespace NePlus.GameObjects.LightObjects
             ResolveLightEffect();
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
             if (DrawLight)
             {

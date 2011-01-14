@@ -6,6 +6,9 @@ using FarseerPhysics.Dynamics;
 
 using NePlus;
 using NePlus.Components.EffectComponents;
+using NePlus.Components.EngineComponents;
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects.LightObjects
 {
@@ -19,9 +22,9 @@ namespace NePlus.GameObjects.LightObjects
         private Vector2 gravityVector;
         public Vector2 GravityVector { get { return gravityVector; } }
 
-        public GravityLight(Engine engine, Vector2 position, string motion, float gravityValue) : base(engine, @"Lights\BlueSpotlight", position, motion)
+        public GravityLight(Engine engine, Vector2 position, string motionType, float gravityValue) : base(engine, @"Lights\BlueSpotlight", position, motionType)
         {
-            particleEffectComponent = new ParticleEffectComponent(Engine, "BeamMeUp", Position);
+            particleEffectComponent = new ParticleEffectComponent(engine, "BeamMeUp", Position);
 
             GravityValue = gravityValue;
             gravityVector = new Vector2(0.0f, GravityValue);
@@ -29,12 +32,12 @@ namespace NePlus.GameObjects.LightObjects
             EffectDelegate = GravityEffect;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             particleEffectComponent.Position = Position - new Vector2(0.0f, -200.0f);
             particleEffectComponent.DrawParticleEffect = EffectActive;
 
-            base.Update();
+            base.Update(gameTime);
         }
         
         public override void ResolveLightEffect()

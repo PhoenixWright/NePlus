@@ -64,7 +64,7 @@
     <Compile Include="Components\EngineComponents\Audio.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />
     <Compile Include="Components\EngineComponents\Configuration.cs" />
-    <Compile Include="Components\EngineComponents\Input.cs" />
+    <Compile Include="Components\EngineComponents\InputState.cs" />
     <Compile Include="Components\EngineComponents\Physics.cs" />
     <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
@@ -73,14 +73,27 @@
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GameObjects\Level.cs" />
     <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
     <Compile Include="GameObjects\LightObjects\Light.cs" />
     <Compile Include="GameObjects\LightObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ScreenManagement\GameScreen.cs" />
+    <Compile Include="ScreenManagement\ScreenManager.cs" />
+    <Compile Include="ScreenManagement\Screens\BackgroundScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\GameplayScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\IntroductionScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\LoadingScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\MainMenuScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\MenuEntry.cs" />
+    <Compile Include="ScreenManagement\Screens\MenuScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\MessageBoxScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\OptionsMenuScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\PauseMenuScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -1,4 +1,7 @@
-﻿using NePlus.Components.EngineComponents;
+﻿using Microsoft.Xna.Framework;
+
+using NePlus.Components.EngineComponents;
+using NePlus.ScreenManagement;
 
 namespace NePlus
 {
@@ -6,26 +9,14 @@ namespace NePlus
     {
         public Engine Engine;
 
-        // this is used to tell if the component has been loaded
-        bool loaded;
-
         // this is the component's draw order
         int drawOrder;
 
         public Component(Engine engine)
         {
             Engine = engine;
-            loaded = false;
             drawOrder = 0;
-        }
-
-        public void LoadComponent()
-        {
-            if (!loaded)
-                Load();
-
-            loaded = true;
-        }
+        }        
 
         public int DrawOrder
         {
@@ -38,16 +29,14 @@ namespace NePlus
             }
         }
 
-        protected virtual void Load()
-        {
-        }
+        public virtual void Initialize() { }
 
-        public virtual void Update()
-        {
-        }
+        public virtual void LoadContent() { }
 
-        public virtual void Draw()
-        {
-        }
+        public virtual void UnloadContent() { }
+
+        public virtual void Update(GameTime gameTime) { }
+
+        public virtual void Draw(GameTime gameTime) { }
     }
 }

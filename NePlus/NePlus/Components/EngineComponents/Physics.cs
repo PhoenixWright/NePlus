@@ -7,13 +7,15 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
+
 namespace NePlus.Components.EngineComponents
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class Physics : Component
     {
+        public Camera Camera { get; private set; }
+
         // used for conversion between game and physics scaling
         public float PixelsPerMeter { get; private set; }
 
@@ -25,13 +27,15 @@ namespace NePlus.Components.EngineComponents
         
         public Physics(Engine engine) : base(engine)
         {
+            Camera = Engine.Camera;
+
             // this should probably never change
-            PixelsPerMeter = 100.0f;
+            PixelsPerMeter = Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
 
             World = new World(new Vector2(0.0f, 9.8f));
 
             DebugView = new DebugViewXNA(World);
-            DebugView.LoadContent(Engine.Game.GraphicsDevice, Engine.Content);
+            DebugView.LoadContent(Global.Game.GraphicsDevice, Global.Content);
             uint flags = 0;
             flags += (uint)DebugViewFlags.AABB;
             flags += (uint)DebugViewFlags.CenterOfMass;
@@ -47,18 +51,18 @@ namespace NePlus.Components.EngineComponents
             DrawOrder = int.MaxValue;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             // update the physics world
-            World.Step(Math.Min((float)Engine.GameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+            World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
-            if (Engine.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
+            if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
             {
-                Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
-                Vector2 size = Engine.Camera.CurSize / (PixelsPerMeter * 2.0f);
+                Matrix view = Matrix.CreateTranslation(Camera.Position.X / -PixelsPerMeter, Camera.Position.Y / -PixelsPerMeter, 0);
+                Vector2 size = Camera.CurSize / (PixelsPerMeter * 2.0f);
                 Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
                 DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);
@@ -66,7 +70,7 @@ namespace NePlus.Components.EngineComponents
                 DebugView.RenderDebugData(ref proj, ref view);
             }
         }
-        
+
         /// <summary>
         /// Conversion function to calculate the game world position of a Farseer physics position.
         /// </summary>
@@ -74,9 +78,9 @@ namespace NePlus.Components.EngineComponents
         /// <returns>The game world position.</returns>
         public Vector2 PositionToGameWorld(Vector2 position)
         {
-            return position * PixelsPerMeter;
+            return position * Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
         }
-        
+
         /// <summary>
         /// Conversion function to calculate the physics world position of a game world position.
         /// </summary>
@@ -84,7 +88,7 @@ namespace NePlus.Components.EngineComponents
         /// <returns>The physics world position.</returns>
         public Vector2 PositionToPhysicsWorld(Vector2 position)
         {
-            return position / PixelsPerMeter;
+            return position / Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
         }
 
         /// <summary>
@@ -94,7 +98,7 @@ namespace NePlus.Components.EngineComponents
         /// <returns>The game world value.</returns>
         public float ValueToGameWorld(float value)
         {
-            return value * PixelsPerMeter;
+            return value * Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
         }
 
         /// <summary>
@@ -104,7 +108,7 @@ namespace NePlus.Components.EngineComponents
         /// <returns>The physics world value.</returns>
         public float ValueToPhysicsWorld(float value)
         {
-            return value / PixelsPerMeter;
+            return value / Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
         }
 
         public AABB CreateAABB(float gameWorldWidth, float gameWorldHeight, Vector2 gameWorldPosition)

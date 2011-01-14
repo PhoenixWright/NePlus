@@ -5,6 +5,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
+
 namespace NePlus.Components.PhysicsComponents
 {
     public class PendulumPhysicsComponent : PhysicsComponent

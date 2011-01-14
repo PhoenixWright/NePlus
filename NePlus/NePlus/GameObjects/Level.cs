@@ -15,6 +15,9 @@ using NePlus.GameObjects.LightObjects;
 
 using NePlus;
 using NePlus.Components.EffectComponents;
+using NePlus.Components.EngineComponents;
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects
 {
@@ -36,19 +39,16 @@ namespace NePlus.GameObjects
         /// <param name="mapPath">The relative path to the map.</param>
         public Level(Engine engine, string mapPath) : base(engine)
         {
-            Engine = engine;
             mapFilePath = mapPath;
             Lights = new List<Light>();
             levelParticleEffects = new List<ParticleEffectComponent>();
 
-            LoadLevel();
-
             Engine.AddComponent(this);
         }
 
-        private void LoadLevel()
+        public override void LoadContent()
         {
-            map = Engine.Content.Load<Map>(mapFilePath);
+            map = Global.Content.Load<Map>(mapFilePath);
             
             // loop through the map properties and handle them
             foreach (Property property in map.Properties)
@@ -95,7 +95,7 @@ namespace NePlus.GameObjects
             }
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
             Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
             map.Draw(Engine.Video.SpriteBatch);

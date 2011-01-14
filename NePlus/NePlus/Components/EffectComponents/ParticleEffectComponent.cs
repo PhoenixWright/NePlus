@@ -4,6 +4,8 @@ using ProjectMercury;
 using ProjectMercury.Renderers;
 
 using NePlus;
+using NePlus.ScreenManagement;
+using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.Components.EffectComponents
 {
@@ -22,8 +24,8 @@ namespace NePlus.Components.EffectComponents
             particleEffectName = effectName;
             this.Position = initialPosition;
             
-            particleEffect = Engine.Content.Load<ParticleEffect>(@"ParticleEffects\" + particleEffectName);
-            particleEffect.LoadContent(Engine.Content);
+            particleEffect = Global.Content.Load<ParticleEffect>(@"ParticleEffects\" + particleEffectName);
+            particleEffect.LoadContent(Global.Content);
             particleEffect.Initialise();
 
             DrawOrder = int.MaxValue - 1;
@@ -31,14 +33,14 @@ namespace NePlus.Components.EffectComponents
             Engine.AddComponent(this);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             particleEffect.Trigger(Position);
-            float deltaSeconds = (float)Engine.GameTime.ElapsedGameTime.TotalSeconds;
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             particleEffect.Update(deltaSeconds);
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
             if (DrawParticleEffect)
             {

@@ -12,7 +12,7 @@ namespace NePlus.Components.EngineComponents
 
         public Configuration()
         {
-            configFile = new ConfigFile("Content\\Config.ini");
+            configFile = new ConfigFile(@"Content\Config.ini");
         }
 
         public bool GetBooleanConfig(string settingsGroup, string settingName)
@@ -25,6 +25,11 @@ namespace NePlus.Components.EngineComponents
             string button = configFile.SettingGroups[settingsGroup].Settings[settingName].GetValueAsString();
 
             return (Buttons)Enum.Parse(typeof(Buttons), button, true);
+        }
+
+        public float GetFloatConfig(string settingsGroup, string settingName)
+        {
+            return configFile.SettingGroups[settingsGroup].Settings[settingName].GetValueAsFloat();
         }
         
         public int GetIntConfig(string settingsGroup, string settingName)
