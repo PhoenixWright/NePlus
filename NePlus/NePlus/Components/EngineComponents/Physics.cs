@@ -35,7 +35,7 @@ namespace NePlus.Components.EngineComponents
             World = new World(new Vector2(0.0f, 9.8f));
 
             DebugView = new DebugViewXNA(World);
-            DebugView.LoadContent(Global.Game.GraphicsDevice, Global.Content);
+            DebugView.LoadContent(Global.Game.GraphicsDevice, Engine.Content);
             uint flags = 0;
             flags += (uint)DebugViewFlags.AABB;
             flags += (uint)DebugViewFlags.CenterOfMass;

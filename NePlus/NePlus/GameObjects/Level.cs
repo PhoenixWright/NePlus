@@ -48,7 +48,7 @@ namespace NePlus.GameObjects
 
         public override void LoadContent()
         {
-            map = Global.Content.Load<Map>(mapFilePath);
+            map = Engine.Content.Load<Map>(mapFilePath);
             
             // loop through the map properties and handle them
             foreach (Property property in map.Properties)

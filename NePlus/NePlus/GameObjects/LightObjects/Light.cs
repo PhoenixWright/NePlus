@@ -34,7 +34,7 @@ namespace NePlus.GameObjects.LightObjects
         public Light(Engine engine, string lightTextureFilePath, Vector2 position, string motion)
             : base(engine)
         {
-            Texture = Global.Content.Load<Texture2D>(lightTextureFilePath);
+            Texture = Engine.Content.Load<Texture2D>(lightTextureFilePath);
 
             // set the origin to the top of the light texture in the middle
             TextureOrigin = new Vector2(Texture.Width / 2, 0);

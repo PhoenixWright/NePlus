@@ -44,7 +44,7 @@ namespace NePlus.ScreenManagement.Screens
         public override void HandleInput(InputState input)
         {
             // Move to the previous menu entry?
-            if (input.IsMenuUp())
+            if (input.IsMenuUp(ControllingPlayer))
             {
                 selectedEntry--;
 
@@ -53,7 +53,7 @@ namespace NePlus.ScreenManagement.Screens
             }
 
             // Move to the next menu entry?
-            if (input.IsMenuDown())
+            if (input.IsMenuDown(ControllingPlayer))
             {
                 selectedEntry++;
 
@@ -61,35 +61,46 @@ namespace NePlus.ScreenManagement.Screens
                     selectedEntry = 0;
             }
 
-            if (input.IsMenuSelect())
+            // Accept or cancel the menu? We pass in our ControllingPlayer, which may
+            // either be null (to accept input from any player) or a specific index.
+            // If we pass a null controlling player, the InputState helper returns to
+            // us which player actually provided the input. We pass that through to
+            // OnSelectEntry and OnCancel, so they can tell which player triggered them.
+            PlayerIndex playerIndex;
+
+            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
             {
-                OnSelectEntry(selectedEntry);
+                OnSelectEntry(selectedEntry, playerIndex);
             }
-            else if (input.IsMenuCancel())
+            else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
             {
-                OnCancel();
+                OnCancel(playerIndex);
             }
         }
 
         /// <summary>
         /// Handler for when the user has chosen a menu entry.
         /// </summary>
-        protected virtual void OnSelectEntry(int entryIndex)
+        protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
-            menuEntries[entryIndex].OnSelectEntry();
+            menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
         /// <summary>
         /// Handler for when the user has cancelled the menu.
         /// </summary>
-        protected virtual void OnCancel()
+        protected virtual void OnCancel(PlayerIndex playerIndex)
         {
             ExitScreen();
         }
 
-        protected void OnCancel(object sender, EventArgs e)
+
+        /// <summary>
+        /// Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
+        /// </summary>
+        protected void OnCancel(object sender, PlayerIndexEventArgs e)
         {
-            OnCancel();
+            OnCancel(e.PlayerIndex);
         }
 
         /// <summary>
@@ -112,7 +123,7 @@ namespace NePlus.ScreenManagement.Screens
                 MenuEntry menuEntry = menuEntries[i];
 
                 // each entry is to be centered horizontally
-                position.X = Global.Game.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -130,7 +141,8 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Updates the menu.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                                       bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 

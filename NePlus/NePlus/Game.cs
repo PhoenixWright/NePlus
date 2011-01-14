@@ -27,8 +27,8 @@ namespace NePlus
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
-            screenManager.AddScreen(new BackgroundScreen());
-            screenManager.AddScreen(new MainMenuScreen());
+            screenManager.AddScreen(new BackgroundScreen(), PlayerIndex.One);
+            screenManager.AddScreen(new MainMenuScreen(), PlayerIndex.One);
         }
 
         protected override void Initialize()

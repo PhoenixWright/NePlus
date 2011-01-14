@@ -14,15 +14,19 @@ namespace NePlus
     {
         List<Component> components;
 
+        public ContentManager Content { get; private set; }
+
         public Audio Audio { get; private set; }
         public Camera Camera { get; private set; }
         public InputState Input { get; private set; }
         public Physics Physics { get; private set; }
         public Video Video { get; private set; }
 
-        public Engine()
+        public Engine(ContentManager content)
         {
             components = new List<Component>();
+
+            Content = content;
 
             Audio = new Audio(this);
             Camera = new Camera(this, new Vector2(Global.Configuration.GetIntConfig("Video", "Width"), Global.Configuration.GetIntConfig("Video", "Height")));

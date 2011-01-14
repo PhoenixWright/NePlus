@@ -43,6 +43,7 @@ namespace NePlus.ScreenManagement.Screens
         /// Activates the loading screen.
         /// </summary>
         public static void Load(ScreenManager screenManager, bool loadingIsSlow,
+                                PlayerIndex? controllingPlayer,
                                 params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
@@ -54,7 +55,7 @@ namespace NePlus.ScreenManagement.Screens
                                                             loadingIsSlow,
                                                             screensToLoad);
 
-            screenManager.AddScreen(loadingScreen);
+            screenManager.AddScreen(loadingScreen, controllingPlayer);
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace NePlus.ScreenManagement.Screens
                 {
                     if (screen != null)
                     {
-                        ScreenManager.AddScreen(screen);
+                        ScreenManager.AddScreen(screen, ControllingPlayer);
                     }
                 }
 

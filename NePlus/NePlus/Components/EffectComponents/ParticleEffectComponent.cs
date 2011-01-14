@@ -24,8 +24,8 @@ namespace NePlus.Components.EffectComponents
             particleEffectName = effectName;
             this.Position = initialPosition;
             
-            particleEffect = Global.Content.Load<ParticleEffect>(@"ParticleEffects\" + particleEffectName);
-            particleEffect.LoadContent(Global.Content);
+            particleEffect = Engine.Content.Load<ParticleEffect>(@"ParticleEffects\" + particleEffectName);
+            particleEffect.LoadContent(Engine.Content);
             particleEffect.Initialise();
 
             DrawOrder = int.MaxValue - 1;

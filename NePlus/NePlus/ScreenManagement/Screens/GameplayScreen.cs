@@ -17,7 +17,9 @@ namespace NePlus.ScreenManagement.Screens
     /// put some more interesting gameplay in here!
     /// </summary>
     class GameplayScreen : GameScreen
-    {
+    {	
+		ContentManager content;
+		
         Engine Engine;
         Level Level;
         Player Player;
@@ -32,13 +34,7 @@ namespace NePlus.ScreenManagement.Screens
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
             
-            Engine = new Engine();
             
-            Level = new Level(Engine, @"Maps\TestMap");
-            
-            Player = new Player(Engine, Level.GetSpawnPoint());
-
-            Engine.Camera.TrackingBody = Player.PhysicsComponent.MainFixture.Body;
         }
 
         /// <summary>
@@ -46,6 +42,16 @@ namespace NePlus.ScreenManagement.Screens
         /// </summary>
         public override void LoadContent()
         {
+            if (content == null)
+                content = new ContentManager(ScreenManager.Game.Services, "Content");
+
+            Engine = new Engine(content);
+            
+            Level = new Level(Engine, @"Maps\TestMap");
+            
+            Player = new Player(Engine, Level.GetSpawnPoint());
+
+            Engine.Camera.TrackingBody = Player.PhysicsComponent.MainFixture.Body;
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
             // while, giving you a chance to admire the beautiful loading screen.
@@ -54,15 +60,15 @@ namespace NePlus.ScreenManagement.Screens
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
-            Global.Game.ResetElapsedTime();
+            ScreenManager.Game.ResetElapsedTime();
         }
 
         /// <summary>
-        /// Unloads the gameplay content
+        /// Unload graphics content used by the game.
         /// </summary>
         public override void UnloadContent()
         {
-            Engine.UnloadContent();
+            content.Unload();
         }
 
         /// <summary>
@@ -101,19 +107,22 @@ namespace NePlus.ScreenManagement.Screens
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            KeyboardState keyboardState = input.CurrentKeyboardState;
-            GamePadState gamePadState = input.CurrentGamePadState;
+            // Look up inputs for the active player profile.
+            int playerIndex = (int)ControllingPlayer.Value;
+
+            KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
+            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
 
             // The game pauses either if the user presses the pause button, or if
             // they unplug the active gamepad. This requires us to keep track of
             // whether a gamepad was ever plugged in, because we don't want to pause
             // on PC if they are playing with a keyboard and have no gamepad at all!
             bool gamePadDisconnected = !gamePadState.IsConnected &&
-                                       input.GamePadWasConnected;
+                                       input.GamePadWasConnected[playerIndex];
 
-            if (input.IsPauseGame() || gamePadDisconnected)
+            if (input.IsPauseGame(ControllingPlayer) || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(new PauseMenuScreen());
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
         }
 

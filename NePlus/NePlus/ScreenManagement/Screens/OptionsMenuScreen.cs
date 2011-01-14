@@ -78,7 +78,7 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event handler for when the Ungulate menu entry is selected.
         /// </summary>
-        void UngulateMenuEntrySelected(object sender, EventArgs e)
+        void UngulateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             currentUngulate++;
 
@@ -92,7 +92,7 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event handler for when the Language menu entry is selected.
         /// </summary>
-        void LanguageMenuEntrySelected(object sender, EventArgs e)
+        void LanguageMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             currentLanguage = (currentLanguage + 1) % languages.Length;
 
@@ -103,7 +103,7 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event handler for when the Frobnicate menu entry is selected.
         /// </summary>
-        void FrobnicateMenuEntrySelected(object sender, EventArgs e)
+        void FrobnicateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             frobnicate = !frobnicate;
 
@@ -114,7 +114,7 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event handler for when the Elf menu entry is selected.
         /// </summary>
-        void ElfMenuEntrySelected(object sender, EventArgs e)
+        void ElfMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             elf++;
 

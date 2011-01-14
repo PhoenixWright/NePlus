@@ -29,7 +29,7 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event handler for when the Quit Game menu entry is selected.
         /// </summary>
-        void QuitGameMenuEntrySelected(object sender, EventArgs e)
+        void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             const string message = "Are you sure you want to quit this game?";
 
@@ -37,7 +37,7 @@ namespace NePlus.ScreenManagement.Screens
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
 
-            ScreenManager.AddScreen(confirmQuitMessageBox);
+            ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
         }
 
         /// <summary>
@@ -45,9 +45,10 @@ namespace NePlus.ScreenManagement.Screens
         /// you want to quit" message box. This uses the loading screen to
         /// transition from the game back to the main menu screen.
         /// </summary>
-        void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
+        void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen());
         }
     }
 }

@@ -63,7 +63,8 @@ namespace NePlus.ScreenManagement
         /// <summary>
         /// Constructs a new screen manager component.
         /// </summary>
-        public ScreenManager(Game game) : base(game)
+        public ScreenManager(Game game)
+            : base(game)
         {
         }
         
@@ -72,8 +73,9 @@ namespace NePlus.ScreenManagement
         /// </summary>
         public override void Initialize()
         {
-            isInitialized = true;
             base.Initialize();
+
+            isInitialized = true;
         }
 
         /// <summary>
@@ -82,9 +84,10 @@ namespace NePlus.ScreenManagement
         protected override void LoadContent()
         {
             // Load content belonging to the screen manager.
-            ContentManager content = Global.Game.Content;
+            ContentManager content = Game.Content;
+            content.RootDirectory = "Content";
 
-            spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             font = content.Load<SpriteFont>(@"Fonts\MenuFont");
             blankTexture = content.Load<Texture2D>(@"Miscellaneous\Blank");
 
@@ -122,7 +125,7 @@ namespace NePlus.ScreenManagement
             foreach (GameScreen screen in screens)
                 screensToUpdate.Add(screen);
 
-            bool otherScreenHasFocus = !Global.Game.IsActive;
+            bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
 
             // Loop as long as there are screens waiting to be updated.
@@ -190,8 +193,9 @@ namespace NePlus.ScreenManagement
         /// <summary>
         /// Adds a new screen to the screen manager.
         /// </summary>
-        public void AddScreen(GameScreen screen)
+        public void AddScreen(GameScreen screen, PlayerIndex? controllingPlayer)
         {
+            screen.ControllingPlayer = controllingPlayer;
             screen.ScreenManager = this;
             screen.IsExiting = false;
 
@@ -238,13 +242,13 @@ namespace NePlus.ScreenManagement
         /// </summary>
         public void FadeBackBufferToBlack(float alpha)
         {
-            Viewport viewport = Global.Game.GraphicsDevice.Viewport;
+            Viewport viewport = GraphicsDevice.Viewport;
 
             spriteBatch.Begin();
 
             spriteBatch.Draw(blankTexture,
-                                new Rectangle(0, 0, viewport.Width, viewport.Height),
-                                Color.Black * alpha);
+                             new Rectangle(0, 0, viewport.Width, viewport.Height),
+                             Color.Black * alpha);
 
             spriteBatch.End();
         }

@@ -15,8 +15,8 @@ namespace NePlus.ScreenManagement.Screens
         string message;
         Texture2D gradientTexture;
 
-        public event EventHandler<EventArgs> Accepted;
-        public event EventHandler<EventArgs> Cancelled;
+        public event EventHandler<PlayerIndexEventArgs> Accepted;
+        public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
         /// <summary>
         /// Constructor automatically includes the standard "A=ok, B=cancel"
@@ -34,8 +34,8 @@ namespace NePlus.ScreenManagement.Screens
         public MessageBoxScreen(string message, bool includeUsageText)
         {
             const string usageText = "\nA button, Space, Enter = ok" +
-                                     "\nB button, Esc = cancel";
-
+                                     "\nB button, Esc = cancel"; 
+            
             if (includeUsageText)
                 this.message = message + usageText;
             else
@@ -56,7 +56,7 @@ namespace NePlus.ScreenManagement.Screens
         /// </summary>
         public override void LoadContent()
         {
-            ContentManager content = Global.Game.Content;
+            ContentManager content = ScreenManager.Game.Content;
 
             gradientTexture = content.Load<Texture2D>(@"Miscellaneous\Gradient");
         }
@@ -66,19 +66,26 @@ namespace NePlus.ScreenManagement.Screens
         /// </summary>
         public override void HandleInput(InputState input)
         {
-            if (input.IsMenuSelect())
+            PlayerIndex playerIndex;
+
+            // We pass in our ControllingPlayer, which may either be null (to
+            // accept input from any player) or a specific index. If we pass a null
+            // controlling player, the InputState helper returns to us which player
+            // actually provided the input. We pass that through to our Accepted and
+            // Cancelled events, so they can tell which player triggered them.
+            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
             {
                 // Raise the accepted event, then exit the message box.
                 if (Accepted != null)
-                    Accepted(this, new EventArgs());
+                    Accepted(this, new PlayerIndexEventArgs(playerIndex));
 
                 ExitScreen();
             }
-            else if (input.IsMenuCancel())
+            else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
             {
                 // Raise the cancelled event, then exit the message box.
                 if (Cancelled != null)
-                    Cancelled(this, new EventArgs());
+                    Cancelled(this, new PlayerIndexEventArgs(playerIndex));
 
                 ExitScreen();
             }
@@ -96,7 +103,7 @@ namespace NePlus.ScreenManagement.Screens
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
-            Viewport viewport = Global.Game.GraphicsDevice.Viewport;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
             Vector2 textPosition = (viewportSize - textSize) / 2;

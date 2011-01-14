@@ -1,10 +1,19 @@
-﻿using System;
+﻿#region File Description
+//-----------------------------------------------------------------------------
+// BackgroundScreen.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using System;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
-using NePlus.ScreenManagement;
+#endregion
 
 namespace NePlus.ScreenManagement.Screens
 {
@@ -45,7 +54,7 @@ namespace NePlus.ScreenManagement.Screens
         public override void LoadContent()
         {
             if (content == null)
-                content = new ContentManager(Global.Game.Services, "Content");
+                content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             backgroundTexture = content.Load<Texture2D>(@"Miscellaneous\Background");
         }
@@ -85,7 +94,7 @@ namespace NePlus.ScreenManagement.Screens
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            Viewport viewport = Global.Game.GraphicsDevice.Viewport;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
             spriteBatch.Begin();

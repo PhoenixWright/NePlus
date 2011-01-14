@@ -15,24 +15,26 @@ namespace NePlus.ScreenManagement
     {
         public const int MaxInputs = 4;
 
-        public KeyboardState CurrentKeyboardState { get; private set; }
-        public GamePadState CurrentGamePadState { get; private set; }
+        public readonly KeyboardState[] CurrentKeyboardStates;
+        public readonly GamePadState[] CurrentGamePadStates;
 
-        public KeyboardState LastKeyboardState { get; private set; }
-        public GamePadState LastGamePadState { get; private set; }
+        public readonly KeyboardState[] LastKeyboardStates;
+        public readonly GamePadState[] LastGamePadStates;
 
-        public bool GamePadWasConnected { get; private set; }
+        public readonly bool[] GamePadWasConnected;
 
         /// <summary>
         /// Constructs a new input state.
         /// </summary>
         public InputState()
         {
-            CurrentKeyboardState = new KeyboardState();
-            CurrentGamePadState = new GamePadState();
+            CurrentKeyboardStates = new KeyboardState[MaxInputs];
+            CurrentGamePadStates = new GamePadState[MaxInputs];
 
-            LastKeyboardState = new KeyboardState();
-            LastGamePadState = new GamePadState();
+            LastKeyboardStates = new KeyboardState[MaxInputs];
+            LastGamePadStates = new GamePadState[MaxInputs];
+
+            GamePadWasConnected = new bool[MaxInputs];
         }
 
         /// <summary>
@@ -40,18 +42,31 @@ namespace NePlus.ScreenManagement
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            LastKeyboardState = CurrentKeyboardState;
-            LastGamePadState = CurrentGamePadState;
-
-            CurrentKeyboardState = Keyboard.GetState();
-            CurrentGamePadState = GamePad.GetState(PlayerIndex.One);
-
-            // Keep track of whether a gamepad has ever been
-            // connected, so we can detect if it is unplugged.
-            if (CurrentGamePadState.IsConnected)
+            for (int i = 0; i < MaxInputs; i++)
             {
-                GamePadWasConnected = true;
+                LastKeyboardStates[i] = CurrentKeyboardStates[i];
+                LastGamePadStates[i] = CurrentGamePadStates[i];
+
+                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
+                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
+
+                // Keep track of whether a gamepad has ever been
+                // connected, so we can detect if it is unplugged.
+                if (CurrentGamePadStates[i].IsConnected)
+                {
+                    GamePadWasConnected[i] = true;
+                }
             }
+        }
+
+        public bool IsButtonDown(Buttons button)
+        {
+            return CurrentGamePadStates[0].IsButtonDown(button);
+        }
+
+        public bool IsKeyDown(Keys key)
+        {
+            return CurrentKeyboardStates[0].IsKeyDown(key);
         }
 
         /// <summary>
@@ -60,10 +75,27 @@ namespace NePlus.ScreenManagement
         /// If this is null, it will accept input from any player. When a keypress
         /// is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public bool IsNewKeyPress(Keys key)
+        public bool IsNewKeyPress(Keys key, PlayerIndex? controllingPlayer,
+                                            out PlayerIndex playerIndex)
         {
-                return (CurrentKeyboardState.IsKeyDown(key) &&
-                        LastKeyboardState.IsKeyUp(key));
+            if (controllingPlayer.HasValue)
+            {
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int)playerIndex;
+
+                return (CurrentKeyboardStates[i].IsKeyDown(key) &&
+                        LastKeyboardStates[i].IsKeyUp(key));
+            }
+            else
+            {
+                // Accept input from any player.
+                return (IsNewKeyPress(key, PlayerIndex.One, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Two, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Three, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Four, out playerIndex));
+            }
         }
         
         /// <summary>
@@ -72,10 +104,27 @@ namespace NePlus.ScreenManagement
         /// If this is null, it will accept input from any player. When a button press
         /// is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public bool IsNewButtonPress(Buttons button)
+        public bool IsNewButtonPress(Buttons button, PlayerIndex? controllingPlayer,
+                                                     out PlayerIndex playerIndex)
         {
-            return (CurrentGamePadState.IsButtonDown(button) &&
-                    LastGamePadState.IsButtonUp(button));
+            if (controllingPlayer.HasValue)
+            {
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int)playerIndex;
+
+                return (CurrentGamePadStates[i].IsButtonDown(button) &&
+                        LastGamePadStates[i].IsButtonUp(button));
+            }
+            else
+            {
+                // Accept input from any player.
+                return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Two, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Three, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Four, out playerIndex));
+            }
         }
 
         /// <summary>
@@ -84,12 +133,13 @@ namespace NePlus.ScreenManagement
         /// If this is null, it will accept input from any player. When the action
         /// is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public bool IsMenuSelect()
+        public bool IsMenuSelect(PlayerIndex? controllingPlayer,
+                                 out PlayerIndex playerIndex)
         {
-            return IsNewKeyPress(Keys.Space) ||
-                   IsNewKeyPress(Keys.Enter) ||
-                   IsNewButtonPress(Buttons.A) ||
-                   IsNewButtonPress(Buttons.Start);
+            return IsNewKeyPress(Keys.Space, controllingPlayer, out playerIndex) ||
+                   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.A, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
         }
 
         /// <summary>
@@ -98,11 +148,12 @@ namespace NePlus.ScreenManagement
         /// If this is null, it will accept input from any player. When the action
         /// is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public bool IsMenuCancel()
+        public bool IsMenuCancel(PlayerIndex? controllingPlayer,
+                                 out PlayerIndex playerIndex)
         {
-            return IsNewKeyPress(Keys.Escape) ||
-                   IsNewButtonPress(Buttons.B) ||
-                   IsNewButtonPress(Buttons.Back);
+            return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.B, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex);
         }
 
         /// <summary>
@@ -110,11 +161,13 @@ namespace NePlus.ScreenManagement
         /// The controllingPlayer parameter specifies which player to read
         /// input for. If this is null, it will accept input from any player.
         /// </summary>
-        public bool IsMenuUp()
+        public bool IsMenuUp(PlayerIndex? controllingPlayer)
         {
-            return IsNewKeyPress(Keys.Up) ||
-                   IsNewButtonPress(Buttons.DPadUp) ||
-                   IsNewButtonPress(Buttons.LeftThumbstickUp);
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
         }
 
         /// <summary>
@@ -122,11 +175,13 @@ namespace NePlus.ScreenManagement
         /// The controllingPlayer parameter specifies which player to read
         /// input for. If this is null, it will accept input from any player.
         /// </summary>
-        public bool IsMenuDown()
+        public bool IsMenuDown(PlayerIndex? controllingPlayer)
         {
-            return IsNewKeyPress(Keys.Down) ||
-                   IsNewButtonPress(Buttons.DPadDown) ||
-                   IsNewButtonPress(Buttons.LeftThumbstickDown);
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.DPadDown, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.LeftThumbstickDown, controllingPlayer, out playerIndex);
         }
 
 
@@ -135,11 +190,13 @@ namespace NePlus.ScreenManagement
         /// The controllingPlayer parameter specifies which player to read
         /// input for. If this is null, it will accept input from any player.
         /// </summary>
-        public bool IsPauseGame()
+        public bool IsPauseGame(PlayerIndex? controllingPlayer)
         {
-            return IsNewKeyPress(Keys.Escape) ||
-                   IsNewButtonPress(Buttons.Back) ||
-                   IsNewButtonPress(Buttons.Start);
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
         }
     }
 }

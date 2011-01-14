@@ -83,10 +83,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManagement\GameScreen.cs" />
+    <Compile Include="ScreenManagement\PlayerIndexEventArgs.cs" />
     <Compile Include="ScreenManagement\ScreenManager.cs" />
     <Compile Include="ScreenManagement\Screens\BackgroundScreen.cs" />
     <Compile Include="ScreenManagement\Screens\GameplayScreen.cs" />
-    <Compile Include="ScreenManagement\Screens\IntroductionScreen.cs" />
     <Compile Include="ScreenManagement\Screens\LoadingScreen.cs" />
     <Compile Include="ScreenManagement\Screens\MainMenuScreen.cs" />
     <Compile Include="ScreenManagement\Screens\MenuEntry.cs" />

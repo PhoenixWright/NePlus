@@ -30,7 +30,7 @@ namespace NePlus.GameObjects
         {
             Position = position;
 
-            texture = Global.Content.Load<Texture2D>(@"Characters\TestSquare");
+            texture = Engine.Content.Load<Texture2D>(@"Characters\TestSquare");
 
             //ParticleEffectComponent = new ParticleEffectComponent(engine, "someName", Position);
             PhysicsComponent = new RectanglePhysicsComponent(Engine, texture.Bounds, position, true);
@@ -43,18 +43,18 @@ namespace NePlus.GameObjects
         {
             Position = PhysicsComponent.Position;
 
-            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
+            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
             {
                 // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -6.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
+            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
-            if (Engine.Input.CurrentGamePadState.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.CurrentKeyboardState.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
+            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
                 PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }

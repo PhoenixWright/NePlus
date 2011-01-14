@@ -27,6 +27,9 @@ namespace NePlus.ScreenManagement
     /// </summary>
     public abstract class GameScreen
     {
+        #region Properties
+
+
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
         /// the first screen will transition off to make room for the new
@@ -39,6 +42,7 @@ namespace NePlus.ScreenManagement
             get { return isPopup; }
             protected set { isPopup = value; }
         }
+
         bool isPopup = false;
 
 
@@ -51,7 +55,9 @@ namespace NePlus.ScreenManagement
             get { return transitionOnTime; }
             protected set { transitionOnTime = value; }
         }
+
         TimeSpan transitionOnTime = TimeSpan.Zero;
+
 
         /// <summary>
         /// Indicates how long the screen takes to
@@ -62,7 +68,9 @@ namespace NePlus.ScreenManagement
             get { return transitionOffTime; }
             protected set { transitionOffTime = value; }
         }
+
         TimeSpan transitionOffTime = TimeSpan.Zero;
+
 
         /// <summary>
         /// Gets the current position of the screen transition, ranging
@@ -74,7 +82,9 @@ namespace NePlus.ScreenManagement
             get { return transitionPosition; }
             protected set { transitionPosition = value; }
         }
+
         float transitionPosition = 1;
+
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
@@ -86,6 +96,7 @@ namespace NePlus.ScreenManagement
             get { return 1f - TransitionPosition; }
         }
 
+
         /// <summary>
         /// Gets the current screen transition state.
         /// </summary>
@@ -96,6 +107,7 @@ namespace NePlus.ScreenManagement
         }
 
         ScreenState screenState = ScreenState.TransitionOn;
+
 
         /// <summary>
         /// There are two possible reasons why a screen might be transitioning
@@ -110,7 +122,9 @@ namespace NePlus.ScreenManagement
             get { return isExiting; }
             protected internal set { isExiting = value; }
         }
+
         bool isExiting = false;
+
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
@@ -127,6 +141,7 @@ namespace NePlus.ScreenManagement
 
         bool otherScreenHasFocus;
 
+
         /// <summary>
         /// Gets the manager that this screen belongs to.
         /// </summary>
@@ -135,7 +150,29 @@ namespace NePlus.ScreenManagement
             get { return screenManager; }
             internal set { screenManager = value; }
         }
+
         ScreenManager screenManager;
+
+
+        /// <summary>
+        /// Gets the index of the player who is currently controlling this screen,
+        /// or null if it is accepting input from any player. This is used to lock
+        /// the game to a specific player profile. The main menu responds to input
+        /// from any connected gamepad, but whichever player makes a selection from
+        /// this menu is given control over all subsequent screens, so other gamepads
+        /// are inactive until the controlling player returns to the main menu.
+        /// </summary>
+        public PlayerIndex? ControllingPlayer
+        {
+            get { return controllingPlayer; }
+            internal set { controllingPlayer = value; }
+        }
+
+        PlayerIndex? controllingPlayer;
+        #endregion
+
+        #region Initialization
+
 
         /// <summary>
         /// Load graphics content for the screen.
@@ -147,12 +184,19 @@ namespace NePlus.ScreenManagement
         /// </summary>
         public virtual void UnloadContent() { }
 
+
+        #endregion
+
+        #region Update and Draw
+
+
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
         /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
-        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                                      bool coveredByOtherScreen)
         {
             this.otherScreenHasFocus = otherScreenHasFocus;
 
@@ -239,9 +283,7 @@ namespace NePlus.ScreenManagement
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw(GameTime gameTime) 
-        {
-        }
+        public virtual void Draw(GameTime gameTime) { }
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
@@ -261,5 +303,7 @@ namespace NePlus.ScreenManagement
                 isExiting = true;
             }
         }
+
+        #endregion
     }
 }

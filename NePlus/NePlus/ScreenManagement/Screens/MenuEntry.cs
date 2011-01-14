@@ -54,16 +54,16 @@ namespace NePlus.ScreenManagement.Screens
         /// <summary>
         /// Event raised when the menu entry is selected.
         /// </summary>
-        public event EventHandler<EventArgs> Selected;
+        public event EventHandler<PlayerIndexEventArgs> Selected;
 
 
         /// <summary>
         /// Method for raising the Selected event.
         /// </summary>
-        protected internal virtual void OnSelectEntry()
+        protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
             if (Selected != null)
-                Selected(new object(), new EventArgs());
+                Selected(this, new PlayerIndexEventArgs(playerIndex));
         }
 
         /// <summary>
