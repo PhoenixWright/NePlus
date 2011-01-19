@@ -20,7 +20,7 @@ namespace NePlus.GameObjects
     {
         // components
         public ParticleEffectComponent ParticleEffectComponent { get; private set; }
-        public RectanglePhysicsComponent PhysicsComponent { get; private set; }
+        public PlayerPhysicsComponent PhysicsComponent { get; private set; }
 
         // variables
         public Vector2 Position { get; private set; }
@@ -33,7 +33,8 @@ namespace NePlus.GameObjects
             texture = Engine.Content.Load<Texture2D>(@"Characters\TestSquare");
 
             //ParticleEffectComponent = new ParticleEffectComponent(engine, "someName", Position);
-            PhysicsComponent = new RectanglePhysicsComponent(Engine, texture.Bounds, position, true);
+            //PhysicsComponent = new RectanglePhysicsComponent(Engine, texture.Bounds, position, true);
+            PhysicsComponent = new PlayerPhysicsComponent(Engine, position, true);
             PhysicsComponent.MainFixture.CollisionFilter.CollidesWith = FarseerPhysics.Dynamics.Category.Cat1;
 
             Engine.AddComponent(this);
@@ -43,20 +44,22 @@ namespace NePlus.GameObjects
         {
             Position = PhysicsComponent.Position;
 
-            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
-            {
-                // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
-                PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -6.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
-            }
+            // check if the player is even able to jump before we check for input
+            //if (PhysicsComponent.MainFixture.Body.
+                if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
+                {
+                    // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
+                    PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -10.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
+                }
 
             if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
             {
-                PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
+                PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-4.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
             if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
-                PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(2.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
+                PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(4.0f, 0.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
             }
 
             //ParticleEffectComponent.Position = this.Position;
@@ -64,9 +67,9 @@ namespace NePlus.GameObjects
 
         public override void Draw(GameTime gameTime)
         {
-            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.Video.SpriteBatch.Draw(texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
-            Engine.Video.SpriteBatch.End();
+            Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
+            Engine.SpriteBatch.Draw(texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+            Engine.SpriteBatch.End();
         }
     }
 }

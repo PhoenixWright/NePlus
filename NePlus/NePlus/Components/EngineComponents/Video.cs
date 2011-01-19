@@ -10,9 +10,6 @@ namespace NePlus.Components.EngineComponents
         // graphics device
         public GraphicsDevice GraphicsDevice { get; private set; }
 
-        // spritebatch
-        public SpriteBatch SpriteBatch { get; private set; }
-
         // particle effect renderer
         public Renderer ParticleRenderer { get; private set; }
 
@@ -29,7 +26,6 @@ namespace NePlus.Components.EngineComponents
             };
 
             GraphicsDevice = Global.Game.GraphicsDevice;
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Engine.AddComponent(this);
         }

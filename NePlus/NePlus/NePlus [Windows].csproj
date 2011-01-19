@@ -133,6 +133,7 @@
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\PlayerPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />

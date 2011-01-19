@@ -63,18 +63,18 @@ namespace NePlus.GameObjects.LightObjects
         {
             if (DrawLight)
             {
-                Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
+                Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
                 
                 if (PhysicsComponent != null)
                 {
-                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
+                    Engine.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
                 }
                 else
                 {
-                    Engine.Video.SpriteBatch.Draw(Texture, Position, null, Color.White, 0.0f, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
+                    Engine.SpriteBatch.Draw(Texture, Position, null, Color.White, 0.0f, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
                 }
 
-                Engine.Video.SpriteBatch.End();
+                Engine.SpriteBatch.End();
             }
         }
 

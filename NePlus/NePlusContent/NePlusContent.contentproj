@@ -91,12 +91,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Maps\TestMap.tmx">
-      <SubType>Designer</SubType>
-      <Name>TestMap</Name>
-      <Importer>TmxImporter</Importer>
-      <Processor>TmxProcessor</Processor>
-    </Compile>
     <Compile Include="Characters\TestSquare.png">
       <Name>TestSquare</Name>
       <Importer>TextureImporter</Importer>
@@ -104,6 +98,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Maps\TestMap.tmx">
+      <SubType>Designer</SubType>
+      <Name>TestMap</Name>
+      <Importer>TmxImporter</Importer>
+      <Processor>TmxProcessor</Processor>
+    </Compile>
     <Compile Include="ParticleEffects\Rain.xml">
       <Name>Rain</Name>
       <Importer>XmlImporter</Importer>

@@ -33,8 +33,6 @@ namespace NePlus.ScreenManagement.Screens
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
-            
-            
         }
 
         /// <summary>
@@ -52,6 +50,7 @@ namespace NePlus.ScreenManagement.Screens
             Player = new Player(Engine, Level.GetSpawnPoint());
 
             Engine.Camera.TrackingBody = Player.PhysicsComponent.MainFixture.Body;
+
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
             // while, giving you a chance to admire the beautiful loading screen.
@@ -131,8 +130,10 @@ namespace NePlus.ScreenManagement.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            Engine.Draw(gameTime);
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
 
+            Engine.Draw(gameTime);
+            
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {

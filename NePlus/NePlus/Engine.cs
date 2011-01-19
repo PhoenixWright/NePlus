@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 using NePlus.Components.EngineComponents;
 using NePlus.ScreenManagement;
@@ -22,6 +23,8 @@ namespace NePlus
         public Physics Physics { get; private set; }
         public Video Video { get; private set; }
 
+        public SpriteBatch SpriteBatch { get; private set; }
+
         public Engine(ContentManager content)
         {
             components = new List<Component>();
@@ -32,7 +35,9 @@ namespace NePlus
             Camera = new Camera(this, new Vector2(Global.Configuration.GetIntConfig("Video", "Width"), Global.Configuration.GetIntConfig("Video", "Height")));
             Input = new InputState();
             Physics = new Physics(this);
-            Video = new Video(this);                        
+            Video = new Video(this);
+
+            SpriteBatch = new SpriteBatch(Global.GraphicsDeviceManager.GraphicsDevice);
         }
 
         public void LoadContent(Game game)

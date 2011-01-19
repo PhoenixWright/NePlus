@@ -97,9 +97,9 @@ namespace NePlus.GameObjects
 
         public override void Draw(GameTime gameTime)
         {
-            Engine.Video.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-            map.Draw(Engine.Video.SpriteBatch);
-            Engine.Video.SpriteBatch.End();
+            Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
+            map.Draw(Engine.SpriteBatch);
+            Engine.SpriteBatch.End();
         }
 
 
@@ -160,7 +160,7 @@ namespace NePlus.GameObjects
 
         public void CreateParticleEffect(string particleEffectName)
         {
-            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(Engine.Video.Width / 2, 0)));
+            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(0, 0)));
         }
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died

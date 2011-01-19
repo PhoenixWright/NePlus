@@ -5,7 +5,7 @@ Release = February 2010;
 
 Options
 {
-    Report File = E:\Important\My Dropbox\Senior Project\NePlus\NePlus\NePlusContent\Audio\xact_build_log.txt;
+    Report File = buildlog.txt;
     Verbose Report = 1;
     Generate C/C++ Headers = 1;
 }
@@ -17,8 +17,8 @@ Global Settings
     Header File = NePlusAudio.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 2721080868;
-    Last Modified High = 30126813;
+    Last Modified Low = 2972121676;
+    Last Modified High = 30128154;
 
     Category
     {
@@ -228,10 +228,10 @@ Wave Bank
     Compression Preset Name = <none>;
     Xbox Bank Last Modified Low = 0;
     Xbox Bank Last Modified High = 0;
-    PC Bank Last Modified Low = 2190155213;
-    PC Bank Last Modified High = 30126816;
-    Bank Last Revised Low = 1965693284;
-    Bank Last Revised High = 30126816;
+    PC Bank Last Modified Low = 2973031728;
+    PC Bank Last Modified High = 30128154;
+    Bank Last Revised Low = 2972731711;
+    Bank Last Revised High = 30128154;
 
     Wave
     {
@@ -328,9 +328,9 @@ Wave Bank
     Wave
     {
         Name = Rain;
-        File = E:\Important\My Dropbox\Development\Projects\NePlus\NePlus\NePlusContent\Audio\Ambience\Rain.wav;
-        Build Settings Last Modified Low = 2332820017;
-        Build Settings Last Modified High = 30126813;
+        File = Ambience\Rain.wav;
+        Build Settings Last Modified Low = 2252760531;
+        Build Settings Last Modified High = 30128154;
 
         Cache
         {
@@ -379,8 +379,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 2192815365;
-    Bank Last Modified High = 30126816;
+    Bank Last Modified Low = 2976361919;
+    Bank Last Modified High = 30128154;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 

@@ -71,6 +71,7 @@
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\PlayerPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />
@@ -86,7 +87,9 @@
     <Compile Include="ScreenManagement\PlayerIndexEventArgs.cs" />
     <Compile Include="ScreenManagement\ScreenManager.cs" />
     <Compile Include="ScreenManagement\Screens\BackgroundScreen.cs" />
-    <Compile Include="ScreenManagement\Screens\GameplayScreen.cs" />
+    <Compile Include="ScreenManagement\Screens\GameplayScreen.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ScreenManagement\Screens\LoadingScreen.cs" />
     <Compile Include="ScreenManagement\Screens\MainMenuScreen.cs" />
     <Compile Include="ScreenManagement\Screens\MenuEntry.cs" />
