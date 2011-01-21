@@ -14,8 +14,8 @@ using NePlus.GameObjects;
 using NePlus.GameObjects.LightObjects;
 
 using NePlus;
-using NePlus.Components.EffectComponents;
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GraphicsComponents;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 

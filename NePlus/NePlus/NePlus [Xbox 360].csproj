@@ -60,14 +60,16 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Component.cs" />
-    <Compile Include="Components\EffectComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />
     <Compile Include="Components\EngineComponents\Configuration.cs" />
     <Compile Include="Components\EngineComponents\InputState.cs" />
+    <Compile Include="Components\EngineComponents\Lighting.cs" />
     <Compile Include="Components\EngineComponents\Physics.cs" />
     <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\GraphicsComponents\LightingComponent.cs" />
+    <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
@@ -81,6 +83,12 @@
     <Compile Include="GameObjects\LightObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Krypton\KryptonEngine.cs" />
+    <Compile Include="Krypton\KryptonRenderHelper.cs" />
+    <Compile Include="Krypton\LightHelper.cs" />
+    <Compile Include="Krypton\Lights\ILight2D.cs" />
+    <Compile Include="Krypton\Lights\PointLight.cs" />
+    <Compile Include="Krypton\ShadowHull.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManagement\GameScreen.cs" />

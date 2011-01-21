@@ -21,8 +21,6 @@ namespace NePlus.GameObjects.LightObjects
         {
             WorldLights = worldLights;
             AffectedLights = new List<Light>();
-
-            DrawOrder = int.MaxValue - 1;
         }
 
         public override void ResolveLightEffect()

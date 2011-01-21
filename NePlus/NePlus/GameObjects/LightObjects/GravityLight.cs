@@ -5,8 +5,8 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 
 using NePlus;
-using NePlus.Components.EffectComponents;
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GraphicsComponents;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 

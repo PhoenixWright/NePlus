@@ -20,6 +20,7 @@ namespace NePlus
         public Audio Audio { get; private set; }
         public Camera Camera { get; private set; }
         public InputState Input { get; private set; }
+        public Lighting Lighting { get; private set; }
         public Physics Physics { get; private set; }
         public Video Video { get; private set; }
 
@@ -33,10 +34,13 @@ namespace NePlus
 
             Audio = new Audio(this);
             Camera = new Camera(this, new Vector2(Global.Configuration.GetIntConfig("Video", "Width"), Global.Configuration.GetIntConfig("Video", "Height")));
-            Input = new InputState();
+            Input = new InputState();            
             Physics = new Physics(this);
             Video = new Video(this);
 
+            // lighting requires video
+            Lighting = new Lighting(this);
+            
             SpriteBatch = new SpriteBatch(Global.GraphicsDeviceManager.GraphicsDevice);
         }
 

@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 
 using NePlus;
-using NePlus.Components.EffectComponents;
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GraphicsComponents;
 using NePlus.Components.PhysicsComponents;
 using NePlus.GameComponents;
 using NePlus.ScreenManagement;

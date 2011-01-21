@@ -7,7 +7,7 @@ using NePlus;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 
-namespace NePlus.Components.EffectComponents
+namespace NePlus.Components.GraphicsComponents
 {
     public class ParticleEffectComponent : Component
     {
