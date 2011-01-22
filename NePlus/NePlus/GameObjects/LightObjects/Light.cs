@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 
 using NePlus;
-using NePlus.Components.GameComponents;
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GameComponents;
+using NePlus.Components.GraphicsComponents;
 using NePlus.Components.PhysicsComponents;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
@@ -25,25 +26,20 @@ namespace NePlus.GameObjects.LightObjects
 
         public Vector2 Position { get; protected set; }
         public float Rotation { get; protected set; }
-        public Texture2D Texture { get; protected set; }
-        public Vector2 TextureOrigin { get; protected set; }
         public Func<Fixture, bool> EffectDelegate { get; protected set; }
 
+        public LightingComponent LightingComponent;
         public PhysicsComponent PhysicsComponent;
 
-        public Light(Engine engine, string lightTextureFilePath, Vector2 position, string motion)
+        public Light(Engine engine, Vector2 position, float range, Color color, string motion)
             : base(engine)
         {
-            Texture = Engine.Content.Load<Texture2D>(lightTextureFilePath);
-
-            // set the origin to the top of the light texture in the middle
-            TextureOrigin = new Vector2(Texture.Width / 2, 0);
-
             DrawLight = true;
             EffectActive = true;
 
             Position = position;
 
+            CreateLightComponent(position, range, color);
             CreatePhysicsComponent(motion);
 
             Engine.AddComponent(this);
@@ -56,26 +52,14 @@ namespace NePlus.GameObjects.LightObjects
                 Position = PhysicsComponent.Position;
             }
 
+            LightingComponent.Light.Position = Position;
+
             ResolveLightEffect();
         }
 
-        public override void Draw(GameTime gameTime)
+        private void CreateLightComponent(Vector2 position, float range, Color color)
         {
-            if (DrawLight)
-            {
-                Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
-                
-                if (PhysicsComponent != null)
-                {
-                    Engine.SpriteBatch.Draw(Texture, Position, null, Color.White, PhysicsComponent.MainFixture.Body.Rotation, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
-                }
-                else
-                {
-                    Engine.SpriteBatch.Draw(Texture, Position, null, Color.White, 0.0f, TextureOrigin, 1.0f, SpriteEffects.None, 1.0f);
-                }
-
-                Engine.SpriteBatch.End();
-            }
+            LightingComponent = new LightingComponent(Engine, position, range, color);
         }
 
         private void CreatePhysicsComponent(string motionType)
@@ -97,23 +81,27 @@ namespace NePlus.GameObjects.LightObjects
 
         public bool CollidingWithRectangle(RotatedRectangle rectangle)
         {
-            RotatedRectangle myRectangle = new RotatedRectangle(new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height), PhysicsComponent.MainFixture.Body.Rotation);
+            //RotatedRectangle myRectangle = new RotatedRectangle(new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height), PhysicsComponent.MainFixture.Body.Rotation);
 
-            return myRectangle.Intersects(rectangle);
+            //return myRectangle.Intersects(rectangle);
+
+            return false;
         }
 
         public bool PositionInLight(Vector2 position)
         {
-            Vector2 middleInGameWorld = Position + new Vector2(0.0f, Texture.Height / 2);
+            //Vector2 middleInGameWorld = Position + new Vector2(0.0f, Texture.Height / 2);
 
-            Engine.Physics.DebugView.DrawPoint(Engine.Physics.PositionToPhysicsWorld(middleInGameWorld), 0.1f, Color.Yellow);
+            //Engine.Physics.DebugView.DrawPoint(Engine.Physics.PositionToPhysicsWorld(middleInGameWorld), 0.1f, Color.Yellow);
 
-            bool positionInLight = position.X > middleInGameWorld.X - Texture.Width / 2
-                                && position.X < middleInGameWorld.X + Texture.Width / 2
-                                && position.Y > middleInGameWorld.Y - Texture.Height / 2
-                                && position.Y < middleInGameWorld.Y + Texture.Height / 2;
+            //bool positionInLight = position.X > middleInGameWorld.X - Texture.Width / 2
+            //                    && position.X < middleInGameWorld.X + Texture.Width / 2
+            //                    && position.Y > middleInGameWorld.Y - Texture.Height / 2
+            //                    && position.Y < middleInGameWorld.Y + Texture.Height / 2;
 
-            return positionInLight;
+            //return positionInLight;
+
+            return false;
         }
 
         abstract public void ResolveLightEffect();

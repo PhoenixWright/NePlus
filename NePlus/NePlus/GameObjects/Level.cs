@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -134,6 +135,23 @@ namespace NePlus.GameObjects
                 throw new Exception("Failed to retrieve light type from " + lightObject.Name + " in map " + mapFilePath);
             }
 
+            Property lightRange;
+            if (lightObject.Properties.TryGetValue("LightRange", out lightRange) == false)
+            {
+                throw new Exception("Failed to retrieve light range from " + lightObject.Name + " in map " + mapFilePath);
+            }
+            float lightRangeValue = float.Parse(lightRange.RawValue);
+
+            Property lightColorString;
+            if (lightObject.Properties.TryGetValue("LightColor", out lightColorString) == false)
+            {
+                throw new Exception("Failed to retrieve light color from " + lightObject.Name + " in map " + mapFilePath);
+            }
+
+            // use reflection to get a Color from a string
+            PropertyInfo colorProperty = typeof(Color).GetProperty(lightColorString.RawValue);
+            Color lightColor = (Color)colorProperty.GetValue(null, null);
+
             switch (lightType.RawValue)
             {
                 case "Gravity":
@@ -143,14 +161,13 @@ namespace NePlus.GameObjects
                     {
                         throw new Exception("Failed to retrieve gravity value from " + lightObject.Name + " in map " + mapFilePath);
                     }
-
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(Engine, position, lightMotion.RawValue, gravityValue));
+                    Lights.Add(new GravityLight(Engine, position, lightRangeValue, lightColor, lightMotion.RawValue, gravityValue));
                     break;
                     
                 case "Null":
-                    Lights.Add(new NullLight(Engine, Lights, position, lightMotion.RawValue));
+                    Lights.Add(new NullLight(Engine, Lights, position, lightRangeValue, lightColor, lightMotion.RawValue));
                     break;
 
                 default:

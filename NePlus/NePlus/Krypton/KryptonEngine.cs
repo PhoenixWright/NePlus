@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -179,6 +180,9 @@ namespace NePlus.Krypton
         public void LightMapPresent()
         {
             RenderHelper.DrawTextureToTarget(this.mMapFinal, BlendTechnique.Multiply);
+
+            //Stream stream = File.OpenWrite("test.png");
+            //mMapFinal.SaveAsPng(stream, mMapFinal.Width, mMapFinal.Height);
         }
     }
 }

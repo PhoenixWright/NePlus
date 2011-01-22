@@ -132,6 +132,7 @@
     <Compile Include="Components\EngineComponents\Physics.cs" />
     <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />

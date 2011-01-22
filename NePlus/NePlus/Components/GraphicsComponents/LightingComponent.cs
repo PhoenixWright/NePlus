@@ -1,6 +1,25 @@
-﻿namespace NePlus.Components.GraphicsComponents
+﻿using Microsoft.Xna.Framework;
+
+using NePlus.Krypton;
+using NePlus.Krypton.Lights;
+
+namespace NePlus.Components.GraphicsComponents
 {
-    public class LightingComponent
+    public class LightingComponent : Component
     {
+        public PointLight Light;
+
+        public LightingComponent(Engine engine, Vector2 position, float range, Color color)
+            : base(engine)
+        {
+            Light = new PointLight();
+            Light.Position = position;
+            Light.Range = range;
+            Light.Color = color;
+
+            Light.Texture = LightTextureBuilder.CreateConicLight(Global.Game.GraphicsDevice, 1024, MathHelper.TwoPi / 8);
+
+            Engine.Lighting.KryptonEngine.Lights.Add(Light);
+        }
     }
 }

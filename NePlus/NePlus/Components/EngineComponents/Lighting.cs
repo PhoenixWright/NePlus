@@ -6,66 +6,64 @@ namespace NePlus.Components.EngineComponents
 {
     public class Lighting : Component
     {
-        KryptonEngine kryptonEngine;
+        public KryptonEngine KryptonEngine;
 
         public Lighting(Engine engine) : base(engine)
         {
-            kryptonEngine = new KryptonEngine(engine, @"Lighting\KryptonEffect");
+            KryptonEngine = new KryptonEngine(engine, @"Lighting\KryptonEffect");
             engine.AddComponent(this);
 
-            kryptonEngine.AmbientColor = new Color(35, 35, 35);
-            kryptonEngine.Matrix = Engine.Camera.CameraMatrix;
+            KryptonEngine.AmbientColor = new Color(35, 35, 35);
+            KryptonEngine.Matrix = Engine.Camera.CameraMatrix;
+            this.DrawOrder = int.MaxValue / 2;
         }
 
         public override void Initialize()
         {
-            kryptonEngine.Initialize();
+            KryptonEngine.Initialize();
 
             base.Initialize();
         }
 
         public override void LoadContent()
         {
-            kryptonEngine.LoadContent();
+            KryptonEngine.LoadContent();
 
             base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
-            kryptonEngine.Update(gameTime);
+            KryptonEngine.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            //kryptonEngine.LightMapPrepare();
-
-            //kryptonEngine.Draw(gameTime);
-
-            //DebugDraw();
+            //KryptonEngine.LightMapPrepare();
+            //KryptonEngine.Draw(gameTime);
 
             base.Draw(gameTime);
         }
 
-        private void DebugDraw()
+        public void DebugDraw()
         {
             // Clear the helpers vertices
-            kryptonEngine.RenderHelper.Vertices.Clear();
-            kryptonEngine.RenderHelper.Indicies.Clear();
+            KryptonEngine.RenderHelper.Vertices.Clear();
+            KryptonEngine.RenderHelper.Indicies.Clear();
 
-            foreach (var hull in kryptonEngine.Hulls)
+            foreach (var hull in KryptonEngine.Hulls)
             {
-                kryptonEngine.RenderHelper.BufferAddShadowHull(hull);
+                KryptonEngine.RenderHelper.BufferAddShadowHull(hull);
             }
 
-            kryptonEngine.RenderHelper.Effect.CurrentTechnique = kryptonEngine.RenderHelper.Effect.Techniques["DebugDraw"];
+            KryptonEngine.RenderHelper.Effect.CurrentTechnique = KryptonEngine.RenderHelper.Effect.Techniques["DebugDraw"];
 
-            foreach (var effectPass in kryptonEngine.RenderHelper.Effect.CurrentTechnique.Passes)
+            foreach (var effectPass in KryptonEngine.RenderHelper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();
-                kryptonEngine.RenderHelper.BufferDraw();
+                KryptonEngine.RenderHelper.BufferDraw();
             }
         }
     }

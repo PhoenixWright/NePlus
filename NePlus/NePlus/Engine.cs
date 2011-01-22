@@ -78,6 +78,7 @@ namespace NePlus
                 c.Draw(gameTime);
 
             Physics.Draw(gameTime);
+            Lighting.DebugDraw();
         }
 
         public void AddComponent(Component Component)
