@@ -30,7 +30,7 @@ namespace NePlus.Krypton
         private RenderTarget2D mMapTemp;
         private RenderTarget2D mMapBlur;
         private RenderTarget2D mMapFinal;
-        private Color mAmbientColor = new Color(35, 35, 35);
+        private Color mAmbientColor = new Color(35,35,35);
 
         public KryptonRenderHelper RenderHelper { get; private set; }
 
@@ -86,7 +86,6 @@ namespace NePlus.Krypton
             set
             {
                 this.mAmbientColor = value;
-                this.mEffect.Parameters["AmbientColor"].SetValue(new Vector4(value.R, value.G, value.B, value.A) / 255f);
             }
         }
 
@@ -139,13 +138,25 @@ namespace NePlus.Krypton
             var originalRenderTargets = Engine.Video.GraphicsDevice.GetRenderTargets();
 
             Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
-            Engine.Video.GraphicsDevice.Clear(Color.Black);
+            Engine.Video.GraphicsDevice.Clear(this.mAmbientColor);
 
             // Render Light Maps
             foreach (var light in this.mLights)
             {
                 if (light.IsOn)
                 {
+                    /* New Pseudo Code
+                     * 
+                     *      DrawHullStencil
+                     *      DrawShadows - shadows will need to be drawn to a seperate render target?
+                     *      Blur
+                     *      DrawLight
+                     */
+                    //light.DrawShadows
+                    //light.Blur
+                    //light.DrawHullFix
+                    //light.DrawLight
+
                     // Draw the light and shadows
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapTemp);
                     Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, Color.Black, 0, 0);
@@ -158,16 +169,6 @@ namespace NePlus.Krypton
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
                     RenderHelper.DrawTextureToTarget(this.mMapTemp, BlendTechnique.Add);
                 }
-            }
-
-            if (true) // blur or not ?
-            {
-                Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapBlur);
-                Engine.Video.GraphicsDevice.Clear(Color.Black);
-                this.RenderHelper.BlurTextureToTarget(this.mMapFinal, BlurTechnique.Horizontal);
-
-                Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
-                this.RenderHelper.BlurTextureToTarget(this.mMapBlur, BlurTechnique.Vertical);
             }
 
             // Reset to the original rendering states

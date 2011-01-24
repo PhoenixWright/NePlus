@@ -13,8 +13,11 @@ namespace NePlus.Components.EngineComponents
             KryptonEngine = new KryptonEngine(engine, @"Lighting\KryptonEffect");
             engine.AddComponent(this);
 
-            KryptonEngine.AmbientColor = new Color(35, 35, 35);
-            KryptonEngine.Matrix = Engine.Camera.CameraMatrix;
+            //KryptonEngine.Matrix = Engine.Camera.CameraMatrix;
+            KryptonEngine.Matrix = Matrix.CreateOrthographic(Engine.Video.GraphicsDevice.Viewport.Width / 10, Engine.Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
+            //KryptonEngine.Matrix = Matrix.CreateTranslation(Engine.Camera.Position.X / -Engine.Physics.PixelsPerMeter, Engine.Camera.Position.Y / -Engine.Physics.PixelsPerMeter, 0);
+            //Vector2 size = Engine.Camera.CurSize / (Engine.Physics.PixelsPerMeter * 2.0f);
+            //KryptonEngine.Matrix = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
             this.DrawOrder = int.MaxValue / 2;
         }
 
@@ -41,8 +44,7 @@ namespace NePlus.Components.EngineComponents
 
         public override void Draw(GameTime gameTime)
         {
-            //KryptonEngine.LightMapPrepare();
-            //KryptonEngine.Draw(gameTime);
+            KryptonEngine.Draw(gameTime);
 
             base.Draw(gameTime);
         }

@@ -52,7 +52,7 @@ namespace NePlus.GameObjects.LightObjects
                 Position = PhysicsComponent.Position;
             }
 
-            LightingComponent.Light.Position = Position;
+            LightingComponent.Light.Position = Position / 100;
 
             ResolveLightEffect();
         }

@@ -14,10 +14,10 @@ namespace NePlus.Components.GraphicsComponents
         {
             Light = new PointLight();
             Light.Position = position;
-            Light.Range = range;
+            Light.Range = range + 20;
             Light.Color = color;
 
-            Light.Texture = LightTextureBuilder.CreateConicLight(Global.Game.GraphicsDevice, 1024, MathHelper.TwoPi / 8);
+            Light.Texture = LightTextureBuilder.CreateConicLight(Engine.Video.GraphicsDevice, 1024, MathHelper.TwoPi / 1);
 
             Engine.Lighting.KryptonEngine.Lights.Add(Light);
         }

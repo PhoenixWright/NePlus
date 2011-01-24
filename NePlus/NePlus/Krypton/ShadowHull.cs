@@ -141,7 +141,7 @@ namespace NePlus.Krypton
             hull.NumVertices = sides * 2;
             var numTris = hull.NumVertices - 2;
             hull.NumIndicies = numTris * 3;
-
+            
             hull.Vertices = new VertexPositionNormalTexture[hull.NumVertices];
             hull.Indicies = new Int32[hull.NumIndicies];
 

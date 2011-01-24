@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using NePlus.Components.EngineComponents;
+using NePlus.Krypton;
+using NePlus.Krypton.Lights;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 
@@ -72,6 +74,9 @@ namespace NePlus
 
         public void Draw(GameTime gameTime)
         {
+            // putting this here because it seems to blank out stuff if I don't            
+            Lighting.KryptonEngine.LightMapPrepare();
+
             Video.GraphicsDevice.Clear(Color.Black);
 
             foreach (Component c in components)

@@ -98,7 +98,7 @@ namespace NePlus.GameObjects
 
         public override void Draw(GameTime gameTime)
         {
-            Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Engine.Camera.CameraMatrix);
+            Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             map.Draw(Engine.SpriteBatch);
             Engine.SpriteBatch.End();
         }

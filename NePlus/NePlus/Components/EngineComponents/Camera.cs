@@ -37,13 +37,15 @@ namespace NePlus.Components.EngineComponents
         Vector2 _maxPosition = Vector2.Zero;
         Body _trackingBody;
 
-        Func<bool> _zoomIn = () =>
+        Func<Camera, bool> _zoomIn = (Camera camera) =>
         {
-            return false; //return Engine.Input.IsCurPress(Engine.Configuration.ZoomInButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomInKey);
+            return camera.Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "ZoomInButton"))
+                || camera.Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "ZoomInKey"));
         };
-        Func<bool> _zoomOut = () =>
+        Func<Camera, bool> _zoomOut = (Camera camera) =>
         {
-            return false; //return Engine.Input.IsCurPress(Engine.Configuration.ZoomOutButton) || Engine.Input.IsCurPress(Engine.Configuration.ZoomOutKey);
+            return camera.Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "ZoomOutButton"))
+                || camera.Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "ZoomOutKey"));
         };
 
         Func<Camera, bool> _clampingEnabled = (Camera camera) =>
@@ -73,9 +75,10 @@ namespace NePlus.Components.EngineComponents
             return false;
         };
 
-        Func<bool> _resetCamera = () =>
+        Func<Camera, bool> _resetCamera = (Camera camera) =>
         {
-            return true; //return Engine.Input.IsCurPress(Buttons.RightStick);
+            return camera.Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "ResetCameraButton"))
+                || camera.Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "ResetCameraKey"));
         };
 
 
@@ -254,7 +257,7 @@ namespace NePlus.Components.EngineComponents
         /// a function that is called to determine if the user wants 
         /// to zoom in.
         /// </summary>
-        public Func<bool> ZoomIn
+        public Func<Camera, bool> ZoomIn
         {
             get { return _zoomIn; }
             set { _zoomIn = value; }
@@ -263,7 +266,7 @@ namespace NePlus.Components.EngineComponents
         /// a function that is called to determine whether the user wants 
         /// to zoom out.
         /// </summary>
-        public Func<bool> ZoomOut
+        public Func<Camera, bool> ZoomOut
         {
             get { return _zoomOut; }
             set { _zoomOut = value; }
@@ -319,7 +322,7 @@ namespace NePlus.Components.EngineComponents
         /// A function that is called to determine if the user is requesting 
         /// that the camera be reset to it's original parameters.
         /// </summary>
-        public Func<bool> ResetCamera
+        public Func<Camera, bool> ResetCamera
         {
             get { return _resetCamera; }
             set { _resetCamera = value; }
@@ -359,9 +362,9 @@ namespace NePlus.Components.EngineComponents
                     else
                         _targetPosition = _trackingBody.Position * 100.0f;
                 }
-                if (_zoomIn())
+                if (_zoomIn(this))
                     _targetZoom = Math.Min(_maxZoom, _zoom + _zoomRate);
-                if (_zoomOut())
+                if (_zoomOut(this))
                     _targetZoom = Math.Max(_minZoom, _zoom - _zoomRate);
                 //these might need to be swapped
                 if (_rotateLeft())

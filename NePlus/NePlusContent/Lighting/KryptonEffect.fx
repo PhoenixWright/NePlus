@@ -151,7 +151,7 @@ VertexPositionTexture VS_PointLight_Shadow(VertexPositionNormalTexture input)
 	return output;
 };
 
-float4 PS_PointLight_Shadow(VertexPositionTexture input) : COLOR0
+float4 PS_PointLight_Shadow() : COLOR0
 {
 	return float4(0,0,0,1);
 };
@@ -166,7 +166,7 @@ VertexPositionTexture VS_Shadow_HullIllumination(VertexPositionTexture input)
 	return output;
 };
 
-float4 PS_Shadow_HullIllumination(VertexPositionTexture input) : COLOR0
+float4 PS_Shadow_HullIllumination() : COLOR0
 {
 	return float4(1,1,1,1);
 };
@@ -243,11 +243,11 @@ technique DebugDraw
 // ------------------------------------------------------------------------------------------------
 // ----- Technique: Blur --------------------------------------------------------------------------
 
-float4 PS_BlurH(VertexPositionTexture input) : COLOR0
+float4 PS_BlurH(in float2 texCoord : TEXCOORD0) : COLOR0
 {
 	float blurFactor = Bluriness * BlurFactorU / 4.0f;
 
-	float center = tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y) + TexelBias);
+	float center = tex2D(tex0, float2(texCoord.x, texCoord.y) + TexelBias);
 
 	if(!all(center))
 	{
@@ -255,39 +255,39 @@ float4 PS_BlurH(VertexPositionTexture input) : COLOR0
 	}
 	
 	float4
-	sum  = tex2D(tex0, float2(input.TexCoord.x - blurFactor * 4, input.TexCoord.y)	+ TexelBias) * 0.05f;
-	sum += tex2D(tex0, float2(input.TexCoord.x - blurFactor * 3, input.TexCoord.y)	+ TexelBias) * 0.09f;
-	sum += tex2D(tex0, float2(input.TexCoord.x - blurFactor * 2, input.TexCoord.y)	+ TexelBias) * 0.12f;
-	sum += tex2D(tex0, float2(input.TexCoord.x - blurFactor,	 input.TexCoord.y)	+ TexelBias) * 0.15f;
-	sum += tex2D(tex0, float2(input.TexCoord.x,					 input.TexCoord.y)	+ TexelBias) * 0.18f;
-	sum += tex2D(tex0, float2(input.TexCoord.x + blurFactor,	 input.TexCoord.y)	+ TexelBias) * 0.15f;
-	sum += tex2D(tex0, float2(input.TexCoord.x + blurFactor * 2, input.TexCoord.y)	+ TexelBias) * 0.12f;
-	sum += tex2D(tex0, float2(input.TexCoord.x + blurFactor * 3, input.TexCoord.y)	+ TexelBias) * 0.09f;
-	sum += tex2D(tex0, float2(input.TexCoord.x + blurFactor * 4, input.TexCoord.y)	+ TexelBias) * 0.05f;
+	sum  = tex2D(tex0, float2(texCoord.x - blurFactor * 4,	texCoord.y)	+ TexelBias) * 0.05f;
+	sum += tex2D(tex0, float2(texCoord.x - blurFactor * 3,	texCoord.y)	+ TexelBias) * 0.09f;
+	sum += tex2D(tex0, float2(texCoord.x - blurFactor * 2,	texCoord.y)	+ TexelBias) * 0.12f;
+	sum += tex2D(tex0, float2(texCoord.x - blurFactor,		texCoord.y)	+ TexelBias) * 0.15f;
+	sum += tex2D(tex0, float2(texCoord.x,					texCoord.y)	+ TexelBias) * 0.18f;
+	sum += tex2D(tex0, float2(texCoord.x + blurFactor,		texCoord.y)	+ TexelBias) * 0.15f;
+	sum += tex2D(tex0, float2(texCoord.x + blurFactor * 2,	texCoord.y)	+ TexelBias) * 0.12f;
+	sum += tex2D(tex0, float2(texCoord.x + blurFactor * 3,	texCoord.y)	+ TexelBias) * 0.09f;
+	sum += tex2D(tex0, float2(texCoord.x + blurFactor * 4,	texCoord.y)	+ TexelBias) * 0.05f;
 	
 	return sum;
 }
 
-float4 PS_BlurV(VertexPositionTexture input) : COLOR0
+float4 PS_BlurV(in float2 texCoord : TEXCOORD0) : COLOR0
 {
 	float blurFactor = Bluriness * BlurFactorV / 4.0f;
 	
-	float center = tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y) + TexelBias);
+	float center = tex2D(tex0, float2(texCoord.x, texCoord.y) + TexelBias);
 
 	if(!all(center))
 	{
 		return center + AmbientColor;
 	}
 	float4
-	sum  = tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y - blurFactor * 4)	+ TexelBias) * 0.05f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y - blurFactor * 3)	+ TexelBias) * 0.09f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y - blurFactor * 2)	+ TexelBias) * 0.12f;
-	sum += tex2D(tex0, float2(input.TexCoord.x,	input.TexCoord.y - blurFactor)		+ TexelBias) * 0.15f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y)					+ TexelBias) * 0.18f;
-	sum += tex2D(tex0, float2(input.TexCoord.x,	input.TexCoord.y + blurFactor)		+ TexelBias) * 0.15f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y + blurFactor * 2)	+ TexelBias) * 0.12f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y + blurFactor * 3)	+ TexelBias) * 0.09f;
-	sum += tex2D(tex0, float2(input.TexCoord.x, input.TexCoord.y + blurFactor * 4)	+ TexelBias) * 0.05f;
+	sum  = tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor * 4)	+ TexelBias) * 0.05f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor * 3)	+ TexelBias) * 0.09f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor * 2)	+ TexelBias) * 0.12f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor)		+ TexelBias) * 0.15f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y)					+ TexelBias) * 0.18f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor)		+ TexelBias) * 0.15f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 2)	+ TexelBias) * 0.12f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 3)	+ TexelBias) * 0.09f;
+	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 4)	+ TexelBias) * 0.05f;
 	
 	return sum + AmbientColor;
 }

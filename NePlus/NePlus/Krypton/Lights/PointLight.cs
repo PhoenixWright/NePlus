@@ -13,6 +13,7 @@ namespace NePlus.Krypton.Lights
         private Texture2D mTexture = null;
         private Color mColor = Color.White;
         private float mRange = 1;
+        private float mFov = MathHelper.TwoPi;
 
         //private RenderTarget2D mMap = null;
 
@@ -81,6 +82,15 @@ namespace NePlus.Krypton.Lights
             set { this.mRange = value; }
         }
 
+        public float Fov
+        {
+            get { return this.mFov; }
+            set
+            {
+                this.mFov = MathHelper.Clamp(value, 0, MathHelper.TwoPi);
+            }
+        }
+
         #endregion Parameters
 
         #region ILight Implementation
@@ -109,7 +119,8 @@ namespace NePlus.Krypton.Lights
             foreach (var effectPass in helper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();
-                helper.DrawSquareQuad(this.mPosition, this.mAngle, this.mRange, this.mColor);
+                helper.DrawClippedFov(this.mPosition, this.mAngle, this.mRange, this.mColor, this.mFov);
+                // helper.DrawSquareQuad(this.mPosition, this.mAngle, this.mRange, this.mColor);
             }
         }
 
@@ -125,7 +136,7 @@ namespace NePlus.Krypton.Lights
             helper.Indicies.Clear();
 
             // Loop through each hull
-            foreach (ShadowHull hull in hulls)
+            foreach(ShadowHull hull in hulls)
             {
                 // Add the hulls to the buffer only if they are within the light's range
                 if (PointLight.IsInRange(hull.Position - this.Position, hull.MaxRadius + this.Range))

@@ -41,7 +41,7 @@ namespace NePlus.Krypton
                     else
                         Data[x, y] = 0;
 
-                    Data[x, y] *= Data[x, y];
+                    //Data[x, y] *= Data[x, y];
                 }
 
             Texture2D tex = new Texture2D(device, size, size);

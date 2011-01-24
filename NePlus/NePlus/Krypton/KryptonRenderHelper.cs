@@ -113,6 +113,10 @@ namespace NePlus.Krypton
 
         public void DrawSquareQuad(Vector2 position, float rotation, float size, Color color)
         {
+            size /= 2;
+
+            size = (float)Math.Sqrt(Math.Pow(size, 2) + Math.Pow(size, 2));
+
             rotation += (float)Math.PI / 4;
 
             var cos = (float)Math.Cos(rotation) * size;
@@ -152,6 +156,142 @@ namespace NePlus.Krypton
             };
 
             this.mGraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, quad, 0, 2);
+        }
+
+        public void DrawClippedFov(Vector2 position, float rotation, float size, Color color, float fov)
+        {
+            fov = MathHelper.Clamp(fov, 0, MathHelper.TwoPi);
+
+            if (fov == 0)
+            {
+                return;
+            }
+            else if (fov == MathHelper.TwoPi)
+            {
+                this.DrawSquareQuad(position, rotation, size, color);
+                return;
+            }
+            else
+            {
+                var ccw = ClampToBox(fov / 2);
+                var cw = ClampToBox(-fov / 2);
+
+                var ccwTex = new Vector2(ccw.X+1, -ccw.Y+1) / 2f;
+                var cwTex = new Vector2(cw.X+1, -cw.Y+1) / 2f;
+
+                //ccwTex = Vector2.Zero;
+                //cwTex = Vector2.Zero;
+
+                VertexPositionColorTexture[] vertices;
+
+                #region Vertices
+                vertices = new VertexPositionColorTexture[]
+            {
+                new VertexPositionColorTexture()
+                {
+                    Position = Vector3.Zero,
+                    Color = color,
+                    TextureCoordinate = new Vector2(0.5f, 0.5f),
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(ccw,0),
+                    Color = color,
+                    TextureCoordinate = ccwTex
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(-1, 1, 0),
+                    Color = color,
+                    TextureCoordinate = new Vector2(0, 0),
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(1, 1, 0),
+                    Color = color,
+                    TextureCoordinate = new Vector2(1, 0),
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(1, -1, 0),
+                    Color = color,
+                    TextureCoordinate = new Vector2(1, 1),
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(-1, -1, 0),
+                    Color = color,
+                    TextureCoordinate = new Vector2(0, 1),
+                },
+                new VertexPositionColorTexture()
+                {
+                    Position = new Vector3(cw, 0),
+                    Color = color,
+                    TextureCoordinate = cwTex,
+                },
+            };
+
+                var r = Matrix.CreateRotationZ(rotation) * Matrix.CreateScale(size / 2) * Matrix.CreateTranslation(new Vector3(position, 0));
+
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    var vertex = vertices[i];
+
+                    Vector3.Transform(ref vertex.Position, ref r, out vertex.Position);
+
+                    vertices[i] = vertex;
+                }
+
+                #endregion Vertices
+
+                Int32[] indicies;
+
+                #region Indicies
+
+                if (fov == 0)
+                {
+                    indicies = new Int32[] { };
+                }
+                else if (fov <= MathHelper.Pi / 2)
+                {
+                    indicies = new Int32[]
+                {
+                    0, 1, 6,
+                };
+                }
+                else if (fov <= 3 * MathHelper.Pi / 2)
+                {
+                    indicies = new Int32[]
+                {
+                    0, 1, 3,
+                    0, 3, 4,
+                    0, 4, 6,
+                };
+                }
+                else
+                {
+                    indicies = new Int32[]
+                {
+                    0, 1, 2,
+                    0, 2, 3,
+                    0, 3, 4,
+                    0, 4, 5,
+                    0, 5, 6,
+                };
+                }
+                #endregion Indicies
+
+                this.mGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indicies, 0, indicies.Length / 3);
+            }
+        }
+
+        public static Vector2 ClampToBox(float angle)
+        {
+            var x = Math.Cos(angle);
+            var y = Math.Sin(angle);
+            var absMax = Math.Max(Math.Abs(x), Math.Abs(y));
+
+            return new Vector2((float)(x / absMax), (float)(y / absMax));
         }
 
         public void BufferDraw()
@@ -221,11 +361,11 @@ namespace NePlus.Krypton
 
             switch (blend)
             {
-                case (BlendTechnique.Add):
+                case(BlendTechnique.Add):
                     techniqueName = "TextureToTarget_Add";
                     break;
 
-                case (BlendTechnique.Multiply):
+                case(BlendTechnique.Multiply):
                     techniqueName = "TextureToTarget_Multiply";
                     break;
             }
