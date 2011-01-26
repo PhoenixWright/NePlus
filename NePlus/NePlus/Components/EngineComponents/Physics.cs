@@ -14,8 +14,6 @@ namespace NePlus.Components.EngineComponents
 {
     public class Physics : Component
     {
-        public Camera Camera { get; private set; }
-
         // used for conversion between game and physics scaling
         public float PixelsPerMeter { get; private set; }
 
@@ -27,8 +25,6 @@ namespace NePlus.Components.EngineComponents
         
         public Physics(Engine engine) : base(engine)
         {
-            Camera = Engine.Camera;
-
             // this should probably never change
             PixelsPerMeter = Global.Configuration.GetFloatConfig("Physics", "PixelsPerMeter");
 
@@ -61,8 +57,8 @@ namespace NePlus.Components.EngineComponents
         {
             if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
             {
-                Matrix view = Matrix.CreateTranslation(Camera.Position.X / -PixelsPerMeter, Camera.Position.Y / -PixelsPerMeter, 0);
-                Vector2 size = Camera.CurSize / (PixelsPerMeter * 2.0f);
+                Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
+                Vector2 size = new Vector2(Engine.Camera.ViewingWidth / Engine.Camera.Zoom, Engine.Camera.ViewingHeight / Engine.Camera.Zoom) / (PixelsPerMeter * 2.0f);
                 Matrix proj = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
 
                 DebugView.DrawSegment(new Vector2(-25, 0), new Vector2(25, 0), Color.Red);

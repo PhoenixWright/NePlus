@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Microsoft.Xna.Framework;
@@ -8,6 +9,13 @@ using NePlus.Krypton.Lights;
 
 namespace NePlus.Krypton
 {
+    public enum LightMapSize
+    {
+        Full = 1,
+        Half = 2,
+        Fourth = 4,
+    }
+
     /// <summary>
     /// A GPU-based 2D lighting engine, wrapped up in a DrawableGameComponent
     /// </summary>
@@ -23,6 +31,7 @@ namespace NePlus.Krypton
 
         // World View Projection matrix, and it's min and max view bounds
         private Matrix mWVP = Matrix.Identity;
+        private bool mSpriteBatchCompatabilityEnabled = false;
         private Vector2 mViewMin = Vector2.One * float.MinValue;
         private Vector2 mViewMax = Vector2.One * float.MaxValue;
 
@@ -31,6 +40,7 @@ namespace NePlus.Krypton
         private RenderTarget2D mMapBlur;
         private RenderTarget2D mMapFinal;
         private Color mAmbientColor = new Color(35,35,35);
+        private LightMapSize mLightMapSize = LightMapSize.Full;
 
         public KryptonRenderHelper RenderHelper { get; private set; }
 
@@ -51,9 +61,22 @@ namespace NePlus.Krypton
         {
             set
             {
-                mWVP = value;
-                mEffect.Parameters["Matrix"].SetValue(value);
+                this.mWVP = value;
             }
+
+            get
+            {
+                return this.mWVP;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating weither or not to use SpriteBatch's matrix drawing lightmaps
+        /// </summary>
+        public bool SpriteBatchCompatablityEnabled
+        {
+            get { return this.mSpriteBatchCompatabilityEnabled; }
+            set { this.mSpriteBatchCompatabilityEnabled = value; }
         }
 
         /// <summary>
@@ -89,6 +112,23 @@ namespace NePlus.Krypton
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value used to determine light map size
+        /// </summary>
+        public LightMapSize LightMapSize
+        {
+            get { return this.mLightMapSize; }
+            set
+            {
+                if (this.mLightMapSize != value)
+                {
+                    this.mLightMapSize = value;
+                    this.DisposeRenderTargets();
+                    this.CreateRenderTargets();
+                }
+            }
+        }
+
         public float BlurFactorU { set { this.mEffect.Parameters["BlurFactorU"].SetValue(value); } }
         public float BlurFactorV { set { this.mEffect.Parameters["BlurFactorV"].SetValue(value); } }
 
@@ -104,6 +144,29 @@ namespace NePlus.Krypton
         }
 
         /// <summary>
+        /// Initialized Krpyton, and hooks itself to the Graphcs Device
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            Engine.Video.GraphicsDevice.DeviceReset += new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
+        }
+
+        public override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            Engine.Video.GraphicsDevice.DeviceReset -= new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
+        }
+
+        void GraphicsDevice_DeviceReset(object sender, EventArgs e)
+        {
+            this.DisposeRenderTargets();
+            this.CreateRenderTargets();
+        }
+
+        /// <summary>
         /// Load's the graphics related content required to draw light maps
         /// </summary>
         public override void LoadContent()
@@ -113,11 +176,38 @@ namespace NePlus.Krypton
             this.mEffect = Engine.Content.Load<Effect>(this.mEffectAssetName);
             RenderHelper = new KryptonRenderHelper(Engine.Video.GraphicsDevice, this.mEffect);
 
-            this.mEffect.Parameters["Matrix"].SetValue(Matrix.Identity);
+            this.CreateRenderTargets();
+        }
 
-            this.mMapTemp = new RenderTarget2D(Engine.Video.GraphicsDevice, Engine.Video.GraphicsDevice.Viewport.Width, Engine.Video.GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PlatformContents);
-            this.mMapBlur = new RenderTarget2D(Engine.Video.GraphicsDevice, Engine.Video.GraphicsDevice.Viewport.Width, Engine.Video.GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PlatformContents);
-            this.mMapFinal = new RenderTarget2D(Engine.Video.GraphicsDevice, Engine.Video.GraphicsDevice.Viewport.Width, Engine.Video.GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+        public override void UnloadContent()
+        {
+            this.DisposeRenderTargets();
+        }
+
+        private void CreateRenderTargets()
+        {
+            var targetWidth = Engine.Video.GraphicsDevice.Viewport.Width / (int)(this.mLightMapSize);
+            var targetHeight = Engine.Video.GraphicsDevice.Viewport.Height / (int)(this.mLightMapSize);
+
+            this.mMapTemp = new RenderTarget2D(Engine.Video.GraphicsDevice, targetWidth, targetHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PlatformContents);
+            this.mMapBlur = new RenderTarget2D(Engine.Video.GraphicsDevice, targetWidth, targetHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PlatformContents);
+            this.mMapFinal = new RenderTarget2D(Engine.Video.GraphicsDevice, targetWidth, targetHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+        }
+
+        private void DisposeRenderTargets()
+        {
+            KryptonEngine.TryDispose(this.mMapTemp);
+            KryptonEngine.TryDispose(this.mMapBlur);
+            KryptonEngine.TryDispose(this.mMapFinal);
+        }
+
+        private static void TryDispose(IDisposable obj)
+        {
+            if (obj != null)
+            {
+                obj.Dispose();
+                obj = null;
+            }
         }
 
         /// <summary>
@@ -134,6 +224,7 @@ namespace NePlus.Krypton
         /// </summary>
         public void LightMapPrepare()
         {
+            SetMatrixParam(this.mWVP, this.mSpriteBatchCompatabilityEnabled);
             // Obtain the original rendering states
             var originalRenderTargets = Engine.Video.GraphicsDevice.GetRenderTargets();
 
@@ -145,18 +236,6 @@ namespace NePlus.Krypton
             {
                 if (light.IsOn)
                 {
-                    /* New Pseudo Code
-                     * 
-                     *      DrawHullStencil
-                     *      DrawShadows - shadows will need to be drawn to a seperate render target?
-                     *      Blur
-                     *      DrawLight
-                     */
-                    //light.DrawShadows
-                    //light.Blur
-                    //light.DrawHullFix
-                    //light.DrawLight
-
                     // Draw the light and shadows
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapTemp);
                     Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, Color.Black, 0, 0);
@@ -167,7 +246,7 @@ namespace NePlus.Krypton
 
                     // Add the temp light map
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
-                    RenderHelper.DrawTextureToTarget(this.mMapTemp, BlendTechnique.Add);
+                    RenderHelper.DrawTextureToTarget(this.mMapTemp, this.mLightMapSize, BlendTechnique.Add);
                 }
             }
 
@@ -176,14 +255,41 @@ namespace NePlus.Krypton
         }
 
         /// <summary>
+        /// Sets the Matrix parameter of the Krypton effect, according to a user defined matrix, and (optionally) the default SpriteBatch matrix
+        /// </summary>
+        /// <param name="transformMatrix">User-defined matrix</param>
+        /// <param name="useSpriteBatchMatrix">Is the SpriteBatch matrix?</param>
+        private void SetMatrixParam(Matrix transformMatrix, bool useSpriteBatchMatrix)
+        {
+            Matrix matrix = Matrix.Identity;
+
+            if (useSpriteBatchMatrix)
+            {
+                var viewport = Engine.Video.GraphicsDevice.Viewport;
+
+                float num2 = (viewport.Width > 0) ? (1f / ((float)viewport.Width)) : 0f;
+                float num = (viewport.Height > 0) ? (-1f / ((float)viewport.Height)) : 0f;
+
+                matrix = new Matrix
+                {
+                    M11 = num2 * 2f,
+                    M22 = num * 2f,
+                    M33 = 1f,
+                    M44 = 1f,
+                    M41 = -1f - num2,
+                    M42 = 1f - num
+                };
+            }
+
+            this.mEffect.Parameters["Matrix"].SetValue(transformMatrix * matrix);
+        }
+
+        /// <summary>
         /// Presents the light map to the current render target
         /// </summary>
         public void LightMapPresent()
         {
-            RenderHelper.DrawTextureToTarget(this.mMapFinal, BlendTechnique.Multiply);
-
-            //Stream stream = File.OpenWrite("test.png");
-            //mMapFinal.SaveAsPng(stream, mMapFinal.Width, mMapFinal.Height);
+            RenderHelper.DrawTextureToTarget(this.mMapFinal, this.mLightMapSize, BlendTechnique.Multiply);
         }
     }
 }

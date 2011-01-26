@@ -60,6 +60,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DebugViewXNA, Version=3.2.4040.33235, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>WindowsDLLs\DebugViewXNA.dll</HintPath>
+    </Reference>
     <Reference Include="EasyConfig">
       <HintPath>WindowsDLLs\EasyConfig.dll</HintPath>
     </Reference>
@@ -148,7 +152,7 @@
     <Compile Include="Global.cs" />
     <Compile Include="Krypton\KryptonEngine.cs" />
     <Compile Include="Krypton\KryptonRenderHelper.cs" />
-    <Compile Include="Krypton\LightHelper.cs" />
+    <Compile Include="Krypton\LightTextureBuilder.cs" />
     <Compile Include="Krypton\Lights\ILight2D.cs" />
     <Compile Include="Krypton\Lights\PointLight.cs" />
     <Compile Include="Krypton\ShadowHull.cs" />
@@ -173,19 +177,21 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="WindowsDLLs\DebugViewXNA.dll" />
     <Content Include="WindowsDLLs\EasyConfig.dll" />
     <Content Include="WindowsDLLs\FarseerPhysicsXNA.dll" />
     <Content Include="WindowsDLLs\ProjectMercury.dll" />
     <Content Include="WindowsDLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA.csproj">
-      <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
-      <Name>DebugView XNA</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BloomPostProcessContent\BloomPostprocessContent.contentproj">
       <Project>{D82A1C97-4FF3-440C-A58F-A1CB9135D0AC}</Project>
       <Name>BloomPostprocessContent %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\DebugViewXNAContent\DebugView XNA Content.contentproj">
+      <Project>{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}</Project>
+      <Name>DebugView XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">

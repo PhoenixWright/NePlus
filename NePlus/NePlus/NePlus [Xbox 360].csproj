@@ -86,9 +86,9 @@
     <Compile Include="Global.cs" />
     <Compile Include="Krypton\KryptonEngine.cs" />
     <Compile Include="Krypton\KryptonRenderHelper.cs" />
-    <Compile Include="Krypton\LightHelper.cs" />
     <Compile Include="Krypton\Lights\ILight2D.cs" />
     <Compile Include="Krypton\Lights\PointLight.cs" />
+    <Compile Include="Krypton\LightTextureBuilder.cs" />
     <Compile Include="Krypton\ShadowHull.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -112,19 +112,21 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="PipelineDLLs\ProjectMercury.ContentPipeline.dll" />
     <Content Include="PipelineDLLs\TiledPipelineExtensions.dll" />
+    <Content Include="Xbox360DLLs\DebugViewXNA.dll" />
     <Content Include="Xbox360DLLs\EasyConfig.dll" />
     <Content Include="Xbox360DLLs\FarseerPhysicsXbox360.dll" />
     <Content Include="Xbox360DLLs\ProjectMercury.dll" />
     <Content Include="Xbox360DLLs\TiledLib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Technologies\XNA\FarseerPhysicsEngine\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj">
-      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
-      <Name>DebugView XNA Xbox360</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BloomPostProcessContent\BloomPostprocessContent.contentproj">
       <Project>{D82A1C97-4FF3-440C-A58F-A1CB9135D0AC}</Project>
       <Name>BloomPostprocessContent %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\DebugViewXNAContent\DebugView XNA Content.contentproj">
+      <Project>{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}</Project>
+      <Name>DebugView XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\NePlusContent\NePlusContent.contentproj">

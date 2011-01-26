@@ -107,7 +107,7 @@ namespace NePlus.Krypton.Lights
         /// <summary>
         /// Draws the light's with texture and color
         /// </summary>
-        /// <param name="helper"></param>
+        /// <param name="helper">A render helper for drawing light</param>
         public void Draw(KryptonRenderHelper helper)
         {
             // Set effect parameters and technique
@@ -158,8 +158,8 @@ namespace NePlus.Krypton.Lights
         /// <summary>
         /// Determines if a vector's length is less than a specified value
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="dist"></param>
+        /// <param name="offset">Offset</param>
+        /// <param name="dist">Distance</param>
         /// <returns></returns>
         private static bool IsInRange(Vector2 offset, float dist)
         {

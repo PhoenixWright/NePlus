@@ -1,50 +1,52 @@
 ﻿using Microsoft.Xna.Framework;
 
 using NePlus.Krypton;
+using NePlus.Krypton.Lights;
 
 namespace NePlus.Components.EngineComponents
 {
     public class Lighting : Component
     {
-        public KryptonEngine KryptonEngine;
+        public KryptonEngine Krypton;
 
         public Lighting(Engine engine) : base(engine)
         {
-            KryptonEngine = new KryptonEngine(engine, @"Lighting\KryptonEffect");
+            Krypton = new KryptonEngine(engine, @"Lighting\KryptonEffect");
+            Krypton.AmbientColor = new Color(65, 65, 65);
             engine.AddComponent(this);
 
-            //KryptonEngine.Matrix = Engine.Camera.CameraMatrix;
-            KryptonEngine.Matrix = Matrix.CreateOrthographic(Engine.Video.GraphicsDevice.Viewport.Width / 10, Engine.Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
-            //KryptonEngine.Matrix = Matrix.CreateTranslation(Engine.Camera.Position.X / -Engine.Physics.PixelsPerMeter, Engine.Camera.Position.Y / -Engine.Physics.PixelsPerMeter, 0);
-            //Vector2 size = Engine.Camera.CurSize / (Engine.Physics.PixelsPerMeter * 2.0f);
-            //KryptonEngine.Matrix = Matrix.CreateOrthographicOffCenter(-size.X, size.X, size.Y, -size.Y, 0, 1);
+            Krypton.Matrix = Engine.Camera.CameraMatrix;
+            Krypton.SpriteBatchCompatablityEnabled = true;
+            //KryptonEngine.Matrix = Matrix.CreateOrthographic(Engine.Video.GraphicsDevice.Viewport.Width / 10, Engine.Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
+
             this.DrawOrder = int.MaxValue / 2;
         }
 
         public override void Initialize()
         {
-            KryptonEngine.Initialize();
+            Krypton.Initialize();
 
             base.Initialize();
         }
 
         public override void LoadContent()
         {
-            KryptonEngine.LoadContent();
+            Krypton.LoadContent();
 
             base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
-            KryptonEngine.Update(gameTime);
+            Krypton.Matrix = Engine.Camera.CameraMatrix;
+            Krypton.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            KryptonEngine.Draw(gameTime);
+            Krypton.Draw(gameTime);
 
             base.Draw(gameTime);
         }
@@ -52,20 +54,20 @@ namespace NePlus.Components.EngineComponents
         public void DebugDraw()
         {
             // Clear the helpers vertices
-            KryptonEngine.RenderHelper.Vertices.Clear();
-            KryptonEngine.RenderHelper.Indicies.Clear();
+            Krypton.RenderHelper.Vertices.Clear();
+            Krypton.RenderHelper.Indicies.Clear();
 
-            foreach (var hull in KryptonEngine.Hulls)
+            foreach (var hull in Krypton.Hulls)
             {
-                KryptonEngine.RenderHelper.BufferAddShadowHull(hull);
+                Krypton.RenderHelper.BufferAddShadowHull(hull);
             }
 
-            KryptonEngine.RenderHelper.Effect.CurrentTechnique = KryptonEngine.RenderHelper.Effect.Techniques["DebugDraw"];
+            Krypton.RenderHelper.Effect.CurrentTechnique = Krypton.RenderHelper.Effect.Techniques["DebugDraw"];
 
-            foreach (var effectPass in KryptonEngine.RenderHelper.Effect.CurrentTechnique.Passes)
+            foreach (var effectPass in Krypton.RenderHelper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();
-                KryptonEngine.RenderHelper.BufferDraw();
+                Krypton.RenderHelper.BufferDraw();
             }
         }
     }

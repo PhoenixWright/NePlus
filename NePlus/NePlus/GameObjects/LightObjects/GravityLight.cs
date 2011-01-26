@@ -35,7 +35,7 @@ namespace NePlus.GameObjects.LightObjects
         public override void Update(GameTime gameTime)
         {
             particleEffectComponent.Position = Position - new Vector2(0.0f, -200.0f);
-            particleEffectComponent.DrawParticleEffect = EffectActive;
+            particleEffectComponent.DrawParticleEffect = false;
 
             base.Update(gameTime);
         }

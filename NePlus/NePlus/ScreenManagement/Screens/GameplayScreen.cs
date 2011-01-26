@@ -19,9 +19,9 @@ namespace NePlus.ScreenManagement.Screens
     /// put some more interesting gameplay in here!
     /// </summary>
     class GameplayScreen : GameScreen
-    {	
-		ContentManager content;
-		
+    {
+        ContentManager content;
+
         Engine Engine;
         Level Level;
         Player Player;
@@ -31,6 +31,7 @@ namespace NePlus.ScreenManagement.Screens
         // test stuff
         KryptonEngine krypton;
         PointLight light = new PointLight();
+        ShadowHull shadowHull;
 
         /// <summary>
         /// Constructor.
@@ -50,12 +51,16 @@ namespace NePlus.ScreenManagement.Screens
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             Engine = new Engine(content);
+            
             //krypton = new KryptonEngine(Engine, @"Lighting\KryptonEffect");
             //krypton.Initialize();
             //krypton.LoadContent();
+            //shadowHull = ShadowHull.CreateRectangle(Vector2.One);
+            //shadowHull.Position = new Vector2(5, 5);
+            //krypton.Hulls.Add(shadowHull);
             //light.Range = 40;
-            //light.Texture = LightTextureBuilder.CreateConicLight(Engine.Video.GraphicsDevice, 1024, MathHelper.TwoPi / 1);
-            //light.Position = new Vector2(-10, 5);
+            //light.Texture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
+            //light.Position = new Vector2(0, 0);
             //light.Color = Color.White;
             //krypton.AmbientColor = new Color(35, 35, 35);
             //krypton.Lights.Add(light);
@@ -64,8 +69,6 @@ namespace NePlus.ScreenManagement.Screens
             Level = new Level(Engine, @"Maps\TestMap");
             
             Player = new Player(Engine, Level.GetSpawnPoint());
-
-            Engine.Camera.TrackingBody = Player.PhysicsComponent.MainFixture.Body;
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a

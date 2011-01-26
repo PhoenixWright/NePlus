@@ -43,6 +43,7 @@ namespace NePlus.GameObjects
         public override void Update(GameTime gameTime)
         {
             Position = PhysicsComponent.Position;
+            //Engine.Camera.Position = Position;
 
             // check if the player is even able to jump before we check for input
             //if (PhysicsComponent.MainFixture.Body.

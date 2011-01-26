@@ -53,7 +53,7 @@ namespace NePlus.Krypton
         private GraphicsDevice mGraphicsDevice;
         private Effect mEffect;
         private List<VertexPositionNormalTexture> mVertices = new List<VertexPositionNormalTexture>();
-        private List<Int32> mIndicies = new List<Int32>();
+        private List<Int16> mIndicies = new List<Int16>();
 
         public GraphicsDevice GraphicsDevice
         {
@@ -68,7 +68,7 @@ namespace NePlus.Krypton
         {
             get { return this.mVertices; }
         }
-        public List<Int32> Indicies
+        public List<Int16> Indicies
         {
             get { return this.mIndicies; }
         }
@@ -102,7 +102,7 @@ namespace NePlus.Krypton
             // Add the indicies to the buffer
             for (int i = 0; i < hull.NumIndicies; i++)
             {
-                mIndicies.Add(vertexCount + hull.Indicies[i]);
+                mIndicies.Add((Int16)(vertexCount + hull.Indicies[i]));
             }
 
             // ----- SPEED TEST -----
@@ -244,24 +244,24 @@ namespace NePlus.Krypton
 
                 #endregion Vertices
 
-                Int32[] indicies;
+                Int16[] indicies;
 
                 #region Indicies
 
                 if (fov == 0)
                 {
-                    indicies = new Int32[] { };
+                    indicies = new Int16[] { };
                 }
                 else if (fov <= MathHelper.Pi / 2)
                 {
-                    indicies = new Int32[]
+                    indicies = new Int16[]
                 {
                     0, 1, 6,
                 };
                 }
                 else if (fov <= 3 * MathHelper.Pi / 2)
                 {
-                    indicies = new Int32[]
+                    indicies = new Int16[]
                 {
                     0, 1, 3,
                     0, 3, 4,
@@ -270,7 +270,7 @@ namespace NePlus.Krypton
                 }
                 else
                 {
-                    indicies = new Int32[]
+                    indicies = new Int16[]
                 {
                     0, 1, 2,
                     0, 2, 3,
@@ -323,7 +323,7 @@ namespace NePlus.Krypton
             //this.mGraphicsDevice.RasterizerState = originalRasterizerState;
         }
 
-        public void BlurTextureToTarget(Texture2D texture, BlurTechnique blur)
+        public void BlurTextureToTarget(Texture2D texture, LightMapSize mapSize, BlurTechnique blur)
         {
             // Get the pass to use
             string passName = "";
@@ -339,11 +339,13 @@ namespace NePlus.Krypton
                     break;
             }
 
+            var biasFactor = KryptonRenderHelper.BiasFactorFromLightMapSize(mapSize);
+
             // Calculate the texel bias
             Vector2 texelBias = new Vector2()
             {
-                X = 0.5f / this.mGraphicsDevice.ScissorRectangle.Width,
-                Y = 0.5f / this.mGraphicsDevice.ScissorRectangle.Height,
+                X = biasFactor / this.mGraphicsDevice.ScissorRectangle.Width,
+                Y = biasFactor / this.mGraphicsDevice.ScissorRectangle.Height,
             };
 
             this.mEffect.Parameters["Texture0"].SetValue(texture);
@@ -354,7 +356,7 @@ namespace NePlus.Krypton
             this.mGraphicsDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, KryptonRenderHelper.UnitQuad, 0, 2);
         }
 
-        public void DrawTextureToTarget(Texture2D texture, BlendTechnique blend)
+        public void DrawTextureToTarget(Texture2D texture, LightMapSize mapSize, BlendTechnique blend)
         {
             // Get the technique to use
             string techniqueName = "";
@@ -370,11 +372,13 @@ namespace NePlus.Krypton
                     break;
             }
 
+            var biasFactor = KryptonRenderHelper.BiasFactorFromLightMapSize(mapSize);
+
             // Calculate the texel bias
             Vector2 texelBias = new Vector2()
             {
-                X = 0.5f / this.mGraphicsDevice.ScissorRectangle.Width,
-                Y = 0.5f / this.mGraphicsDevice.ScissorRectangle.Height,
+                X = biasFactor / this.mGraphicsDevice.ScissorRectangle.Width,
+                Y = biasFactor / this.mGraphicsDevice.ScissorRectangle.Height,
             };
 
             this.mEffect.Parameters["Texture0"].SetValue(texture);
@@ -386,6 +390,24 @@ namespace NePlus.Krypton
             {
                 effectPass.Apply();
                 this.mGraphicsDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, KryptonRenderHelper.UnitQuad, 0, 2);
+            }
+        }
+
+        private static float BiasFactorFromLightMapSize(LightMapSize mapSize)
+        {
+            switch (mapSize)
+            {
+                case (LightMapSize.Full):
+                    return 0.5f;
+
+                case (LightMapSize.Half):
+                    return 0.75f;
+
+                case (LightMapSize.Fourth):
+                    return 0.875f;
+
+                default:
+                    return 0.0f;
             }
         }
     }

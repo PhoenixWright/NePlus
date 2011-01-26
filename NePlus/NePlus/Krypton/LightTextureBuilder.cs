@@ -7,17 +7,37 @@ namespace NePlus.Krypton
 {
     public static class LightTextureBuilder
     {
-
+        /// <summary>
+        /// Create a Point Light based on a size.
+        /// </summary>
+        /// <param name="device">Your game's GraphicsDevice</param>
+        /// <param name="size">Maximum Size</param>
+        /// <returns>Light Texture</returns>
         public static Texture2D CreatePointLight(GraphicsDevice device, int size)
         {
             return CreateConicLight(device, size, MathHelper.TwoPi, 0);
         }
 
+        /// <summary>
+        /// Create a Conic Light based on the size, and field of view.
+        /// </summary>
+        /// <param name="device">Your game's GraphicsDevice</param>
+        /// <param name="size">Maximum Size</param>
+        /// <param name="FOV">Maximum Field of View</param>
+        /// <returns>Light Texture</returns>
         public static Texture2D CreateConicLight(GraphicsDevice device, int size, float FOV)
         {
             return CreateConicLight(device, size, FOV, 0);
         }
 
+        /// <summary>
+        /// Create a Conic Light based on the size, field of view, and near plane distance.
+        /// </summary>
+        /// <param name="device">Your game's GraphicsDevice</param>
+        /// <param name="size">Maximum size</param>
+        /// <param name="FOV">Maximum Field of View</param>
+        /// <param name="nearPlaneDistance">Prevents texture from being drawn at this plane distance, originating from the center of light</param>
+        /// <returns>Light Texture</returns>
         public static Texture2D CreateConicLight(GraphicsDevice device, int size, float FOV, float nearPlaneDistance)
         {
             /*if (!IsPowerOfTwo(size))
@@ -56,6 +76,10 @@ namespace NePlus.Krypton
             return tex;
         }
 
+        /// <summary>
+        /// Math helper to determine if integer is a power of two
+        /// </summary>
+        /// <param name="x">Integer value</param>
         private static bool IsPowerOfTwo(int x)
         {
             return (x & (x - 1)) == 0;
