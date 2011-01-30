@@ -17,7 +17,7 @@ namespace NePlus.GameObjects.LightObjects
         List<Light> WorldLights;
         List<Light> AffectedLights;
 
-        public NullLight(Engine engine, List<Light> worldLights, Vector2 position, float range, Color color, string motionType) : base(engine, position, range, color, motionType)
+        public NullLight(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motionType, List<Light> worldLights) : base(engine, position, fov, angle, range, color, motionType)
         {
             WorldLights = worldLights;
             AffectedLights = new List<Light>();

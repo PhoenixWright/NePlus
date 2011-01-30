@@ -16,7 +16,7 @@ namespace NePlus
         {
             Engine = engine;
             drawOrder = 0;
-        }        
+        }
 
         public int DrawOrder
         {

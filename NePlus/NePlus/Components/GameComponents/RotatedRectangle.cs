@@ -11,7 +11,7 @@ namespace NePlus.Components.GameComponents
         public Rectangle CollisionRectangle;
         public float Rotation;
         public Vector2 Origin;
-        
+
         public RotatedRectangle(Rectangle theRectangle, float theInitialRotation)
         {
             CollisionRectangle = theRectangle;

@@ -9,6 +9,7 @@ namespace NePlus.Components.GraphicsComponents
         public ShadowComponent(Engine engine)
             : base(engine)
         {
+
         }
     }
 }

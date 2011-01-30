@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component.cs" />
-    <Compile Include="Components\GraphicsComponents\LightingComponent.cs" />
+    <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />

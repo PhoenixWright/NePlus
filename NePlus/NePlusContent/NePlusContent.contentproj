@@ -178,8 +178,18 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="Lighting\KryptonEffect.fx">
+    <Compile Include="Krypton\KryptonEffect.fx">
       <Name>KryptonEffect</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Krypton\KryptonEffect2.fx">
+      <Name>KryptonEffect2</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Krypton\KryptonEffectOld.fx">
+      <Name>KryptonEffectOld</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
@@ -215,6 +225,18 @@
   <ItemGroup>
     <Compile Include="Miscellaneous\TestBackground.jpg">
       <Name>TestBackground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Krypton\tex.jpg">
+      <Name>tex</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Krypton\tex_blur.jpg">
+      <Name>tex_blur</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

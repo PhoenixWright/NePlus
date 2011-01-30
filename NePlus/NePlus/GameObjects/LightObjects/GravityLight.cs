@@ -22,7 +22,7 @@ namespace NePlus.GameObjects.LightObjects
         private Vector2 gravityVector;
         public Vector2 GravityVector { get { return gravityVector; } }
 
-        public GravityLight(Engine engine, Vector2 position, float range, Color color, string motionType, float gravityValue) : base(engine, position, range, color, motionType)
+        public GravityLight(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motionType, float gravityValue) : base(engine, position, fov, angle, range, color, motionType)
         {
             particleEffectComponent = new ParticleEffectComponent(engine, "BeamMeUp", Position);
 

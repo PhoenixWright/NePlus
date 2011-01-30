@@ -51,6 +51,10 @@ namespace NePlus.Krypton
         /// </summary>
         public int NumIndicies;
 
+        public bool Enabled = true;
+
+        public Vector2 Scale = Vector2.One;
+
         #endregion
 
         #region Constructor

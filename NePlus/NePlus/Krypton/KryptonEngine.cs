@@ -12,8 +12,8 @@ namespace NePlus.Krypton
     public enum LightMapSize
     {
         Full = 1,
-        Half = 2,
-        Fourth = 4,
+        Fourth = 2,
+        Eighth = 4,
     }
 
     /// <summary>
@@ -224,7 +224,12 @@ namespace NePlus.Krypton
         /// </summary>
         public void LightMapPrepare()
         {
-            SetMatrixParam(this.mWVP, this.mSpriteBatchCompatabilityEnabled);
+            // Prepare and set the matrix
+            var viewWidth = Engine.Video.GraphicsDevice.ScissorRectangle.Width;
+            var viewHeight = Engine.Video.GraphicsDevice.ScissorRectangle.Height;
+
+            KryptonEngine.MatrixPrepareAndSet(this.mWVP, this.mSpriteBatchCompatabilityEnabled, this.mEffect.Parameters["Matrix"], viewWidth, viewHeight);
+
             // Obtain the original rendering states
             var originalRenderTargets = Engine.Video.GraphicsDevice.GetRenderTargets();
 
@@ -236,6 +241,8 @@ namespace NePlus.Krypton
             {
                 if (light.IsOn)
                 {
+                    Engine.Video.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
                     // Draw the light and shadows
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapTemp);
                     Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, Color.Black, 0, 0);
@@ -255,22 +262,23 @@ namespace NePlus.Krypton
         }
 
         /// <summary>
-        /// Sets the Matrix parameter of the Krypton effect, according to a user defined matrix, and (optionally) the default SpriteBatch matrix
+        /// Sets a matrix parameter of an effect, according to a user defined matrix, and (optionally) the default SpriteBatch matrix
         /// </summary>
-        /// <param name="transformMatrix">User-defined matrix</param>
+        /// <param name="matrixWVP">User-defined matrix</param>
         /// <param name="useSpriteBatchMatrix">Is the SpriteBatch matrix?</param>
-        private void SetMatrixParam(Matrix transformMatrix, bool useSpriteBatchMatrix)
+        /// <param name="effectParameter">The effect's Matrix parameter</param>
+        /// <param name="width">The render target width</param>
+        /// <param name="height">The render target height</param>
+        private static void MatrixPrepareAndSet(Matrix matrixWVP, bool useSpriteBatchMatrix, EffectParameter effectParameter, float width, float height)
         {
-            Matrix matrix = Matrix.Identity;
+            Matrix matrixSpriteBatch = Matrix.Identity;
 
             if (useSpriteBatchMatrix)
             {
-                var viewport = Engine.Video.GraphicsDevice.Viewport;
+                float num2 = (width > 0) ? (1f / ((float)width)) : 0f;
+                float num = (height > 0) ? (-1f / ((float)height)) : 0f;
 
-                float num2 = (viewport.Width > 0) ? (1f / ((float)viewport.Width)) : 0f;
-                float num = (viewport.Height > 0) ? (-1f / ((float)viewport.Height)) : 0f;
-
-                matrix = new Matrix
+                matrixSpriteBatch = new Matrix
                 {
                     M11 = num2 * 2f,
                     M22 = num * 2f,
@@ -281,7 +289,7 @@ namespace NePlus.Krypton
                 };
             }
 
-            this.mEffect.Parameters["Matrix"].SetValue(transformMatrix * matrix);
+            effectParameter.SetValue(matrixWVP * matrixSpriteBatch);
         }
 
         /// <summary>

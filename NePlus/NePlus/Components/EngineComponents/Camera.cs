@@ -17,7 +17,7 @@ public class Camera2D : Component
             position = value;
 
             visibleArea = new Rectangle((int)position.X + (int)offset.X - visibleArea.Width / 2,
-                              (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
+                                        (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
         }
     }
 
@@ -29,7 +29,7 @@ public class Camera2D : Component
         {
             offset = value;
             visibleArea = new Rectangle((int)position.X + (int)offset.X - visibleArea.Width / 2,
-                          (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
+                                        (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
         }
     }
     #endregion Position
@@ -91,37 +91,9 @@ public class Camera2D : Component
             // Then, we scale and rotate around the origin
             // Finally, we translate to SCREEN coordinates, so translation is based on the ScreenCenter
             return Matrix.CreateTranslation(-matrixRotOrigin) *
-                Matrix.CreateScale(zoom, zoom, 1.0f) *
-                Matrix.CreateRotationZ(Rotation) *
-                Matrix.CreateTranslation(matrixScreenPos);
-        }
-    }
-
-    public Matrix ProjectionMatrix
-    {
-        get
-        {
-            return Matrix.CreateOrthographic(zoom * Engine.Video.GraphicsDevice.Viewport.AspectRatio, zoom, 0, 1);
-        }
-    }
-
-    public Matrix TransformMatrix
-    {
-        get
-        {
-            return ViewMatrix
-                 * Matrix.CreateScale(Engine.Video.GraphicsDevice.Viewport.Height / zoom)
-                 * Matrix.CreateScale(1, -1, 1)
-                 * Matrix.CreateTranslation(Engine.Video.GraphicsDevice.Viewport.Width * 0.5f, Engine.Video.GraphicsDevice.Viewport.Height * 0.5f, 0f);
-        }
-    }
-
-    public Matrix ViewMatrix
-    {
-        get
-        {
-            return Matrix.CreateTranslation(-position.X, -position.Y, 0)
-                 * Matrix.CreateRotationZ(rotation);
+                   Matrix.CreateScale(zoom, zoom, 1.0f) *
+                   Matrix.CreateRotationZ(Rotation) *
+                   Matrix.CreateTranslation(matrixScreenPos);
         }
     }
     #endregion Properties and Fields

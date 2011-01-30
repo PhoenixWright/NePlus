@@ -11,13 +11,12 @@ namespace NePlus.Components.EngineComponents
 
         public Lighting(Engine engine) : base(engine)
         {
-            Krypton = new KryptonEngine(engine, @"Lighting\KryptonEffect");
+            Krypton = new KryptonEngine(engine, @"Krypton\KryptonEffect");
             Krypton.AmbientColor = new Color(65, 65, 65);
             engine.AddComponent(this);
 
             Krypton.Matrix = Engine.Camera.CameraMatrix;
             Krypton.SpriteBatchCompatablityEnabled = true;
-            //KryptonEngine.Matrix = Matrix.CreateOrthographic(Engine.Video.GraphicsDevice.Viewport.Width / 10, Engine.Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
 
             this.DrawOrder = int.MaxValue / 2;
         }

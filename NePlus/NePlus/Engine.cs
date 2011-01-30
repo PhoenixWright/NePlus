@@ -28,12 +28,6 @@ namespace NePlus
 
         public SpriteBatch SpriteBatch { get; private set; }
 
-        // test stuff
-        //Texture2D background;
-        public KryptonEngine krypton;
-        PointLight light = new PointLight();
-        ShadowHull shadowHull = ShadowHull.CreateRectangle(Vector2.One);
-
         public Engine(ContentManager content)
         {
             components = new List<Component>();
@@ -49,25 +43,9 @@ namespace NePlus
             Camera = new Camera2D(this);
             
             // lighting needs to know the camera matrix
-            //Lighting = new Lighting(this);
+            Lighting = new Lighting(this);
 
             SpriteBatch = new SpriteBatch(Global.GraphicsDeviceManager.GraphicsDevice);
-
-            // test stuff
-            krypton = new KryptonEngine(this, @"Lighting\KryptonEffect");
-            krypton.AmbientColor = new Color(65, 65, 65);
-            krypton.Matrix = Camera.CameraMatrix;
-            krypton.SpriteBatchCompatablityEnabled = true;
-            //krypton.Matrix = Matrix.CreateOrthographic(Video.GraphicsDevice.Viewport.Width / 10, Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
-            krypton.Initialize();
-            krypton.LoadContent();
-            light.Range = 40;
-            light.Texture = LightTextureBuilder.CreatePointLight(Video.GraphicsDevice, 512);
-            light.Position = new Vector2(0, 0);
-            light.Color = Color.White;
-            krypton.Lights.Add(light);
-            shadowHull.Position = new Vector2(10, 10);
-            krypton.Hulls.Add(shadowHull);
         }
 
         public void LoadContent(Game game)
@@ -89,7 +67,6 @@ namespace NePlus
 
         public void Update(GameTime gameTime)
         {
-            krypton.Matrix = Camera.CameraMatrix;
             Input.Update(gameTime);
             Physics.Update(gameTime);
 
@@ -123,35 +100,24 @@ namespace NePlus
                 Camera.Zoom -= 0.01f;
             }
 
-            // test stuff
-            krypton.Update(gameTime);
-
             foreach (Component c in components)
                 c.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime)
         {
-            // putting this here because it seems to blank out stuff if I don't
-            //Lighting.KryptonEngine.LightMapPrepare();
-
-            // test stuff
-            Video.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-            krypton.LightMapPrepare();
+            Lighting.Krypton.LightMapPrepare();
 
             Video.GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            // this is placeholder code for testing stuff
             SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Camera.CameraMatrix);
-            //SpriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             SpriteBatch.End();
 
             foreach (Component c in components)
                 c.Draw(gameTime);
 
-            // test stuff
-            krypton.Draw(gameTime);
-
-            //Lighting.DebugDraw();
+            Lighting.DebugDraw();
             Physics.Draw(gameTime);
         }
 

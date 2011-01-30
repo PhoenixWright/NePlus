@@ -105,22 +105,20 @@ namespace NePlus.Krypton.Lights
         }
 
         /// <summary>
-        /// Draws the light's with texture and color
+        /// Draws the light with texture and color
         /// </summary>
-        /// <param name="helper">A render helper for drawing light</param>
+        /// <param name="helper">A render helper for drawing the light</param>
         public void Draw(KryptonRenderHelper helper)
         {
             // Set effect parameters and technique
             helper.Effect.Parameters["Texture0"].SetValue(this.mTexture);
-            helper.Effect.Parameters["LightPosition"].SetValue(this.mPosition);
-            helper.Effect.CurrentTechnique = helper.Effect.Techniques["SimpleTexture"];
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["LightTexture"];
 
             // Draw the light
             foreach (var effectPass in helper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();
                 helper.DrawClippedFov(this.mPosition, this.mAngle, this.mRange, this.mColor, this.mFov);
-                // helper.DrawSquareQuad(this.mPosition, this.mAngle, this.mRange, this.mColor);
             }
         }
 
@@ -139,7 +137,7 @@ namespace NePlus.Krypton.Lights
             foreach(ShadowHull hull in hulls)
             {
                 // Add the hulls to the buffer only if they are within the light's range
-                if (PointLight.IsInRange(hull.Position - this.Position, hull.MaxRadius + this.Range))
+                if (hull.Enabled && PointLight.IsInRange(hull.Position - this.Position, hull.MaxRadius + this.Range))
                 {
                     helper.BufferAddShadowHull(hull);
                 }
@@ -147,7 +145,7 @@ namespace NePlus.Krypton.Lights
 
             // Set the effect parameters
             helper.Effect.Parameters["LightPosition"].SetValue(this.mPosition);
-            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_ShadowWithOcclusion"];
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow"];
             foreach (var effectPass in helper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();

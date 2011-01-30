@@ -24,22 +24,26 @@ namespace NePlus.GameObjects.LightObjects
         public bool DrawLight { get; set; }
         public bool EffectActive { get; set; }
 
+        public float Angle { get; protected set; }
+        public float Fov { get; protected set; }
         public Vector2 Position { get; protected set; }
-        public float Rotation { get; protected set; }
+        public float Range { get; protected set; }
+
         public Func<Fixture, bool> EffectDelegate { get; protected set; }
 
-        public LightingComponent LightingComponent;
+        public LightComponent LightingComponent;
         public PhysicsComponent PhysicsComponent;
 
-        public Light(Engine engine, Vector2 position, float range, Color color, string motion)
+        public Light(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motion)
             : base(engine)
         {
             DrawLight = true;
             EffectActive = true;
 
+            Angle = angle;
             Position = position;
 
-            CreateLightComponent(position, range, color);
+            CreateLightComponent(position, fov, angle, range, color);
             CreatePhysicsComponent(motion);
 
             Engine.AddComponent(this);
@@ -49,17 +53,19 @@ namespace NePlus.GameObjects.LightObjects
         {
             if (PhysicsComponent != null)
             {
+                Angle = PhysicsComponent.Angle + MathHelper.TwoPi / 4;
                 Position = PhysicsComponent.Position;
             }
 
+            LightingComponent.Light.Angle = Angle;
             LightingComponent.Light.Position = Position;
 
             ResolveLightEffect();
         }
 
-        private void CreateLightComponent(Vector2 position, float range, Color color)
+        private void CreateLightComponent(Vector2 position, float fov, float angle, float range, Color color)
         {
-            LightingComponent = new LightingComponent(Engine, position, range, color);
+            LightingComponent = new LightComponent(Engine, position, fov, angle, range, color);
         }
 
         private void CreatePhysicsComponent(string motionType)
@@ -100,6 +106,9 @@ namespace NePlus.GameObjects.LightObjects
             //                    && position.Y < middleInGameWorld.Y + Texture.Height / 2;
 
             //return positionInLight;
+
+            float lightFov = LightingComponent.Light.Fov;
+            float lightRange = LightingComponent.Light.Range;
 
             return false;
         }

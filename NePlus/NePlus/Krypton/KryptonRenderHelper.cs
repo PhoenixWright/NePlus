@@ -81,34 +81,46 @@ namespace NePlus.Krypton
 
         public void BufferAddShadowHull(ShadowHull hull)
         {
+            // Why do we need all of these again? (hint: we don't)
+            Matrix matrixRotation;
+            Matrix matrixTranslation;
+            Matrix matrixScale;
+            Matrix matrixScaleInv;
+
+            Matrix vertexMatrix;
+            Matrix normalMatrix;
+
             // Where are we in the buffer?
             var vertexCount = this.mVertices.Count;
 
             // Add the vertices to the buffer
-            for (int i = 0; i < hull.NumVertices; i++)
+            foreach (var vertex in hull.Vertices)
             {
-                var translatedVertex = hull.Vertices[i];
+                var translatedVertex = vertex;
 
-                // Create the matrix by which to transform the hull vertices
-                Matrix hullMatrix = Matrix.CreateRotationZ(hull.Angle) * Matrix.CreateTranslation(hull.Position.X, hull.Position.Y, 0f);
+                matrixRotation = Matrix.CreateRotationZ(hull.Angle);
+                matrixTranslation = Matrix.CreateTranslation(hull.Position.X, hull.Position.Y, 0f);
+                matrixScale = Matrix.CreateScale(hull.Scale.X, hull.Scale.Y, 0);
+                matrixScaleInv = Matrix.CreateScale(1f / hull.Scale.X, 1f / hull.Scale.Y, 0);
+
+                // Create the matricies by which to transform the hull vertices and thier normals
+                // ----- FIX THIS -----
+                // This desperately needs to be optimized, as it would result in a major speed boost.
+                vertexMatrix = matrixScale * matrixRotation * matrixTranslation;
+                normalMatrix = matrixScaleInv * matrixRotation;
 
                 // Transform the vertices to screen coordinates
-                Vector3.Transform(ref translatedVertex.Position, ref hullMatrix, out translatedVertex.Position);
-                Vector3.TransformNormal(ref translatedVertex.Normal, ref hullMatrix, out translatedVertex.Normal);
+                Vector3.Transform(ref translatedVertex.Position, ref vertexMatrix, out translatedVertex.Position);
+                Vector3.TransformNormal(ref translatedVertex.Normal, ref normalMatrix, out translatedVertex.Normal);
 
                 this.mVertices.Add(translatedVertex);
             }
 
             // Add the indicies to the buffer
-            for (int i = 0; i < hull.NumIndicies; i++)
+            foreach (int index in hull.Indicies)
             {
-                mIndicies.Add((Int16)(vertexCount + hull.Indicies[i]));
+                mIndicies.Add((Int16)(vertexCount + index));
             }
-
-            // ----- SPEED TEST -----
-            // Try some LINQ later to test speed ;)
-            // mIndicies.AddRange(hull.Indicies.Select(x => x + vertexCount));
-            // ----- SPEED TEST -----
         }
 
         public void DrawSquareQuad(Vector2 position, float rotation, float size, Color color)
@@ -400,10 +412,10 @@ namespace NePlus.Krypton
                 case (LightMapSize.Full):
                     return 0.5f;
 
-                case (LightMapSize.Half):
+                case (LightMapSize.Fourth):
                     return 0.75f;
 
-                case (LightMapSize.Fourth):
+                case (LightMapSize.Eighth):
                     return 0.875f;
 
                 default:

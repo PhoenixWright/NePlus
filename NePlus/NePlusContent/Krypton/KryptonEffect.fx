@@ -9,6 +9,7 @@
 float4x4 Matrix;
 
 texture Texture0;
+texture Texture1;
 float2	LightPosition;
 
 float2 TexelBias;
@@ -25,6 +26,13 @@ float BlurFactorV = 0;
 sampler2D tex0 = sampler_state
 {
 	Texture = <Texture0>;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
+
+sampler2D tex1 = sampler_state
+{
+	Texture = <Texture1>;
 	AddressU = Clamp;
 	AddressV = Clamp;
 };
@@ -77,11 +85,15 @@ technique TextureToTarget_Add
 {
 	pass Pass1
 	{
+		StencilEnable = False;
+
 		BlendOp = Add;
 		SrcBlend = One;
 		DestBlend = One;
 
 		AlphaBlendEnable = True;
+		
+		CullMode = CCW;
 
 		VertexShader = compile vs_2_0 VS_ScreenCopy();
 		PixelShader = compile ps_2_0 PS_ScreenCopy();
@@ -92,9 +104,13 @@ technique TextureToTarget_Multiply
 {
 	pass Pass1
 	{
+		StencilEnable = False;
+
 		BlendOp = Add;
 		SrcBlend = Zero;
 		DestBlend = SrcColor;
+		
+		CullMode = CCW;
 
 		VertexShader = compile vs_2_0 VS_ScreenCopy();
 		PixelShader = compile ps_2_0 PS_ScreenCopy();
@@ -124,7 +140,25 @@ technique SimpleTexture
 {
 	pass Pass1
 	{
-		StencilEnable = false;
+		StencilEnable = False;
+
+		VertexShader = compile vs_2_0 VS_SimpleTexture();
+		PixelShader = compile ps_2_0 PS_SimpleTexture();
+	}
+};
+
+technique LightTexture
+{
+	pass Pass1
+	{
+		StencilEnable = False;
+
+		BlendOp = Add;
+		DestBlend = Zero;
+		SrcBlend = SrcAlpha;
+		
+		AlphaBlendEnable = True;
+
 		VertexShader = compile vs_2_0 VS_SimpleTexture();
 		PixelShader = compile ps_2_0 PS_SimpleTexture();
 	}
@@ -175,6 +209,10 @@ technique PointLight_Shadow
 {
 	pass Shadow
 	{
+		StencilEnable = False;
+
+		AlphaBlendEnable = False;
+
 		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
 		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
 	}
@@ -185,17 +223,33 @@ technique PointLight_Shadow
 
 technique PointLight_ShadowWithIllumination
 {
-	pass Shadow
-	{
-		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
-		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
-	}
-
 	pass Shadow_Illumination
 	{
+		// This outlines where our hulls are currently, so we don't draw shadows there
+		StencilEnable = True;
+		StencilFunc = Never;
+		StencilFail = Incr;
+
+		AlphaBlendEnable = False;
+
 		VertexShader = compile vs_2_0 VS_Shadow_HullIllumination();
 		PixelShader = compile ps_2_0 PS_Shadow_HullIllumination();
 	}
+
+	pass Shadow
+	{
+		// Only draw where the Stencil hasn't touched
+		StencilEnable = True;
+		StencilFunc = Equal;
+		StencilRef = 0;
+		StencilFail = Incr;
+		
+		AlphaBlendEnable = False;
+
+		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
+		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
+	}
+	
 };
 
 // ------------------------------------------------------------------------------------------------
@@ -205,7 +259,7 @@ technique PointLight_ShadowWithOcclusion
 {
 	pass Shadow_HullStencil
 	{
-		// This outlines where our hulls are currently, so we don't draw shadows there
+		// This outlines where our hulls are currently, so we don't draw shadows there, unless the hull is occluded
 		StencilEnable = True;
 		StencilFunc = Never;
 		StencilFail = Incr;
@@ -220,8 +274,10 @@ technique PointLight_ShadowWithOcclusion
 		StencilEnable = True;
 		StencilFunc = NotEqual;
 		StencilRef = 1;
-		StencilPass = Incr;
+		StencilPass = Keep;
 		StencilFail = Incr;
+
+		AlphaBlendEnable = False;
 
 		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
 		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
@@ -296,12 +352,16 @@ technique Blur
 {
     pass HorizontalBlur
     {
+		CullMode = CCW;
+
 		VertexShader = compile vs_2_0 VS_ScreenCopy();
         PixelShader = compile ps_2_0 PS_BlurH();
     }
     
     pass VerticalBlur
     {
+		CullMode = CCW;
+
 		VertexShader = compile vs_2_0 VS_ScreenCopy();
         PixelShader = compile ps_2_0 PS_BlurV();
     }

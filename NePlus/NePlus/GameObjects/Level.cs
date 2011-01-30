@@ -17,6 +17,7 @@ using NePlus.GameObjects.LightObjects;
 using NePlus;
 using NePlus.Components.EngineComponents;
 using NePlus.Components.GraphicsComponents;
+using NePlus.Krypton;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 
@@ -73,6 +74,9 @@ namespace NePlus.GameObjects
             {
                 // I don't fully understand why using Vector2.Zero works here. It must have something to do with the Bounds already containing the position information
                 CreateCollisionRectangle(collisionObject.Bounds, Engine.Physics.PositionToPhysicsWorld(Vector2.Zero));
+
+                // create the shadow hull for the platform
+                CreateRectangleShadowHull(new Vector2(collisionObject.Bounds.Center.X, collisionObject.Bounds.Center.Y), collisionObject.Bounds);
             }
 
             // loop through the collision tiles and create physics fixtures for them
@@ -83,7 +87,13 @@ namespace NePlus.GameObjects
                {
                     if (tileLayer.Tiles[x, y] != null)
                     {
+                        // create the physics object for the tile
                         CreateCollisionRectangle(tileLayer.Tiles[x, y].Source, Engine.Physics.PositionToPhysicsWorld(new Vector2(x * map.TileWidth, y * map.TileHeight)));
+
+                        // create the shadow for the tile new Vector2(x * map.TileWidth, y * map.TileHeight)
+                        CreateRectangleShadowHull(new Vector2(x * map.TileWidth + tileLayer.Tiles[x, y].Source.Width / 2,
+                                                              y * map.TileHeight + tileLayer.Tiles[x, y].Source.Height / 2),
+                                                  tileLayer.Tiles[x, y].Source);
                     }
                 }
             }
@@ -123,16 +133,33 @@ namespace NePlus.GameObjects
         {
             Vector2 position = new Vector2(lightObject.Bounds.Center.X, lightObject.Bounds.Center.Y);
 
+            Property lightAngle;
+            if (lightObject.Properties.TryGetValue("LightAngle", out lightAngle) == false)
+            {
+                lightAngle = new Property("LightAngle", "3.14");
+            }
+            float lightAngleValue = float.Parse(lightAngle.RawValue);
+
+            Property lightColorString;
+            if (lightObject.Properties.TryGetValue("LightColor", out lightColorString) == false)
+            {
+                throw new Exception("Failed to retrieve light color from " + lightObject.Name + " in map " + mapFilePath);
+            }
+            // use reflection to get a Color from a string
+            PropertyInfo colorProperty = typeof(Color).GetProperty(lightColorString.RawValue);
+            Color lightColor = (Color)colorProperty.GetValue(null, null);
+
+            Property lightFov;
+            if (lightObject.Properties.TryGetValue("LightFov", out lightFov) == false)
+            {
+                lightFov = new Property("LightFov", "6.28");
+            }
+            float lightFovValue = float.Parse(lightFov.RawValue);
+
             Property lightMotion;
             if (lightObject.Properties.TryGetValue("LightMotion", out lightMotion) == false)
             {
                 throw new Exception("Failed to retrieve light motion from " + lightObject.Name + " in map " + mapFilePath);
-            }
-
-            Property lightType;
-            if (lightObject.Properties.TryGetValue("LightType", out lightType) == false)
-            {
-                throw new Exception("Failed to retrieve light type from " + lightObject.Name + " in map " + mapFilePath);
             }
 
             Property lightRange;
@@ -142,15 +169,11 @@ namespace NePlus.GameObjects
             }
             float lightRangeValue = float.Parse(lightRange.RawValue);
 
-            Property lightColorString;
-            if (lightObject.Properties.TryGetValue("LightColor", out lightColorString) == false)
+            Property lightType;
+            if (lightObject.Properties.TryGetValue("LightType", out lightType) == false)
             {
-                throw new Exception("Failed to retrieve light color from " + lightObject.Name + " in map " + mapFilePath);
+                throw new Exception("Failed to retrieve light type from " + lightObject.Name + " in map " + mapFilePath);
             }
-
-            // use reflection to get a Color from a string
-            PropertyInfo colorProperty = typeof(Color).GetProperty(lightColorString.RawValue);
-            Color lightColor = (Color)colorProperty.GetValue(null, null);
 
             switch (lightType.RawValue)
             {
@@ -163,11 +186,11 @@ namespace NePlus.GameObjects
                     }
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(Engine, position, lightRangeValue, lightColor, lightMotion.RawValue, gravityValue));
+                    Lights.Add(new GravityLight(Engine, position, lightFovValue, lightAngleValue, lightRangeValue, lightColor, lightMotion.RawValue, gravityValue));
                     break;
                     
                 case "Null":
-                    Lights.Add(new NullLight(Engine, Lights, position, lightRangeValue, lightColor, lightMotion.RawValue));
+                    Lights.Add(new NullLight(Engine, position, lightFovValue, lightAngleValue, lightRangeValue, lightColor, lightMotion.RawValue, Lights));
                     break;
 
                 default:
@@ -178,6 +201,22 @@ namespace NePlus.GameObjects
         public void CreateParticleEffect(string particleEffectName)
         {
             levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(0, 0)));
+        }
+
+        public void CreatePlatform(Vector2 position, Rectangle rectangle, bool castsShadow)
+        {
+            
+
+            // create the shadow hull for the platform
+            CreateRectangleShadowHull(position, rectangle);
+        }
+
+        public void CreateRectangleShadowHull(Vector2 position, Rectangle rectangle)
+        {
+            ShadowHull shadowHull = ShadowHull.CreateRectangle(new Vector2(rectangle.Width, rectangle.Height));
+            shadowHull.Position = position;
+
+            Engine.Lighting.Krypton.Hulls.Add(shadowHull);
         }
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died

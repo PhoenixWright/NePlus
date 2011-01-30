@@ -28,11 +28,6 @@ namespace NePlus.ScreenManagement.Screens
 
         float pauseAlpha;
 
-        // test stuff
-        KryptonEngine krypton;
-        PointLight light = new PointLight();
-        ShadowHull shadowHull;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -51,20 +46,6 @@ namespace NePlus.ScreenManagement.Screens
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             Engine = new Engine(content);
-            
-            //krypton = new KryptonEngine(Engine, @"Lighting\KryptonEffect");
-            //krypton.Initialize();
-            //krypton.LoadContent();
-            //shadowHull = ShadowHull.CreateRectangle(Vector2.One);
-            //shadowHull.Position = new Vector2(5, 5);
-            //krypton.Hulls.Add(shadowHull);
-            //light.Range = 40;
-            //light.Texture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
-            //light.Position = new Vector2(0, 0);
-            //light.Color = Color.White;
-            //krypton.AmbientColor = new Color(35, 35, 35);
-            //krypton.Lights.Add(light);
-            //krypton.Matrix = Matrix.CreateOrthographic(Engine.Video.GraphicsDevice.Viewport.Width / 10, Engine.Video.GraphicsDevice.Viewport.Height / 10, 0, 1);
 
             Level = new Level(Engine, @"Maps\TestMap");
             
@@ -113,8 +94,6 @@ namespace NePlus.ScreenManagement.Screens
             {
                 Engine.Pause();
             }
-
-            //krypton.Update(gameTime);
         }
 
 
@@ -153,12 +132,8 @@ namespace NePlus.ScreenManagement.Screens
         {
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
 
-            //krypton.LightMapPrepare();
-
             Engine.Draw(gameTime);
-            
-            //krypton.Draw(gameTime);            
-            
+
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {

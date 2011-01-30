@@ -15,8 +15,6 @@ namespace NePlus
 
         public NePlusGame()
         {
-            
-            
             // tried to move this code, but it seems that nothing will draw unless it is located here
             // I seriously can't believe how many times this has come up
             graphics = new GraphicsDeviceManager(this);
