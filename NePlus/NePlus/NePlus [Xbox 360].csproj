@@ -90,6 +90,8 @@
     <Compile Include="Krypton\Lights\PointLight.cs" />
     <Compile Include="Krypton\LightTextureBuilder.cs" />
     <Compile Include="Krypton\ShadowHull.cs" />
+    <Compile Include="Krypton\ShadowHullPoint.cs" />
+    <Compile Include="Krypton\ShadowHullVertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManagement\GameScreen.cs" />

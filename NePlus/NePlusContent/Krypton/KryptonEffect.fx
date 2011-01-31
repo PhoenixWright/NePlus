@@ -11,12 +11,13 @@ float4x4 Matrix;
 texture Texture0;
 texture Texture1;
 float2	LightPosition;
+float	LightIntensityFactor = 1;
 
 float2 TexelBias;
 
 float4 AmbientColor;
 
-float Bluriness = 1;
+float Bluriness = 0.5f;
 float BlurFactorU = 0;
 float BlurFactorV = 0;
 
@@ -39,6 +40,19 @@ sampler2D tex1 = sampler_state
 
 // ------------------------------------------------------------------------------------------------ //
 // ----- Structures ------------------------------------------------------------------------------- //
+
+struct ShadowHullVertex
+{
+	float4 Position : POSITION0;
+	float2 Normal	: NORMAL0;
+	float4 Color	: COLOR0;
+};
+
+struct VertexPositionColor
+{
+	float4 Position : POSITION0;
+	float4 Color	: COLOR0;
+};
 
 struct VertexPositionNormalTexture
 {
@@ -109,6 +123,8 @@ technique TextureToTarget_Multiply
 		BlendOp = Add;
 		SrcBlend = Zero;
 		DestBlend = SrcColor;
+
+		AlphaBlendEnable = True;
 		
 		CullMode = CCW;
 
@@ -136,6 +152,11 @@ float4 PS_SimpleTexture(VertexPositionColorTexture input) : COLOR0
 	return tex2D(tex0, input.TexCoord) * input.Color;
 };
 
+float4 PS_LightTexture(VertexPositionColorTexture input) : COLOR0
+{
+	return pow(tex2D(tex0, input.TexCoord) * input.Color, LightIntensityFactor);
+};
+
 technique SimpleTexture
 {
 	pass Pass1
@@ -160,14 +181,14 @@ technique LightTexture
 		AlphaBlendEnable = True;
 
 		VertexShader = compile vs_2_0 VS_SimpleTexture();
-		PixelShader = compile ps_2_0 PS_SimpleTexture();
+		PixelShader = compile ps_2_0 PS_LightTexture();
 	}
 };
 
 // ------------------------------------------------------------------------------------------------
 // ----- Technique: PointLight_Shadow -------------------------------------------------------------
 
-VertexPositionTexture VS_PointLight_Shadow(VertexPositionNormalTexture input)
+VertexPositionColor VS_PointLight_Shadow(ShadowHullVertex input)
 {
     float2 Direction = normalize(LightPosition.xy - input.Position.xy);
     
@@ -177,25 +198,25 @@ VertexPositionTexture VS_PointLight_Shadow(VertexPositionNormalTexture input)
 		input.Position.xy -= Direction * 1000000;
     }
 	
-	VertexPositionTexture output;
+	VertexPositionColor output;
 
 	output.Position = mul(input.Position, Matrix);
-	output.TexCoord = input.TexCoord;
+	output.Color = input.Color;
 
 	return output;
 };
 
-float4 PS_PointLight_Shadow() : COLOR0
+float4 PS_PointLight_Shadow(float4 input : COLOR0) : COLOR0
 {
-	return float4(0,0,0,1);
+	return float4((1-(input.rgb * (1-input.a))) * input.a, 1);
 };
 
-VertexPositionTexture VS_Shadow_HullIllumination(VertexPositionTexture input)
+VertexPositionColor VS_Shadow_HullIllumination(ShadowHullVertex input)
 {
-	VertexPositionTexture output;
+	VertexPositionColor output;
 
 	output.Position = mul(input.Position, Matrix);
-	output.TexCoord = input.TexCoord;
+	output.Color = input.Color;
 
 	return output;
 };
@@ -211,7 +232,11 @@ technique PointLight_Shadow
 	{
 		StencilEnable = False;
 
-		AlphaBlendEnable = False;
+		AlphaBlendEnable = True;
+
+		BlendOp = RevSubtract;
+		SrcBlend = One;
+		DestBlend = One;
 
 		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
 		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
@@ -243,8 +268,12 @@ technique PointLight_ShadowWithIllumination
 		StencilFunc = Equal;
 		StencilRef = 0;
 		StencilFail = Incr;
-		
-		AlphaBlendEnable = False;
+
+		AlphaBlendEnable = True;
+
+		BlendOp = RevSubtract;
+		SrcBlend = One;
+		DestBlend = One;
 
 		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
 		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
@@ -277,7 +306,11 @@ technique PointLight_ShadowWithOcclusion
 		StencilPass = Keep;
 		StencilFail = Incr;
 
-		AlphaBlendEnable = False;
+		AlphaBlendEnable = True;
+
+		BlendOp = RevSubtract;
+		SrcBlend = One;
+		DestBlend = One;
 
 		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
 		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
@@ -291,6 +324,8 @@ technique DebugDraw
 {
 	pass Solid
 	{
+		AlphaBlendEnable = False;
+
 		VertexShader = compile vs_2_0 VS_Shadow_HullIllumination();
 		PixelShader = compile ps_2_0 PS_Shadow_HullIllumination();
 	}
@@ -309,7 +344,7 @@ float4 PS_BlurH(in float2 texCoord : TEXCOORD0) : COLOR0
 	{
 		return center;
 	}
-	
+
 	float4
 	sum  = tex2D(tex0, float2(texCoord.x - blurFactor * 4,	texCoord.y)	+ TexelBias) * 0.05f;
 	sum += tex2D(tex0, float2(texCoord.x - blurFactor * 3,	texCoord.y)	+ TexelBias) * 0.09f;
@@ -332,8 +367,9 @@ float4 PS_BlurV(in float2 texCoord : TEXCOORD0) : COLOR0
 
 	if(!all(center))
 	{
-		return center + AmbientColor;
+		return center;
 	}
+
 	float4
 	sum  = tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor * 4)	+ TexelBias) * 0.05f;
 	sum += tex2D(tex0, float2(texCoord.x, texCoord.y - blurFactor * 3)	+ TexelBias) * 0.09f;
@@ -345,13 +381,17 @@ float4 PS_BlurV(in float2 texCoord : TEXCOORD0) : COLOR0
 	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 3)	+ TexelBias) * 0.09f;
 	sum += tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 4)	+ TexelBias) * 0.05f;
 	
-	return sum + AmbientColor;
+	return sum;
 }
 
 technique Blur
 {
     pass HorizontalBlur
     {
+		StencilEnable = False;
+
+		AlphaBlendEnable = False;
+
 		CullMode = CCW;
 
 		VertexShader = compile vs_2_0 VS_ScreenCopy();
@@ -360,6 +400,10 @@ technique Blur
     
     pass VerticalBlur
     {
+		StencilEnable = False;
+
+		AlphaBlendEnable = False;
+
 		CullMode = CCW;
 
 		VertexShader = compile vs_2_0 VS_ScreenCopy();

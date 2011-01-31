@@ -52,8 +52,8 @@ namespace NePlus.Krypton
 
         private GraphicsDevice mGraphicsDevice;
         private Effect mEffect;
-        private List<VertexPositionNormalTexture> mVertices = new List<VertexPositionNormalTexture>();
-        private List<Int16> mIndicies = new List<Int16>();
+        private List<ShadowHullVertex> mShadowHullVertices = new List<ShadowHullVertex>();
+        private List<Int16> mShadowHullIndicies = new List<Int16>();
 
         public GraphicsDevice GraphicsDevice
         {
@@ -64,13 +64,13 @@ namespace NePlus.Krypton
             get { return this.mEffect; }
         }
 
-        public List<VertexPositionNormalTexture> Vertices
+        public List<ShadowHullVertex> ShadowHullVertices
         {
-            get { return this.mVertices; }
+            get { return this.mShadowHullVertices; }
         }
-        public List<Int16> Indicies
+        public List<Int16> ShadowHullIndicies
         {
-            get { return this.mIndicies; }
+            get { return this.mShadowHullIndicies; }
         }
 
         public KryptonRenderHelper(GraphicsDevice graphicsDevice, Effect effect)
@@ -82,44 +82,53 @@ namespace NePlus.Krypton
         public void BufferAddShadowHull(ShadowHull hull)
         {
             // Why do we need all of these again? (hint: we don't)
-            Matrix matrixRotation;
-            Matrix matrixTranslation;
-            Matrix matrixScale;
-            Matrix matrixScaleInv;
 
-            Matrix vertexMatrix;
-            Matrix normalMatrix;
+            Matrix vertexMatrix = Matrix.Identity;
+            Matrix normalMatrix = Matrix.Identity;
+
+            float cos, sin;
+
+            ShadowHullPoint point;
+            ShadowHullVertex hullVertex;
 
             // Where are we in the buffer?
-            var vertexCount = this.mVertices.Count;
+            var vertexCount = this.mShadowHullVertices.Count;
 
             // Add the vertices to the buffer
-            foreach (var vertex in hull.Vertices)
+            for (int i = 0; i < hull.NumPoints; i++)
             {
-                var translatedVertex = vertex;
+                // Create the matrices (3X speed boost versus prior version)
+                cos = (float)Math.Cos(hull.Angle);
+                sin = (float)Math.Sin(hull.Angle);
 
-                matrixRotation = Matrix.CreateRotationZ(hull.Angle);
-                matrixTranslation = Matrix.CreateTranslation(hull.Position.X, hull.Position.Y, 0f);
-                matrixScale = Matrix.CreateScale(hull.Scale.X, hull.Scale.Y, 0);
-                matrixScaleInv = Matrix.CreateScale(1f / hull.Scale.X, 1f / hull.Scale.Y, 0);
+                // vertexMatrix = scale * rotation * translation;
+                vertexMatrix.M11 = hull.Scale.X * cos;
+                vertexMatrix.M12 = hull.Scale.X * sin;
+                vertexMatrix.M21 = hull.Scale.Y * -sin;
+                vertexMatrix.M22 = hull.Scale.Y * cos;
+                vertexMatrix.M41 = hull.Position.X;
+                vertexMatrix.M42 = hull.Position.Y;
 
-                // Create the matricies by which to transform the hull vertices and thier normals
-                // ----- FIX THIS -----
-                // This desperately needs to be optimized, as it would result in a major speed boost.
-                vertexMatrix = matrixScale * matrixRotation * matrixTranslation;
-                normalMatrix = matrixScaleInv * matrixRotation;
+                // normalMatrix = scaleInv * rotation;
+                normalMatrix.M11 = (1f / hull.Scale.X) * cos;
+                normalMatrix.M12 = (1f / hull.Scale.X) * sin;
+                normalMatrix.M21 = (1f / hull.Scale.Y) * -sin;
+                normalMatrix.M22 = (1f / hull.Scale.Y) * cos;
 
                 // Transform the vertices to screen coordinates
-                Vector3.Transform(ref translatedVertex.Position, ref vertexMatrix, out translatedVertex.Position);
-                Vector3.TransformNormal(ref translatedVertex.Normal, ref normalMatrix, out translatedVertex.Normal);
+                point = hull.Points[i];
+                Vector2.Transform(ref point.Position, ref vertexMatrix, out hullVertex.Position);
+                Vector2.TransformNormal(ref point.Normal, ref normalMatrix, out hullVertex.Normal);
 
-                this.mVertices.Add(translatedVertex);
+                hullVertex.Color = hull.Color;
+
+                this.mShadowHullVertices.Add(hullVertex); // could this be sped up... ?
             }
 
-            // Add the indicies to the buffer
+            //// Add the indicies to the buffer
             foreach (int index in hull.Indicies)
             {
-                mIndicies.Add((Int16)(vertexCount + index));
+                mShadowHullIndicies.Add((Int16)(vertexCount + index)); // what about this? Add range?
             }
         }
 
@@ -308,9 +317,9 @@ namespace NePlus.Krypton
 
         public void BufferDraw()
         {
-            if (this.mIndicies.Count >= 3)
+            if (this.mShadowHullIndicies.Count >= 3)
             {
-                this.mGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, this.mVertices.ToArray(), 0, this.mVertices.Count, this.mIndicies.ToArray(), 0, this.mIndicies.Count / 3);
+                this.mGraphicsDevice.DrawUserIndexedPrimitives<ShadowHullVertex>(PrimitiveType.TriangleList, this.mShadowHullVertices.ToArray(), 0, this.mShadowHullVertices.Count, this.mShadowHullIndicies.ToArray(), 0, this.mShadowHullIndicies.Count / 3);
             }
         }
 
@@ -335,12 +344,12 @@ namespace NePlus.Krypton
             //this.mGraphicsDevice.RasterizerState = originalRasterizerState;
         }
 
-        public void BlurTextureToTarget(Texture2D texture, LightMapSize mapSize, BlurTechnique blur)
+        public void BlurTextureToTarget(Texture2D texture, LightMapSize mapSize, BlurTechnique blurTechnique, float bluriness)
         {
             // Get the pass to use
             string passName = "";
 
-            switch (blur)
+            switch (blurTechnique)
             {
                 case (BlurTechnique.Horizontal):
                     passName = "HorizontalBlur";
@@ -362,6 +371,7 @@ namespace NePlus.Krypton
 
             this.mEffect.Parameters["Texture0"].SetValue(texture);
             this.mEffect.Parameters["TexelBias"].SetValue(texelBias);
+            this.mEffect.Parameters["Bluriness"].SetValue(bluriness);
             this.mEffect.CurrentTechnique = this.mEffect.Techniques["Blur"];
 
             mEffect.CurrentTechnique.Passes[passName].Apply();
@@ -413,10 +423,10 @@ namespace NePlus.Krypton
                     return 0.5f;
 
                 case (LightMapSize.Fourth):
-                    return 0.75f;
+                    return 0.6f;
 
                 case (LightMapSize.Eighth):
-                    return 0.875f;
+                    return 0.7f;
 
                 default:
                     return 0.0f;

@@ -34,12 +34,12 @@ namespace NePlus.Krypton
         /// <summary>
         /// The vertices comprising the shadow hull
         /// </summary>
-        public VertexPositionNormalTexture[] Vertices;
+        public ShadowHullPoint[] Points;
 
         /// <summary>
         /// The number of vertices comprising the shadow hull
         /// </summary>
-        public int NumVertices;
+        public int NumPoints;
 
         /// <summary>
         /// The indicies used to render the shadow hull
@@ -54,6 +54,8 @@ namespace NePlus.Krypton
         public bool Enabled = true;
 
         public Vector2 Scale = Vector2.One;
+
+        public Color Color = Color.Black;
 
         #endregion
 
@@ -80,40 +82,34 @@ namespace NePlus.Krypton
 
             hull.MaxRadius = (float)Math.Sqrt(size.X * size.X + size.Y * size.Y);
 
-            hull.NumVertices = 4 * 2;
-            var numTris = hull.NumVertices - 2;
+            hull.NumPoints = 4 * 2;
+            var numTris = hull.NumPoints - 2;
             hull.NumIndicies = numTris * 3;
 
-            hull.Vertices = new VertexPositionNormalTexture[hull.NumVertices];
+            hull.Points = new ShadowHullPoint[hull.NumPoints];
             hull.Indicies = new Int32[hull.NumIndicies];
 
             // Vertex position
-            var posTR = new Vector3(+size.X, +size.Y, 0f);
-            var posBR = new Vector3(+size.X, -size.Y, 0f);
-            var posBL = new Vector3(-size.X, -size.Y, 0f);
-            var posTL = new Vector3(-size.X, +size.Y, 0f);
-
-            // Vertex texture coordinates
-            var texTR = new Vector2(1, 0);
-            var texBR = new Vector2(1, 1);
-            var texBL = new Vector2(0, 1);
-            var texTL = new Vector2(0, 0);
+            var posTR = new Vector2(+size.X, +size.Y);
+            var posBR = new Vector2(+size.X, -size.Y);
+            var posBL = new Vector2(-size.X, -size.Y);
+            var posTL = new Vector2(-size.X, +size.Y);
 
             // Right
-            hull.Vertices[0] = new VertexPositionNormalTexture(posTR, Vector3.Right, texTR);
-            hull.Vertices[1] = new VertexPositionNormalTexture(posBR, Vector3.Right, texBR);
-
-            // Bottom
-            hull.Vertices[2] = new VertexPositionNormalTexture(posBR, Vector3.Down, texBR);
-            hull.Vertices[3] = new VertexPositionNormalTexture(posBL, Vector3.Down, texBL);
-
-            // Left
-            hull.Vertices[4] = new VertexPositionNormalTexture(posBL, Vector3.Left, texBL);
-            hull.Vertices[5] = new VertexPositionNormalTexture(posTL, Vector3.Left, texTL);
+            hull.Points[0] = new ShadowHullPoint(posTR, Vector2.UnitX);
+            hull.Points[1] = new ShadowHullPoint(posBR, Vector2.UnitX);
+                                                              
+            // Bottom                                         
+            hull.Points[2] = new ShadowHullPoint(posBR, -Vector2.UnitY);
+            hull.Points[3] = new ShadowHullPoint(posBL, -Vector2.UnitY);
+                                                              
+            // Left                                           
+            hull.Points[4] = new ShadowHullPoint(posBL, -Vector2.UnitX);
+            hull.Points[5] = new ShadowHullPoint(posTL, -Vector2.UnitX);
 
             // Top
-            hull.Vertices[6] = new VertexPositionNormalTexture(posTL, Vector3.Up, texTL);
-            hull.Vertices[7] = new VertexPositionNormalTexture(posTR, Vector3.Up, texTR);
+            hull.Points[6] = new ShadowHullPoint(posTL, Vector2.UnitY);
+            hull.Points[7] = new ShadowHullPoint(posTR, Vector2.UnitY);
 
             // Create tris
             for (int i = 0; i < numTris; i++)
@@ -142,11 +138,11 @@ namespace NePlus.Krypton
             hull.MaxRadius = radius;
 
             // Calculate number of sides
-            hull.NumVertices = sides * 2;
-            var numTris = hull.NumVertices - 2;
+            hull.NumPoints = sides * 2;
+            var numTris = hull.NumPoints - 2;
             hull.NumIndicies = numTris * 3;
             
-            hull.Vertices = new VertexPositionNormalTexture[hull.NumVertices];
+            hull.Points = new ShadowHullPoint[hull.NumPoints];
             hull.Indicies = new Int32[hull.NumIndicies];
 
             var angle = (float)(-Math.PI * 2) / sides; // XNA Renders Clockwise
@@ -155,37 +151,26 @@ namespace NePlus.Krypton
             for (int i = 0; i < sides; i++)
             {
                 // Create vertices
-                var v1 = new VertexPositionNormalTexture();
-                var v2 = new VertexPositionNormalTexture();
+                var v1 = new ShadowHullPoint();
+                var v2 = new ShadowHullPoint();
 
                 // Vertex Position
                 v1.Position.X = (float)Math.Cos(angle * i) * radius;
                 v1.Position.Y = (float)Math.Sin(angle * i) * radius;
-                v1.Position.Z = 0;
 
                 v2.Position.X = (float)Math.Cos(angle * (i + 1)) * radius;
                 v2.Position.Y = (float)Math.Sin(angle * (i + 1)) * radius;
-                v2.Position.Z = 0;
 
                 // Vertex Normal
                 v1.Normal.X = (float)Math.Cos(angle * i + angleOffset);
                 v1.Normal.Y = (float)Math.Sin(angle * i + angleOffset);
-                v1.Normal.Z = 0;
 
                 v2.Normal.X = (float)Math.Cos(angle * i + angleOffset);
                 v2.Normal.Y = (float)Math.Sin(angle * i + angleOffset);
-                v2.Normal.Z = 0;
-
-                // Vertex Texture Coordinates
-                v1.TextureCoordinate.X = +v1.Position.X;
-                v1.TextureCoordinate.Y = -v1.Position.Y;
-
-                v2.TextureCoordinate.X = +v2.Position.X;
-                v2.TextureCoordinate.Y = -v2.Position.Y;
 
                 // Copy vertices
-                hull.Vertices[i * 2 + 0] = v1;
-                hull.Vertices[i * 2 + 1] = v2;
+                hull.Points[i * 2 + 0] = v1;
+                hull.Points[i * 2 + 1] = v2;
             }
 
             for (int i = 0; i < numTris; i++)
@@ -213,29 +198,15 @@ namespace NePlus.Krypton
 
             ShadowHull hull = new ShadowHull();
 
-            hull.NumVertices = numPoints * 2;
-            var numTris = hull.NumVertices - 2;
+            hull.NumPoints = numPoints * 2;
+            var numTris = hull.NumPoints - 2;
             hull.NumIndicies = numTris * 3;
 
-            hull.Vertices = new VertexPositionNormalTexture[hull.NumVertices];
+            hull.Points = new ShadowHullPoint[hull.NumPoints];
             hull.Indicies = new Int32[hull.NumIndicies];
 
             Vector2 pointMin = points[0];
             Vector2 pointMax = points[0];
-
-            for (int i = 1; i < numPoints; i++)
-            {
-                var point = points[i];
-
-                // These mins and max's could be optimised, but it's probably not worth it.
-                pointMin.X = Math.Min(pointMin.X, point.X);
-                pointMin.Y = Math.Min(pointMin.Y, point.Y);
-
-                pointMax.X = Math.Max(pointMin.X, point.X);
-                pointMax.Y = Math.Max(pointMin.Y, point.Y);
-            }
-
-            var texSize = pointMax - pointMin;
 
             for (int i = 0; i < numPoints; i++)
             {
@@ -245,34 +216,13 @@ namespace NePlus.Krypton
                 hull.MaxRadius = Math.Max(hull.MaxRadius, p1.Length());
 
                 var line = p2 - p1;
+
                 var normal = new Vector2(-line.Y, +line.X);
 
                 normal.Normalize();
 
-                // Generate texture coordinates
-                var tex1 = (p1 - pointMin) / texSize;
-                var tex2 = (p2 - pointMin) / texSize;
-
-                // Flip texture coordinates vertically
-                tex1.Y = 1 - tex1.Y;
-                tex2.Y = 1 - tex2.Y;
-
-                var v1 = new VertexPositionNormalTexture()
-                {
-                    Position = new Vector3(p1, 0f),
-                    Normal = new Vector3(normal, 0f),
-                    TextureCoordinate = tex1,
-                };
-
-                var v2 = new VertexPositionNormalTexture()
-                {
-                    Position = new Vector3(p2, 0f),
-                    Normal = new Vector3(normal, 0f),
-                    TextureCoordinate = tex2,
-                };
-
-                hull.Vertices[i * 2 + 0] = v1;
-                hull.Vertices[i * 2 + 1] = v2;
+                hull.Points[i * 2 + 0] = new ShadowHullPoint(p1, normal);
+                hull.Points[i * 2 + 1] = new ShadowHullPoint(p2, normal);
             }
 
             for (Int16 i = 0; i < numTris; i++)

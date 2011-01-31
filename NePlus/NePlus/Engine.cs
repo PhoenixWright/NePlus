@@ -118,6 +118,8 @@ namespace NePlus
                 c.Draw(gameTime);
 
             Lighting.DebugDraw();
+
+            Video.GraphicsDevice.BlendState = BlendState.Additive;
             Physics.Draw(gameTime);
         }
 

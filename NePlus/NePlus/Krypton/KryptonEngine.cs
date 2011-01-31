@@ -16,6 +16,13 @@ namespace NePlus.Krypton
         Eighth = 4,
     }
 
+    public enum CullMode
+    {
+        None = 0,
+        Clockwise = 1,
+        CounterClockwise = 2,
+    }
+
     /// <summary>
     /// A GPU-based 2D lighting engine, wrapped up in a DrawableGameComponent
     /// </summary>
@@ -24,6 +31,7 @@ namespace NePlus.Krypton
         // The Krypton Effect
         private string mEffectAssetName;
         private Effect mEffect;
+        private CullMode mCullMode = CullMode.CounterClockwise;
 
         // The goods
         private List<ShadowHull> mHulls = new List<ShadowHull>();
@@ -35,14 +43,27 @@ namespace NePlus.Krypton
         private Vector2 mViewMin = Vector2.One * float.MinValue;
         private Vector2 mViewMax = Vector2.One * float.MaxValue;
 
+        // Blur
+        private bool mBlurEnable = false;
+        private float mBluriness = 1;
+        private RenderTarget2D mMapBlur;
+
         // Light maps
         private RenderTarget2D mMapTemp;
-        private RenderTarget2D mMapBlur;
         private RenderTarget2D mMapFinal;
         private Color mAmbientColor = new Color(35,35,35);
         private LightMapSize mLightMapSize = LightMapSize.Full;
 
         public KryptonRenderHelper RenderHelper { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating how Krypton should cull geometry. The default value is CullMode.CounterClockwise
+        /// </summary>
+        public CullMode CullMode
+        {
+            get { return this.mCullMode; }
+            set { this.mCullMode = value; }
+        }
 
         /// <summary>
         /// The collection of lights krypton uses to render shadows
@@ -59,15 +80,8 @@ namespace NePlus.Krypton
         /// </summary>
         public Matrix Matrix
         {
-            set
-            {
-                this.mWVP = value;
-            }
-
-            get
-            {
-                return this.mWVP;
-            }
+            set { this.mWVP = value; }
+            get { return this.mWVP; }
         }
 
         /// <summary>
@@ -102,14 +116,8 @@ namespace NePlus.Krypton
         /// </summary>
         public Color AmbientColor
         {
-            get
-            {
-                return this.mAmbientColor;
-            }
-            set
-            {
-                this.mAmbientColor = value;
-            }
+            get { return this.mAmbientColor; }
+            set { this.mAmbientColor = value; }
         }
 
         /// <summary>
@@ -127,6 +135,18 @@ namespace NePlus.Krypton
                     this.CreateRenderTargets();
                 }
             }
+        }
+
+        public bool BlurEnable
+        {
+            get { return this.mBlurEnable; }
+            set { this.mBlurEnable = value; }
+        }
+
+        public float Bluriness
+        {
+            get { return this.mBluriness; }
+            set { this.mBluriness = Math.Max(0, value); }
         }
 
         public float BlurFactorU { set { this.mEffect.Parameters["BlurFactorU"].SetValue(value); } }
@@ -241,12 +261,12 @@ namespace NePlus.Krypton
             {
                 if (light.IsOn)
                 {
-                    Engine.Video.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-
                     // Draw the light and shadows
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapTemp);
                     Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, Color.Black, 0, 0);
                     Engine.Video.GraphicsDevice.BlendState = BlendState.Opaque;
+
+                    Engine.Video.GraphicsDevice.RasterizerState = KryptonEngine.RasterizerStateGetFromCullMode(this.mCullMode);
 
                     light.Draw(this.RenderHelper);
                     light.DrawShadows(this.RenderHelper, this.mHulls);
@@ -255,6 +275,15 @@ namespace NePlus.Krypton
                     Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
                     RenderHelper.DrawTextureToTarget(this.mMapTemp, this.mLightMapSize, BlendTechnique.Add);
                 }
+            }
+
+            if (this.mBlurEnable)
+            {
+                Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapBlur);
+                Engine.Video.GraphicsDevice.Clear(Color.Black);
+                RenderHelper.BlurTextureToTarget(this.mMapFinal, LightMapSize.Full, BlurTechnique.Horizontal, this.mBluriness);
+                Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
+                RenderHelper.BlurTextureToTarget(this.mMapBlur, LightMapSize.Full, BlurTechnique.Vertical, this.mBluriness);
             }
 
             // Reset to the original rendering states
@@ -290,6 +319,25 @@ namespace NePlus.Krypton
             }
 
             effectParameter.SetValue(matrixWVP * matrixSpriteBatch);
+        }
+        /// <summary>
+        /// Retrieves a rasterize state by using the cull mode as a lookup
+        /// </summary>
+        /// <param name="cullMode"></param>
+        /// <returns></returns>
+        private static RasterizerState RasterizerStateGetFromCullMode(Krypton.CullMode cullMode)
+        {
+            switch (cullMode)
+            {
+                case (CullMode.CounterClockwise):
+                    return RasterizerState.CullCounterClockwise;
+
+                case (CullMode.Clockwise):
+                    return RasterizerState.CullClockwise;
+
+                default:
+                    return RasterizerState.CullNone;
+            }
         }
 
         /// <summary>

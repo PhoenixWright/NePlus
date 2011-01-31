@@ -14,6 +14,7 @@ namespace NePlus.Krypton.Lights
         private Color mColor = Color.White;
         private float mRange = 1;
         private float mFov = MathHelper.TwoPi;
+        private float mIntensity = 1;
 
         //private RenderTarget2D mMap = null;
 
@@ -91,6 +92,12 @@ namespace NePlus.Krypton.Lights
             }
         }
 
+        public float Intensity
+        {
+            get { return this.mIntensity; }
+            set { this.mIntensity = MathHelper.Clamp(value, 0.01f, 3f); }
+        }
+
         #endregion Parameters
 
         #region ILight Implementation
@@ -112,6 +119,7 @@ namespace NePlus.Krypton.Lights
         {
             // Set effect parameters and technique
             helper.Effect.Parameters["Texture0"].SetValue(this.mTexture);
+            helper.Effect.Parameters["LightIntensityFactor"].SetValue(1 / (this.mIntensity * this.mIntensity));
             helper.Effect.CurrentTechnique = helper.Effect.Techniques["LightTexture"];
 
             // Draw the light
@@ -130,8 +138,8 @@ namespace NePlus.Krypton.Lights
         public void DrawShadows(KryptonRenderHelper helper, List<ShadowHull> hulls)
         {
             // Make sure we only render the following hulls
-            helper.Vertices.Clear();
-            helper.Indicies.Clear();
+            helper.ShadowHullVertices.Clear();
+            helper.ShadowHullIndicies.Clear();
 
             // Loop through each hull
             foreach(ShadowHull hull in hulls)
@@ -145,7 +153,7 @@ namespace NePlus.Krypton.Lights
 
             // Set the effect parameters
             helper.Effect.Parameters["LightPosition"].SetValue(this.mPosition);
-            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow"];
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_ShadowWithIllumination"];
             foreach (var effectPass in helper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();

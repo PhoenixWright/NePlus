@@ -15,6 +15,8 @@ namespace NePlus.Components.EngineComponents
             Krypton.AmbientColor = new Color(65, 65, 65);
             engine.AddComponent(this);
 
+            Krypton.BlurEnable = true;
+            Krypton.CullMode = CullMode.None;
             Krypton.Matrix = Engine.Camera.CameraMatrix;
             Krypton.SpriteBatchCompatablityEnabled = true;
 
@@ -53,8 +55,8 @@ namespace NePlus.Components.EngineComponents
         public void DebugDraw()
         {
             // Clear the helpers vertices
-            Krypton.RenderHelper.Vertices.Clear();
-            Krypton.RenderHelper.Indicies.Clear();
+            Krypton.RenderHelper.ShadowHullVertices.Clear();
+            Krypton.RenderHelper.ShadowHullIndicies.Clear();
 
             foreach (var hull in Krypton.Hulls)
             {

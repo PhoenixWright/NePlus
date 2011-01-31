@@ -107,9 +107,6 @@ namespace NePlus.GameObjects.LightObjects
 
             //return positionInLight;
 
-            float lightFov = LightingComponent.Light.Fov;
-            float lightRange = LightingComponent.Light.Range;
-
             return false;
         }
 
