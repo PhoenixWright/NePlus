@@ -13,7 +13,7 @@ namespace NePlus.Krypton
     public struct ShadowHullPoint
     {
         /// <summary>
-        /// Creates a new ShadowHullPoint
+        /// Creates a new Shadow Hull Point
         /// </summary>
         /// <param name="position">The position of the point</param>
         /// <param name="normal">The normal of the side which the point helps represent</param>

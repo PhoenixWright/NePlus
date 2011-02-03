@@ -44,8 +44,6 @@ namespace NePlus.GameObjects
             mapFilePath = mapPath;
             Lights = new List<Light>();
             levelParticleEffects = new List<ParticleEffectComponent>();
-
-            Engine.AddComponent(this);
         }
 
         public override void LoadContent()

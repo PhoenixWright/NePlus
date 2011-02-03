@@ -91,29 +91,30 @@ namespace NePlus.Krypton
             ShadowHullPoint point;
             ShadowHullVertex hullVertex;
 
+            // Create the matrices (3X speed boost versus prior version)
+            cos = (float)Math.Cos(hull.Angle);
+            sin = (float)Math.Sin(hull.Angle);
+
+            // vertexMatrix = scale * rotation * translation;
+            vertexMatrix.M11 = hull.Scale.X * cos;
+            vertexMatrix.M12 = hull.Scale.X * sin;
+            vertexMatrix.M21 = hull.Scale.Y * -sin;
+            vertexMatrix.M22 = hull.Scale.Y * cos;
+            vertexMatrix.M41 = hull.Position.X;
+            vertexMatrix.M42 = hull.Position.Y;
+
+            // normalMatrix = scaleInv * rotation;
+            normalMatrix.M11 = (1f / hull.Scale.X) * cos;
+            normalMatrix.M12 = (1f / hull.Scale.X) * sin;
+            normalMatrix.M21 = (1f / hull.Scale.Y) * -sin;
+            normalMatrix.M22 = (1f / hull.Scale.Y) * cos;
+
             // Where are we in the buffer?
             var vertexCount = this.mShadowHullVertices.Count;
 
             // Add the vertices to the buffer
             for (int i = 0; i < hull.NumPoints; i++)
             {
-                // Create the matrices (3X speed boost versus prior version)
-                cos = (float)Math.Cos(hull.Angle);
-                sin = (float)Math.Sin(hull.Angle);
-
-                // vertexMatrix = scale * rotation * translation;
-                vertexMatrix.M11 = hull.Scale.X * cos;
-                vertexMatrix.M12 = hull.Scale.X * sin;
-                vertexMatrix.M21 = hull.Scale.Y * -sin;
-                vertexMatrix.M22 = hull.Scale.Y * cos;
-                vertexMatrix.M41 = hull.Position.X;
-                vertexMatrix.M42 = hull.Position.Y;
-
-                // normalMatrix = scaleInv * rotation;
-                normalMatrix.M11 = (1f / hull.Scale.X) * cos;
-                normalMatrix.M12 = (1f / hull.Scale.X) * sin;
-                normalMatrix.M21 = (1f / hull.Scale.Y) * -sin;
-                normalMatrix.M22 = (1f / hull.Scale.Y) * cos;
 
                 // Transform the vertices to screen coordinates
                 point = hull.Points[i];

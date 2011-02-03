@@ -55,7 +55,7 @@ namespace NePlus.Components.EngineComponents
 
         public override void Draw(GameTime gameTime)
         {
-            if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
+            if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugPhysicsView"))
             {
                 Matrix view = Matrix.CreateTranslation(Engine.Camera.Position.X / -PixelsPerMeter, Engine.Camera.Position.Y / -PixelsPerMeter, 0);
                 Vector2 size = new Vector2(Engine.Camera.ViewingWidth / Engine.Camera.Zoom, Engine.Camera.ViewingHeight / Engine.Camera.Zoom) / (PixelsPerMeter * 2.0f);

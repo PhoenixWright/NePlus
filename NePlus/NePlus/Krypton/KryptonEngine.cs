@@ -281,9 +281,9 @@ namespace NePlus.Krypton
             {
                 Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapBlur);
                 Engine.Video.GraphicsDevice.Clear(Color.Black);
-                RenderHelper.BlurTextureToTarget(this.mMapFinal, LightMapSize.Full, BlurTechnique.Horizontal, this.mBluriness);
+                this.RenderHelper.BlurTextureToTarget(this.mMapFinal, LightMapSize.Full, BlurTechnique.Horizontal, this.mBluriness);
                 Engine.Video.GraphicsDevice.SetRenderTarget(this.mMapFinal);
-                RenderHelper.BlurTextureToTarget(this.mMapBlur, LightMapSize.Full, BlurTechnique.Vertical, this.mBluriness);
+                this.RenderHelper.BlurTextureToTarget(this.mMapBlur, LightMapSize.Full, BlurTechnique.Vertical, this.mBluriness);
             }
 
             // Reset to the original rendering states

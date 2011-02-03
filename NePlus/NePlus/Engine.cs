@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using NePlus.Components.EngineComponents;
+using NePlus.GameObjects;
 using NePlus.Krypton;
 using NePlus.Krypton.Lights;
 using NePlus.ScreenManagement;
@@ -22,6 +23,7 @@ namespace NePlus
         public Audio Audio { get; private set; }
         public Camera2D Camera { get; private set; }
         public InputState Input { get; private set; }
+        public Level Level { get; set; }
         public Lighting Lighting { get; private set; }
         public Physics Physics { get; private set; }
         public Video Video { get; private set; }
@@ -117,10 +119,23 @@ namespace NePlus
             foreach (Component c in components)
                 c.Draw(gameTime);
 
-            Lighting.DebugDraw();
+            // draw level after lighting because primary artwork is going to be "lit" with its own effects
+            if (Level != null)
+                Level.Draw(gameTime);
 
-            Video.GraphicsDevice.BlendState = BlendState.Additive;
-            Physics.Draw(gameTime);
+            DebugDraw(gameTime);
+        }
+
+        public void DebugDraw(GameTime gameTime)
+        {
+            if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugView"))
+            {
+                Lighting.DebugDraw();
+
+                // need this to allow the farseer debug view transparency to work
+                Video.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                Physics.Draw(gameTime);
+            }
         }
 
         public void AddComponent(Component Component)

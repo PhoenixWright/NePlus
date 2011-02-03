@@ -153,7 +153,7 @@ namespace NePlus.Krypton.Lights
 
             // Set the effect parameters
             helper.Effect.Parameters["LightPosition"].SetValue(this.mPosition);
-            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_ShadowWithIllumination"];
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow"];
             foreach (var effectPass in helper.Effect.CurrentTechnique.Passes)
             {
                 effectPass.Apply();

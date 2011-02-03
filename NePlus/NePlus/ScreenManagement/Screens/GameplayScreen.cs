@@ -48,6 +48,10 @@ namespace NePlus.ScreenManagement.Screens
             Engine = new Engine(content);
 
             Level = new Level(Engine, @"Maps\TestMap");
+            Level.Initialize();
+            Level.LoadContent();
+
+            Engine.Level = Level;
             
             Player = new Player(Engine, Level.GetSpawnPoint());
 
