@@ -38,9 +38,12 @@ namespace NePlus.GameObjects.LightObjects
             particleEffectComponent.Position = Position - new Vector2(0.0f, -200.0f);
             particleEffectComponent.DrawParticleEffect = false;
 
-            foreach (Fixture fixture in AffectedFixtures)
+            if (EffectActive)
             {
-                fixture.Body.ApplyForce(GravityVector);
+                foreach (Fixture fixture in AffectedFixtures)
+                {
+                    fixture.Body.ApplyForce(GravityVector);
+                }
             }
 
             base.Update(gameTime);

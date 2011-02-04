@@ -32,12 +32,15 @@ namespace NePlus.GameObjects.LightObjects
         public Vector2 Position { get; protected set; }
         public float Range { get; protected set; }
 
+        public bool IsOn { get; set; }
+
         public LightComponent LightingComponent;
         public PhysicsComponent PhysicsComponent;
         public SensorPhysicsComponent SensorPhysicsComponent;
 
         // this list is the list of fixtures currently under the light
-        protected List<Fixture> AffectedFixtures;
+        protected List<Fixture> AffectedFixtures { get; private set; }
+        protected List<Light> AffectedLights { get; private set; }
 
         public Light(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motion)
             : base(engine)
@@ -47,14 +50,16 @@ namespace NePlus.GameObjects.LightObjects
 
             Angle = angle;
             Fov = fov;
+            IsOn = true;
             Position = position;
             Range = range;
 
             CreateLightComponent(position, fov, angle, range, color);
             CreatePhysicsComponent(motion);
-            CreateSensorPhysicsComponent(GetVertices(), Position);
+            CreateSensorPhysicsComponent(GetFarseerVertices(), Position);
 
             AffectedFixtures = new List<Fixture>();
+            AffectedLights = new List<Light>();
 
             Engine.AddComponent(this);
         }
@@ -74,6 +79,7 @@ namespace NePlus.GameObjects.LightObjects
             }
 
             LightingComponent.Light.Angle = Angle;
+            LightingComponent.Light.IsOn = IsOn;
             LightingComponent.Light.Position = Position;
         }
 
@@ -106,10 +112,11 @@ namespace NePlus.GameObjects.LightObjects
             SensorPhysicsComponent.SensorFixture.OnSeparation += AfterFixtureCollision;
         }
 
-        public List<Vector2> GetVertices()
+        public List<Vector2> GetFarseerVertices()
         {
             // create a list of vectors
-            List<Vector2> triangle = new List<Vector2>();
+            List<Vector2> vertices = new List<Vector2>();
+
             // the first vector is the light's position
             Vector2 a = Vector2.Zero;
 
@@ -120,21 +127,31 @@ namespace NePlus.GameObjects.LightObjects
             // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle
             Vector2 c = XnaHelper.RotateVector2(b, Fov, Vector2.Zero);
 
-            triangle.Add(a);
-            triangle.Add(b);
-            triangle.Add(c);
+            vertices.Add(a);
+            vertices.Add(b);
+            vertices.Add(c);
 
-            return triangle;
+            return vertices;
         }
 
-        public List<Vector2> GetVerticesWithPosition()
+        public List<Vector2> GetVertices()
         {
-            List<Vector2> vertices = GetVertices();
+            // create a list of vectors
+            List<Vector2> vertices = new List<Vector2>();
 
-            for (int idx = 0; idx < vertices.Count; ++idx)
-            {
-                vertices[idx] += Position;
-            }
+            // the first vector is the light's position
+            Vector2 a = Position;
+
+            // the second vector is the first endpoint, which should take into account angle and range, where angle takes into account where the light is aimed
+            Vector2 b = Position + new Vector2(Range / 2.5f, Range / 2.5f);
+            b = XnaHelper.RotateVector2(b, Angle - MathHelper.PiOver2 + 0.17f, a);
+
+            // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle
+            Vector2 c = XnaHelper.RotateVector2(b, Fov, Vector2.Zero);
+
+            vertices.Add(a);
+            vertices.Add(b);
+            vertices.Add(c);
 
             return vertices;
         }
