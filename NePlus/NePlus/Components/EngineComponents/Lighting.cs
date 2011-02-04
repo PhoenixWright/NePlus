@@ -74,30 +74,6 @@ namespace NePlus.Components.EngineComponents
                 effectPass.Apply();
                 Krypton.RenderHelper.BufferDraw();
             }
-
-            // draw a Farseer shape representing the light's actual area of effect
-            foreach (PointLight light in Krypton.Lights)
-            {
-                // if the angle isn't zero, then it's a cone-shaped light
-                if (light.Angle != 0)
-                {
-                    // the first vector is the light's position
-                    Vector2 position = Engine.Physics.PositionToPhysicsWorld(light.Position);
-
-                    // the second vector is the first endpoint, which should take into account angle and range, where angle takes into account where the light is aimed
-                    Vector2 endpoint1 = Engine.Physics.PositionToPhysicsWorld(light.Position + new Vector2(light.Range / 2.5f, light.Range / 2.5f));
-                    endpoint1 = XnaHelper.RotateVector2(endpoint1, light.Angle - MathHelper.PiOver2 + 0.17f, position);
-                    
-                    // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle
-                    Vector2 endpoint2 = XnaHelper.RotateVector2(endpoint1, light.Fov, position);
-
-                    Vector2[] vertices = new Vector2[3];
-                    vertices[0] = position;
-                    vertices[1] = endpoint1;
-                    vertices[2] = endpoint2;
-                    Engine.Physics.DebugView.DrawPolygon(vertices, 3, Color.White);
-                }
-            }
         }
     }
 }

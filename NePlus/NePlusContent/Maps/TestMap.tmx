@@ -91,7 +91,7 @@
  <objectgroup name="LightObjects" width="64" height="32">
   <object name="GravityLight1" type="LightObject" x="512" y="256" width="64" height="32">
    <properties>
-    <property name="GravityValue" value="-10.0"/>
+    <property name="GravityValue" value="-4.0"/>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="CornflowerBlue"/>
     <property name="LightFov" value="1.2"/>

@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 
 using NePlus;
 using NePlus.Components.EngineComponents;
@@ -18,18 +23,14 @@ namespace NePlus.GameObjects.LightObjects
         private ParticleEffectComponent particleEffectComponent;
 
         public float GravityValue { get; private set; }
-
-        private Vector2 gravityVector;
-        public Vector2 GravityVector { get { return gravityVector; } }
+        public Vector2 GravityVector { get; protected set; }
 
         public GravityLight(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motionType, float gravityValue) : base(engine, position, fov, angle, range, color, motionType)
         {
             particleEffectComponent = new ParticleEffectComponent(engine, "BeamMeUp", Position);
 
             GravityValue = gravityValue;
-            gravityVector = new Vector2(0.0f, GravityValue);
-
-            EffectDelegate = GravityEffect;
+            GravityVector = new Vector2(0.0f, GravityValue);
         }
 
         public override void Update(GameTime gameTime)
@@ -37,38 +38,12 @@ namespace NePlus.GameObjects.LightObjects
             particleEffectComponent.Position = Position - new Vector2(0.0f, -200.0f);
             particleEffectComponent.DrawParticleEffect = false;
 
-            base.Update(gameTime);
-        }
-        
-        public override void ResolveLightEffect()
-        {
-            //if (EffectActive)
-            //{
-            //    // create an AABB representing the light, and apply the gravity effect to anything in it
-            //    AABB aabb = Engine.Physics.CreateAABB(Texture.Width, Texture.Height, Position + new Vector2(-Texture.Width / 2, 0.0f));
-
-            //    Engine.Physics.DebugView.DrawAABB(ref aabb, Color.Yellow);
-
-            //    Engine.Physics.World.QueryAABB(EffectDelegate, ref aabb);
-            //}
-        }
-
-        private bool GravityEffect(Fixture fixture)
-        {
-            // check to make sure that the fixture is dynamic
-            if (fixture.Body.BodyType == BodyType.Dynamic)
+            foreach (Fixture fixture in AffectedFixtures)
             {
-                if (fixture.CollisionFilter.CollidesWith == Category.Cat1)
-                {
-                    fixture.Body.ApplyForce(ref gravityVector);
-
-                    Engine.Physics.DebugView.DrawPoint(fixture.Body.Position, 0.05f, Color.Yellow);
-                }
-                
-                return true;
+                fixture.Body.ApplyForce(GravityVector);
             }
 
-            return false;
+            base.Update(gameTime);
         }
     }
 }
