@@ -6,18 +6,19 @@ using NePlus;
 public class Camera2D : Component
 {
     #region Properties and Fields
-    #region Position
+    #region Variables
+    const float smoothingSpeed = 0.15f;
+    Vector2 targetPosition = Vector2.Zero;
+    #endregion
 
+    #region Position
     protected Vector2 position = Vector2.Zero;
     public Vector2 Position
     {
         get { return position; }
         set
         {
-            position = value;
-
-            visibleArea = new Rectangle((int)position.X + (int)offset.X - visibleArea.Width / 2,
-                                        (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
+            targetPosition = value;
         }
     }
 
@@ -104,12 +105,17 @@ public class Camera2D : Component
     {
         visibleArea = new Rectangle(0, 0, Engine.Video.GraphicsDevice.Viewport.Width, Engine.Video.GraphicsDevice.Viewport.Height);
         position = ScreenPosition;
+
+        Engine.AddComponent(this);
     }
+
     public Camera2D(Engine engine, int width, int height)
         : base(engine)
     {
         visibleArea = new Rectangle(0, 0, width, height);
         position = ScreenPosition;
+
+        Engine.AddComponent(this);
     }
     public Camera2D(Engine engine, int x, int y, int width, int height)
         : base(engine)
@@ -117,8 +123,20 @@ public class Camera2D : Component
         visibleArea = new Rectangle(x - (width / 2), y - (height / 2), width, height);
         position.X = x;
         position.Y = y;
+
+        Engine.AddComponent(this);
     }
     #endregion Constructors
+
+    public override void Update(GameTime gameTime)
+    {
+        position = Vector2.SmoothStep(position, targetPosition, smoothingSpeed);
+
+        visibleArea = new Rectangle((int)position.X + (int)offset.X - visibleArea.Width / 2,
+                                        (int)position.Y + (int)offset.Y - visibleArea.Height / 2, visibleArea.Width, visibleArea.Height);
+
+        base.Update(gameTime);
+    }
 
     #region Destructors
     public override void Dispose(bool disposing)

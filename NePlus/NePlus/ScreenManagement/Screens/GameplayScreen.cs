@@ -83,7 +83,7 @@ namespace NePlus.ScreenManagement.Screens
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
-            
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
@@ -92,6 +92,8 @@ namespace NePlus.ScreenManagement.Screens
 
             if (IsActive)
             {
+                Engine.Camera.Position = Player.Position + new Vector2(200, 0);
+
                 Engine.Update(gameTime);
             }
             else

@@ -79,6 +79,14 @@ namespace NePlus.GameObjects
 
             // loop through the collision tiles and create physics fixtures for them
             TileLayer tileLayer = map.GetLayer("CollisionTiles") as TileLayer;
+            if (Global.Configuration.GetBooleanConfig("Debug", "ShowDebugCollisionTiles"))
+            {
+                tileLayer.Opacity = 100;
+            }
+            else
+            {
+                tileLayer.Opacity = 0;
+            }
             for (int y = 0; y < tileLayer.Height; ++y)
             {
                for (int x = 0; x < tileLayer.Width; ++x)
@@ -198,13 +206,11 @@ namespace NePlus.GameObjects
 
         public void CreateParticleEffect(string particleEffectName)
         {
-            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(0, 0)));
+            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(Engine.Video.GraphicsDevice.Viewport.Width / 2, 0)));
         }
 
         public void CreatePlatform(Vector2 position, Rectangle rectangle, bool castsShadow)
         {
-            
-
             // create the shadow hull for the platform
             CreateRectangleShadowHull(position, rectangle);
         }

@@ -43,7 +43,7 @@ namespace NePlus.Components.EngineComponents
             flags += (uint)DebugViewFlags.PolygonPoints;
             flags += (uint)DebugViewFlags.Shape;
             DebugView.Flags = (DebugViewFlags)flags;
-            
+
             DrawOrder = int.MaxValue;
         }
 
