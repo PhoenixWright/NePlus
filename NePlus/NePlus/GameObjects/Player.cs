@@ -52,6 +52,12 @@ namespace NePlus.GameObjects
 
         public override void Update(GameTime gameTime)
         {
+            // check if the player needs to be reset
+            if (Position.Y > 2000.0f)
+            {
+                PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
+            }
+
             Position = PhysicsComponent.Position;
             LightComponent.Light.Position = Position + new Vector2(0, 25);
 

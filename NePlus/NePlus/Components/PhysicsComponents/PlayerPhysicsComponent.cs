@@ -14,24 +14,27 @@ namespace NePlus.Components.PhysicsComponents
     public class PlayerPhysicsComponent : PhysicsComponent
     {
         public Fixture WheelFixture;
-        RevoluteJoint wheelMotorRevJoint;
+        private FixedAngleJoint playerFAJ;
+        private RevoluteJoint wheelMotorRevJoint;
 
         public PlayerPhysicsComponent(Engine engine, Vector2 gameWorldPosition, bool dynamic)
             : base(engine)
         {
+            CreatePlayerPhysicsObjects(gameWorldPosition);
+        }
+
+        public void ResetPlayerPosition(Vector2 gameWorldPosition)
+        {
+            DestroyPlayerPhysicsObjects();
+            CreatePlayerPhysicsObjects(gameWorldPosition);
+        }
+
+        private void CreatePlayerPhysicsObjects(Vector2 gameWorldPosition)
+        {
             MainFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, 0.5f, 0.5f, 1);
             Bodies.Add(MainFixture.Body);
-            MainFixture.CollisionFilter.CollisionGroup = 1;
             MainFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(gameWorldPosition);
-
-            if (dynamic)
-            {
-                MainFixture.Body.BodyType = BodyType.Dynamic;
-            }
-            else
-            {
-                MainFixture.Body.BodyType = BodyType.Static;
-            }
+            MainFixture.Body.BodyType = BodyType.Dynamic;
             MainFixture.Body.SleepingAllowed = false;
 
             WheelFixture = FixtureFactory.CreateCircle(Engine.Physics.World, 0.3f, 1.0f);
@@ -42,13 +45,21 @@ namespace NePlus.Components.PhysicsComponents
             WheelFixture.Body.SleepingAllowed = false;
             WheelFixture.Friction = 0.5f;
 
-            FixedAngleJoint playerFAJ = JointFactory.CreateFixedAngleJoint(Engine.Physics.World, MainFixture.Body);
+            playerFAJ = JointFactory.CreateFixedAngleJoint(Engine.Physics.World, MainFixture.Body);
             playerFAJ.BodyB = WheelFixture.Body;
 
             wheelMotorRevJoint = JointFactory.CreateRevoluteJoint(MainFixture.Body, WheelFixture.Body, Vector2.Zero);
             wheelMotorRevJoint.MaxMotorTorque = 10.0f;
             wheelMotorRevJoint.MotorEnabled = true;
             Engine.Physics.World.AddJoint(wheelMotorRevJoint);
+        }
+
+        private void DestroyPlayerPhysicsObjects()
+        {
+            Engine.Physics.World.RemoveJoint(playerFAJ);
+            Engine.Physics.World.RemoveJoint(wheelMotorRevJoint);
+            Engine.Physics.World.RemoveBody(WheelFixture.Body);
+            Engine.Physics.World.RemoveBody(MainFixture.Body);
         }
 
         public void MoveLeft()

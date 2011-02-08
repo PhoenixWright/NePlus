@@ -16,7 +16,17 @@ namespace NePlus.Components.PhysicsComponents
         public Fixture MainFixture { get; protected set; }
         public float Angle { get { return MainFixture.Body.Rotation; } }
         public List<Body> Bodies { get; private set; }
-        public Vector2 Position { get { return Engine.Physics.PositionToGameWorld(MainFixture.Body.Position); } }
+        public Vector2 Position
+        {
+            get
+            {
+                return Engine.Physics.PositionToGameWorld(MainFixture.Body.Position);
+            }
+            set
+            {
+                MainFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(value);
+            }
+        }
 
         public PhysicsComponent(Engine engine) : base(engine)
         {
