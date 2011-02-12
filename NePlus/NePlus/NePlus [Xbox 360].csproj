@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Reference Include="DebugViewXNA, Version=3.2.4021.35973, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="EasyConfig">
       <HintPath>Xbox360DLLs\EasyConfig.dll</HintPath>
     </Reference>

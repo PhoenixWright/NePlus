@@ -22,10 +22,6 @@ namespace NePlus.Components.PhysicsComponents
             {
                 return Engine.Physics.PositionToGameWorld(MainFixture.Body.Position);
             }
-            set
-            {
-                MainFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(value);
-            }
         }
 
         public PhysicsComponent(Engine engine) : base(engine)

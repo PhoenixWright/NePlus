@@ -28,16 +28,16 @@ namespace NePlus.GameObjects
         // variables
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
-        private HashSet<Fixture> groundCache;
-        private HashSet<Fixture> wallCache;
+        private List<Fixture> groundCache;
+        private List<Fixture> wallCache;
 
         public Vector2 Position { get; private set; }
 
         public Player(Engine engine, Vector2 position)
             : base(engine)
         {
-            groundCache = new HashSet<Fixture>();
-            wallCache = new HashSet<Fixture>();
+            groundCache = new List<Fixture>();
+            wallCache = new List<Fixture>();
 
             Position = position;
 

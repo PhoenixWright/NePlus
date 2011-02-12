@@ -26,6 +26,7 @@ namespace NePlus
         public Level Level { get; set; }
         public Lighting Lighting { get; private set; }
         public Physics Physics { get; private set; }
+        public Player Player { get; set; }
         public Video Video { get; private set; }
 
         public SpriteBatch SpriteBatch { get; private set; }
@@ -43,7 +44,7 @@ namespace NePlus
 
             // these things require video
             Camera = new Camera2D(this);
-            
+
             // lighting needs to know the camera matrix
             Lighting = new Lighting(this);
 
@@ -103,7 +104,9 @@ namespace NePlus
             }
 
             foreach (Component c in components)
+            {
                 c.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime)
@@ -117,11 +120,9 @@ namespace NePlus
             SpriteBatch.End();
 
             foreach (Component c in components)
+            {
                 c.Draw(gameTime);
-
-            // draw level after lighting because primary artwork is going to be "lit" with its own effects
-            if (Level != null)
-                Level.Draw(gameTime);
+            }
 
             DebugDraw(gameTime);
         }

@@ -23,9 +23,6 @@ using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class Level : Component
     {
         public List<Light> Lights { get; private set; }
@@ -44,12 +41,16 @@ namespace NePlus.GameObjects
             mapFilePath = mapPath;
             Lights = new List<Light>();
             levelParticleEffects = new List<ParticleEffectComponent>();
+
+            DrawOrder = int.MaxValue - 1;
+
+            Engine.AddComponent(this);
         }
 
         public override void LoadContent()
         {
             map = Engine.Content.Load<Map>(mapFilePath);
-            
+
             // loop through the map properties and handle them
             foreach (Property property in map.Properties)
             {
@@ -112,14 +113,80 @@ namespace NePlus.GameObjects
             }
         }
 
+        /// <summary>
+        /// This draw function comes from TiledLib, and is re-implemented to add parallax scrolling.
+        /// The scrolling is based player position and a scroll value in a layer's properties if IsParallax is true.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            Rectangle worldArea = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
+
+            // figure out the min and max tile indices to draw
+            int minX = Math.Max((int)Math.Floor((float)worldArea.Left / map.TileWidth), 0);
+            int maxX = Math.Min((int)Math.Ceiling((float)worldArea.Right / map.TileWidth), map.Width);
+
+            int minY = Math.Max((int)Math.Floor((float)worldArea.Top / map.TileHeight), 0);
+            int maxY = Math.Min((int)Math.Ceiling((float)worldArea.Bottom / map.TileHeight), map.Height);
+
             Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            map.Draw(Engine.SpriteBatch);
+
+            foreach (Layer layer in map.Layers)
+            {
+                if (layer.Name.Contains("Object"))
+                    continue;
+
+                TileLayer tileLayer = layer as TileLayer;
+
+                bool isParallax;
+                float parallaxValue = 1.0f;
+
+                if (!tileLayer.Visible)
+                    continue;
+
+                Property isParralax;
+                if (tileLayer.Properties.TryGetValue("IsParallax", out isParralax) == true)
+                {
+                    isParallax = bool.Parse(isParralax.RawValue);
+                    parallaxValue = float.Parse(tileLayer.Properties["ParallaxValue"].RawValue);
+                }
+                else
+                {
+                    isParallax = false;
+                }
+
+                // get an int to use for including parallax value with the rectangle used below
+                int parallaxOffset = (int)(parallaxValue * Engine.Player.Position.X);
+
+                for (int x = minX; x < maxX; x++)
+                {
+                    for (int y = minY; y < maxY; y++)
+                    {
+                        Tile tile = tileLayer.Tiles[x, y];
+
+                        if (tile == null)
+                            continue;
+
+                        Rectangle r;
+
+                        if (isParallax)
+                        {
+                            r = new Rectangle(x * map.TileWidth + parallaxOffset, y * map.TileHeight - tile.Source.Height + map.TileHeight, tile.Source.Width, tile.Source.Height);
+                        }
+                        else
+                        {
+                            r = new Rectangle(x * map.TileWidth, y * map.TileHeight - tile.Source.Height + map.TileHeight, tile.Source.Width, tile.Source.Height);
+                        }
+
+                        tile.DrawOrthographic(Engine.SpriteBatch, r, tileLayer.Opacity, tileLayer.LayerDepth);
+                    }
+                }
+            }
+
             Engine.SpriteBatch.End();
         }
 
-
+        #region CreateFunctions
         public void CreateCollisionRectangle(Rectangle rectangle, Vector2 position)
         {
             Vertices vertices = new Vertices();
@@ -222,6 +289,7 @@ namespace NePlus.GameObjects
 
             Engine.Lighting.Krypton.Hulls.Add(shadowHull);
         }
+        #endregion
 
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died
         {

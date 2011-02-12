@@ -52,8 +52,9 @@ namespace NePlus.ScreenManagement.Screens
             Level.LoadContent();
 
             Engine.Level = Level;
-            
+
             Player = new Player(Engine, Level.GetSpawnPoint());
+            Engine.Player = Player;
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
