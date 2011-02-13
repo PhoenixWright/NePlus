@@ -113,6 +113,16 @@ namespace NePlus.GameObjects
             }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            foreach (ParticleEffectComponent particleEffectComponent in levelParticleEffects)
+            {
+                particleEffectComponent.Position = new Vector2(Engine.Camera.Position.X, 0.0f);
+            }
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// This draw function comes from TiledLib, and is re-implemented to add parallax scrolling.
         /// The scrolling is based player position and a scroll value in a layer's properties if IsParallax is true.
@@ -273,7 +283,7 @@ namespace NePlus.GameObjects
 
         public void CreateParticleEffect(string particleEffectName)
         {
-            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(Engine.Video.GraphicsDevice.Viewport.Width / 2, 0)));
+            levelParticleEffects.Add(new ParticleEffectComponent(Engine, particleEffectName, new Vector2(Engine.Video.GraphicsDevice.Viewport.Width, 0)));
         }
 
         public void CreatePlatform(Vector2 position, Rectangle rectangle, bool castsShadow)

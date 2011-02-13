@@ -37,7 +37,7 @@
       <BlendMode>Alpha</BlendMode>
       <TriggerOffset>0 0</TriggerOffset>
       <MinimumTriggerPeriod>0</MinimumTriggerPeriod>
-      <Length>1200</Length>
+      <Length>1500</Length>
       <Angle>-3.1415925</Angle>
       <Rectilinear>true</Rectilinear>
       <EmitBothWays>false</EmitBothWays>

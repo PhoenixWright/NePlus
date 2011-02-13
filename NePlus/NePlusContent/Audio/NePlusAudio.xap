@@ -17,8 +17,8 @@ Global Settings
     Header File = NePlusAudio.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 2972121676;
-    Last Modified High = 30128154;
+    Last Modified Low = 67669307;
+    Last Modified High = 30133035;
 
     Category
     {
@@ -230,6 +230,8 @@ Wave Bank
     Xbox Bank Last Modified High = 0;
     PC Bank Last Modified Low = 2973031728;
     PC Bank Last Modified High = 30128154;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
     Bank Last Revised Low = 2972731711;
     Bank Last Revised High = 30128154;
 
@@ -379,8 +381,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 2976361919;
-    Bank Last Modified High = 30128154;
+    Bank Last Modified Low = 67839316;
+    Bank Last Modified High = 30133035;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
