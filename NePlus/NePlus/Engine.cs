@@ -5,10 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using Krypton;
+using Krypton.Lights;
+
 using NePlus.Components.EngineComponents;
 using NePlus.GameObjects;
-using NePlus.Krypton;
-using NePlus.Krypton.Lights;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 

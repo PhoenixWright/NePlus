@@ -85,10 +85,11 @@
     <Compile Include="GameObjects\LightObjects\NullLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Krypton\Common\BoundingRect.cs" />
     <Compile Include="Krypton\KryptonEngine.cs" />
     <Compile Include="Krypton\KryptonRenderHelper.cs" />
     <Compile Include="Krypton\Lights\ILight2D.cs" />
-    <Compile Include="Krypton\Lights\PointLight.cs" />
+    <Compile Include="Krypton\Lights\Light2D.cs" />
     <Compile Include="Krypton\LightTextureBuilder.cs" />
     <Compile Include="Krypton\ShadowHull.cs" />
     <Compile Include="Krypton\ShadowHullPoint.cs" />

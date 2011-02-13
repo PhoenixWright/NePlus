@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 
-using NePlus.Krypton;
-using NePlus.Krypton.Lights;
+using Krypton;
+using Krypton.Lights;
 
 namespace NePlus.Components.GraphicsComponents
 {
     public class LightComponent : Component
     {
-        public PointLight Light;
+        public Light2D Light;
 
         /// <summary>
         /// Constructs a light and adds it to the collection of game lights.
@@ -21,7 +21,7 @@ namespace NePlus.Components.GraphicsComponents
         public LightComponent(Engine engine, Vector2 position, float fov, float angle, float range, Color color)
             : base(engine)
         {
-            Light = new PointLight();
+            Light = new Light2D();
             Light.Position = position;
             Light.Fov = fov;
             Light.Angle = angle;

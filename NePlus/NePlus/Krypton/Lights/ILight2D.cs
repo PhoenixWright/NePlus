@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
 
-namespace NePlus.Krypton.Lights
+using Krypton.Common;
+
+namespace Krypton.Lights
 {
     public interface ILight2D
     {
-        bool IsOn { get; set; }
+        BoundingRect Bounds { get; }
 
-        void Draw(KryptonRenderHelper helper);
-        void DrawShadows(KryptonRenderHelper helper, List<ShadowHull> hullNode);
+        void Draw(KryptonRenderHelper renderHelper, List<ShadowHull> hulls);
     }
 }

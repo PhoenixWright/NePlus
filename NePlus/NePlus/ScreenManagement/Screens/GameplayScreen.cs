@@ -6,10 +6,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Krypton;
+using Krypton.Lights;
+
 using NePlus.Components.EngineComponents;
 using NePlus.GameObjects;
-using NePlus.Krypton;
-using NePlus.Krypton.Lights;
 
 namespace NePlus.ScreenManagement.Screens
 {
@@ -48,8 +49,6 @@ namespace NePlus.ScreenManagement.Screens
             Engine = new Engine(content);
 
             Level = new Level(Engine, @"Maps\TestMap");
-            Level.Initialize();
-            Level.LoadContent();
 
             Engine.Level = Level;
 

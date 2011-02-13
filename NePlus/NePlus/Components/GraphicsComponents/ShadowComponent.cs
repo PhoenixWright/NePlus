@@ -1,4 +1,4 @@
-﻿using NePlus.Krypton;
+﻿using Krypton;
 
 namespace NePlus.Components.GraphicsComponents
 {

@@ -174,24 +174,24 @@
   <object name="InitialSpawnPoint" type="SpawnPointObject" x="288" y="544" width="96" height="96"/>
  </objectgroup>
  <objectgroup name="LightObjects" width="128" height="32">
-  <object name="GravityLight1" type="LightObject" x="4000" y="352" width="64" height="32">
+  <object name="GravityLight1" type="LightObject" x="736" y="512" width="64" height="32">
    <properties>
     <property name="GravityValue" value="-4.0"/>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="CornflowerBlue"/>
     <property name="LightFov" value="1.2"/>
     <property name="LightMotion" value="None"/>
-    <property name="LightRange" value="600"/>
+    <property name="LightRange" value="300"/>
     <property name="LightType" value="Gravity"/>
    </properties>
   </object>
-  <object name="NullLight1" type="LightObject" x="4000" y="96" width="68" height="32">
+  <object name="NullLight1" type="LightObject" x="736" y="256" width="68" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Gray"/>
     <property name="LightFov" value="1.4"/>
     <property name="LightMotion" value="Pendulum"/>
-    <property name="LightRange" value="500"/>
+    <property name="LightRange" value="300"/>
     <property name="LightType" value="Null"/>
    </properties>
   </object>

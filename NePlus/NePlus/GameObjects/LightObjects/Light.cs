@@ -117,11 +117,10 @@ namespace NePlus.GameObjects.LightObjects
             // create a list of vectors
             List<Vector2> vertices = new List<Vector2>();
 
-            // the first vector is the light's position
             Vector2 a = Vector2.Zero;
 
             // the second vector is the first endpoint, which should take into account angle and range, where angle takes into account where the light is aimed
-            Vector2 b = Engine.Physics.PositionToPhysicsWorld(new Vector2(Range / 2.5f, Range / 2.5f));
+            Vector2 b = Engine.Physics.PositionToPhysicsWorld(new Vector2(Range / 1.5f, Range / 1.5f));
             b = XnaHelper.RotateVector2(b, Angle - MathHelper.PiOver2 + 0.17f, a);
 
             // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle
@@ -143,7 +142,7 @@ namespace NePlus.GameObjects.LightObjects
             Vector2 a = Position;
 
             // the second vector is the first endpoint, which should take into account angle and range, where angle takes into account where the light is aimed
-            Vector2 b = Position + new Vector2(Range / 2.5f, Range / 2.5f);
+            Vector2 b = Position + new Vector2(Range / 1.5f, Range / 1.5f);
             b = XnaHelper.RotateVector2(b, Angle - MathHelper.PiOver2 + 0.17f, a);
 
             // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle

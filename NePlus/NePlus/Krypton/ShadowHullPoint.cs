@@ -5,7 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
-namespace NePlus.Krypton
+namespace Krypton
 {
     /// <summary>
     /// A two dimensional point with normal

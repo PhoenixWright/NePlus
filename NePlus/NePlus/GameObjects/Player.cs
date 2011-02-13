@@ -56,6 +56,12 @@ namespace NePlus.GameObjects
             if (Position.Y > 2000.0f)
             {
                 PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
+                groundCache.Clear();
+                wallCache.Clear();
+                OnGround = false;
+                OnWall = false;
+                PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
+                PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
             }
 
             Position = PhysicsComponent.Position;

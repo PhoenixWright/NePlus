@@ -1,9 +1,10 @@
 ﻿using System;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-using NePlus.Krypton;
-using NePlus.Krypton.Lights;
+using Krypton;
+using Krypton.Lights;
 
 namespace NePlus.Components.EngineComponents
 {
@@ -17,9 +18,7 @@ namespace NePlus.Components.EngineComponents
             Krypton.AmbientColor = new Color(65, 65, 65);
             engine.AddComponent(this);
 
-            Krypton.BlurEnable = true;
-            Krypton.BlurFactorU = 1.0f / (Engine.Video.GraphicsDevice.Viewport.Width / 10);
-            Krypton.BlurFactorV = 1.0f / (Engine.Video.GraphicsDevice.Viewport.Height / 10);
+            Krypton.Bluriness = 3;
             Krypton.CullMode = CullMode.None;
             Krypton.Matrix = Engine.Camera.CameraMatrix;
             Krypton.SpriteBatchCompatablityEnabled = true;

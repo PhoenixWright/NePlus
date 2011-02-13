@@ -11,13 +11,13 @@ using FarseerPhysics.Factories;
 
 using TiledLib;
 
-using NePlus.GameObjects;
-using NePlus.GameObjects.LightObjects;
+using Krypton;
 
 using NePlus;
 using NePlus.Components.EngineComponents;
 using NePlus.Components.GraphicsComponents;
-using NePlus.Krypton;
+using NePlus.GameObjects;
+using NePlus.GameObjects.LightObjects;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 

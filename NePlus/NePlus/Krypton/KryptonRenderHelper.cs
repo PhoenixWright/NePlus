@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using NePlus.Krypton.Lights;
+using Krypton.Lights;
 
-namespace NePlus.Krypton
+namespace Krypton
 {
     public enum BlendTechnique
     {
@@ -121,7 +123,7 @@ namespace NePlus.Krypton
                 Vector2.Transform(ref point.Position, ref vertexMatrix, out hullVertex.Position);
                 Vector2.TransformNormal(ref point.Normal, ref normalMatrix, out hullVertex.Normal);
 
-                hullVertex.Color = hull.Color;
+                hullVertex.Color = Color.Black;
 
                 this.mShadowHullVertices.Add(hullVertex); // could this be sped up... ?
             }
@@ -198,11 +200,8 @@ namespace NePlus.Krypton
                 var ccw = ClampToBox(fov / 2);
                 var cw = ClampToBox(-fov / 2);
 
-                var ccwTex = new Vector2(ccw.X+1, -ccw.Y+1) / 2f;
-                var cwTex = new Vector2(cw.X+1, -cw.Y+1) / 2f;
-
-                //ccwTex = Vector2.Zero;
-                //cwTex = Vector2.Zero;
+                var ccwTex = new Vector2(ccw.X + 1, -ccw.Y + 1) / 2f;
+                var cwTex = new Vector2(cw.X + 1, -cw.Y + 1) / 2f;
 
                 VertexPositionColorTexture[] vertices;
 
@@ -270,36 +269,32 @@ namespace NePlus.Krypton
 
                 #region Indicies
 
-                if (fov == 0)
-                {
-                    indicies = new Int16[] { };
-                }
-                else if (fov <= MathHelper.Pi / 2)
+                if (fov <= MathHelper.Pi / 2)
                 {
                     indicies = new Int16[]
-                {
-                    0, 1, 6,
-                };
+                    {
+                        0, 1, 6,
+                    };
                 }
                 else if (fov <= 3 * MathHelper.Pi / 2)
                 {
                     indicies = new Int16[]
-                {
-                    0, 1, 3,
-                    0, 3, 4,
-                    0, 4, 6,
-                };
+                    {
+                        0, 1, 3,
+                        0, 3, 4,
+                        0, 4, 6,
+                    };
                 }
                 else
                 {
                     indicies = new Int16[]
-                {
-                    0, 1, 2,
-                    0, 2, 3,
-                    0, 3, 4,
-                    0, 4, 5,
-                    0, 5, 6,
-                };
+                    {
+                        0, 1, 2,
+                        0, 2, 3,
+                        0, 3, 4,
+                        0, 4, 5,
+                        0, 5, 6,
+                    };
                 }
                 #endregion Indicies
 
@@ -324,7 +319,7 @@ namespace NePlus.Krypton
             }
         }
 
-        internal void DrawFullscreenQuad()
+        public void DrawFullscreenQuad()
         {
             // Obtain the original rendering states
             var originalRasterizerState = this.mGraphicsDevice.RasterizerState;
@@ -353,10 +348,12 @@ namespace NePlus.Krypton
             switch (blurTechnique)
             {
                 case (BlurTechnique.Horizontal):
+                    this.mEffect.Parameters["BlurFactorU"].SetValue(1f / this.GraphicsDevice.PresentationParameters.BackBufferWidth);
                     passName = "HorizontalBlur";
                     break;
 
                 case (BlurTechnique.Vertical):
+                    this.mEffect.Parameters["BlurFactorV"].SetValue(1f / this.mGraphicsDevice.PresentationParameters.BackBufferHeight);
                     passName = "VerticalBlur";
                     break;
             }
@@ -366,9 +363,10 @@ namespace NePlus.Krypton
             // Calculate the texel bias
             Vector2 texelBias = new Vector2()
             {
-                X = biasFactor / this.mGraphicsDevice.ScissorRectangle.Width,
-                Y = biasFactor / this.mGraphicsDevice.ScissorRectangle.Height,
+                X = biasFactor / this.mGraphicsDevice.Viewport.Width,
+                Y = biasFactor / this.mGraphicsDevice.Viewport.Height,
             };
+
 
             this.mEffect.Parameters["Texture0"].SetValue(texture);
             this.mEffect.Parameters["TexelBias"].SetValue(texelBias);
@@ -432,6 +430,47 @@ namespace NePlus.Krypton
                 default:
                     return 0.0f;
             }
+        }
+
+        public void BufferAddBoundOutline(Common.BoundingRect boundingRect)
+        {
+            var vertexCount = this.mShadowHullVertices.Count;
+
+            this.mShadowHullVertices.Add(new ShadowHullVertex()
+            {
+                Color = Color.Black,
+                Normal = Vector2.Zero,
+                Position = new Vector2(boundingRect.Left, boundingRect.Top)
+            });
+
+            this.mShadowHullVertices.Add(new ShadowHullVertex()
+            {
+                Color = Color.Black,
+                Normal = Vector2.Zero,
+                Position = new Vector2(boundingRect.Right, boundingRect.Top)
+            });
+
+            this.mShadowHullVertices.Add(new ShadowHullVertex()
+            {
+                Color = Color.Black,
+                Normal = Vector2.Zero,
+                Position = new Vector2(boundingRect.Right, boundingRect.Bottom)
+            });
+
+            this.mShadowHullVertices.Add(new ShadowHullVertex()
+            {
+                Color = Color.Black,
+                Normal = Vector2.Zero,
+                Position = new Vector2(boundingRect.Left, boundingRect.Bottom)
+            });
+
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 0));
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 1));
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 2));
+
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 0));
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 2));
+            this.mShadowHullIndicies.Add((Int16)(vertexCount + 3));
         }
     }
 }

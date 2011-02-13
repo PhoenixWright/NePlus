@@ -1,9 +1,12 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Krypton.Common;
 
-namespace NePlus.Krypton
+namespace Krypton
 {
     /// <summary>
     /// A hull used for casting shadows from a light source
@@ -51,21 +54,19 @@ namespace NePlus.Krypton
         /// </summary>
         public int NumIndicies;
 
-        public bool Enabled = true;
+        /// <summary>
+        /// A value indicating if the hull should cast a shadow
+        /// </summary>
+        public bool Visible = true;
 
+        /// <summary>
+        /// A value indicating how much to stretch the hull
+        /// </summary>
         public Vector2 Scale = Vector2.One;
 
-        public Color Color = Color.Black;
-
         #endregion
 
-        #region Constructor
-
-        private ShadowHull()
-        {
-        }
-
-        #endregion
+        private ShadowHull(){}
 
         #region Factory Methods
 
