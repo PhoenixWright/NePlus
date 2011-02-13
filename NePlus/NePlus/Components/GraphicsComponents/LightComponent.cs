@@ -22,13 +22,14 @@ namespace NePlus.Components.GraphicsComponents
             : base(engine)
         {
             Light = new Light2D();
-            Light.Position = position;
-            Light.Fov = fov;
             Light.Angle = angle;
-            Light.Range = range;
             Light.Color = color;
+            Light.Fov = fov;
+            Light.Intensity = 1f;
+            Light.Position = position;
+            Light.Range = range;
 
-            Light.Texture = LightTextureBuilder.CreateConicLight(Engine.Video.GraphicsDevice, 1024, MathHelper.TwoPi / 1);
+            Light.Texture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
 
             Engine.Lighting.Krypton.Lights.Add(Light);
         }

@@ -178,7 +178,7 @@
    <properties>
     <property name="GravityValue" value="-4.0"/>
     <property name="LightAngle" value="1.6"/>
-    <property name="LightColor" value="CornflowerBlue"/>
+    <property name="LightColor" value="Blue"/>
     <property name="LightFov" value="1.2"/>
     <property name="LightMotion" value="None"/>
     <property name="LightRange" value="300"/>
@@ -188,7 +188,7 @@
   <object name="NullLight1" type="LightObject" x="736" y="256" width="68" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
-    <property name="LightColor" value="Gray"/>
+    <property name="LightColor" value="NavajoWhite"/>
     <property name="LightFov" value="1.4"/>
     <property name="LightMotion" value="Pendulum"/>
     <property name="LightRange" value="300"/>

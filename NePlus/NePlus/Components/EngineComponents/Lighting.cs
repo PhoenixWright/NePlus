@@ -15,7 +15,6 @@ namespace NePlus.Components.EngineComponents
         public Lighting(Engine engine) : base(engine)
         {
             Krypton = new KryptonEngine(engine, @"Krypton\KryptonEffect");
-            Krypton.AmbientColor = new Color(65, 65, 65);
             engine.AddComponent(this);
 
             Krypton.Bluriness = 3;

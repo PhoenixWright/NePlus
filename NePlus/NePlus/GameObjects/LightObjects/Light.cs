@@ -146,7 +146,7 @@ namespace NePlus.GameObjects.LightObjects
             b = XnaHelper.RotateVector2(b, Angle - MathHelper.PiOver2 + 0.17f, a);
 
             // the third vector is the second endpoint, which should take into account angle, range, and the light's "fov", or the light's interior angle
-            Vector2 c = XnaHelper.RotateVector2(b, Fov, Vector2.Zero);
+            Vector2 c = XnaHelper.RotateVector2(b, Fov, a);
 
             vertices.Add(a);
             vertices.Add(b);
