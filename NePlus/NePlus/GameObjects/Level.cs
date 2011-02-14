@@ -130,14 +130,13 @@ namespace NePlus.GameObjects
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            Rectangle worldArea = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
+            Rectangle worldArea;
 
-            // figure out the min and max tile indices to draw
-            int minX = Math.Max((int)Math.Floor((float)worldArea.Left / map.TileWidth), 0);
-            int maxX = Math.Min((int)Math.Ceiling((float)worldArea.Right / map.TileWidth), map.Width);
+            int minX;
+            int maxX;
 
-            int minY = Math.Max((int)Math.Floor((float)worldArea.Top / map.TileHeight), 0);
-            int maxY = Math.Min((int)Math.Ceiling((float)worldArea.Bottom / map.TileHeight), map.Height);
+            int minY;
+            int maxY;
 
             Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
 
@@ -159,11 +158,22 @@ namespace NePlus.GameObjects
                 {
                     isParallax = bool.Parse(isParralax.RawValue);
                     parallaxValue = float.Parse(tileLayer.Properties["ParallaxValue"].RawValue);
+
+                    worldArea = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
                 }
                 else
                 {
                     isParallax = false;
+
+                    worldArea = Engine.Camera.VisibleArea;
                 }
+
+                // figure out the min and max tile indices to draw
+                minX = Math.Max((int)Math.Floor((float)worldArea.Left / map.TileWidth), 0);
+                maxX = Math.Min((int)Math.Ceiling((float)worldArea.Right / map.TileWidth), map.Width);
+
+                minY = Math.Max((int)Math.Floor((float)worldArea.Top / map.TileHeight), 0);
+                maxY = Math.Min((int)Math.Ceiling((float)worldArea.Bottom / map.TileHeight), map.Height);
 
                 // get an int to use for including parallax value with the rectangle used below
                 int parallaxOffset = (int)(parallaxValue * Engine.Player.Position.X);

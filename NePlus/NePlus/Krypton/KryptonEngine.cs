@@ -283,7 +283,7 @@ namespace Krypton
                 {
                     // Clear the stencil and set the scissor rect (because we're stretching geometry past the light's reach)
                     Engine.Video.GraphicsDevice.Clear(ClearOptions.Stencil, Color.Black, 0, 1);
-                    //this.GraphicsDevice.ScissorRectangle = KryptonEngine.ScissorRectCreateForLight(light, lightMapMatrix, targetSize);
+                    Engine.Video.GraphicsDevice.ScissorRectangle = KryptonEngine.ScissorRectCreateForLight(light, lightMapMatrix, targetSize);
                     
                     // Draw the light!
                     light.Draw(this.RenderHelper, this.mHulls);
@@ -393,36 +393,6 @@ namespace Krypton
             return v;
         }
 
-        /// <summary>
-        /// Sets a matrix parameter of an effect, according to a user defined matrix, and (optionally) the default SpriteBatch matrix
-        /// </summary>
-        /// <param name="matrixWVP">User-defined matrix</param>
-        /// <param name="useSpriteBatchMatrix">Is the SpriteBatch matrix?</param>
-        /// <param name="effectParameter">The effect's Matrix parameter</param>
-        /// <param name="targetWidth">The render target width</param>
-        /// <param name="targetHeight">The render target height</param>
-        private static void MatrixPrepareAndSet(Matrix matrixWVP, bool useSpriteBatchMatrix, EffectParameter effectParameter, float targetWidth, float targetHeight)
-        {
-            Matrix matrixSpriteBatch = Matrix.Identity;
-
-            if (useSpriteBatchMatrix)
-            {
-                float num2 = (targetWidth > 0) ? (1f / ((float)targetWidth)) : 0f;
-                float num = (targetHeight > 0) ? (-1f / ((float)targetHeight)) : 0f;
-
-                matrixSpriteBatch = new Matrix
-                {
-                    M11 = num2 * 2f,
-                    M22 = num * 2f,
-                    M33 = 1f,
-                    M44 = 1f,
-                    M41 = -1f - num2,
-                    M42 = 1f - num
-                };
-            }
-
-            effectParameter.SetValue(matrixWVP * matrixSpriteBatch);
-        }
         /// <summary>
         /// Retrieves a rasterize state by using the cull mode as a lookup
         /// </summary>
