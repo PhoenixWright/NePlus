@@ -72,6 +72,7 @@
     <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\BulletPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\EnemyPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Components\PhysicsComponents\SensorPhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameObjects\Enemies\RotatingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs">
       <SubType>Code</SubType>

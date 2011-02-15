@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
@@ -25,7 +26,11 @@ namespace NePlus.GameObjects
         public LightComponent LightComponent { get; private set; }
         public PlayerPhysicsComponent PhysicsComponent { get; private set; }
 
-        // variables
+        // variables/state management
+        public bool CanFire { get; private set; }
+        private List<Bullet> bullets;
+
+        public Global.Directions LastDirection = Global.Directions.Right;
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
         private List<Fixture> groundCache;
@@ -36,6 +41,8 @@ namespace NePlus.GameObjects
         public Player(Engine engine, Vector2 position)
             : base(engine)
         {
+            bullets = new List<Bullet>();
+            CanFire = true;
             groundCache = new List<Fixture>();
             wallCache = new List<Fixture>();
 
@@ -81,26 +88,42 @@ namespace NePlus.GameObjects
             {
                 PhysicsComponent.MoveLeft();
 
-                if (!OnGround)
-                {
-                    if (Math.Abs(PhysicsComponent.MainFixture.Body.LinearVelocity.X) < 10.0f)
-                    {
-                        PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(-1.5f, 0.0f));
-                    }
-                }
+                LastDirection = Global.Directions.Left;
             }
             else if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
                 PhysicsComponent.MoveRight();
 
-                if (!OnGround)
-                {
-                    PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(1.5f, 0.0f));
-                }
+                LastDirection = Global.Directions.Right;
             }
             else
             {
                 PhysicsComponent.StopMoving();
+            }
+
+            if (CanFire)
+            {
+                if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "FireButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "FireKey")))
+                {
+                    Vector2 bulletPosition;
+
+                    //determine bullet position
+                    switch (LastDirection)
+                    {
+                        case Global.Directions.Left:
+                            bulletPosition = Position + new Vector2(-20.0f, 0.0f);
+                            break;
+                        case Global.Directions.Right:
+                            bulletPosition = Position + new Vector2(20.0f, 0.0f);
+                            break;
+                        default:
+                            bulletPosition = Position;
+                            break;
+                    }
+
+                    // create bullet
+                    Bullet bullet = new Bullet(Engine, bulletPosition, LastDirection, Global.CollisionCategories.PlayerBullet);
+                }
             }
         }
 

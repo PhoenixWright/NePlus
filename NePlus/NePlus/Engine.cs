@@ -18,6 +18,8 @@ namespace NePlus
     public class Engine
     {
         List<Component> components;
+        List<Component> componentsToBeAdded;
+        List<Component> componentsToBeRemoved;
 
         public ContentManager Content { get; private set; }
 
@@ -32,9 +34,13 @@ namespace NePlus
 
         public SpriteBatch SpriteBatch { get; private set; }
 
+        public bool Updating { get; private set; }
+
         public Engine(ContentManager content)
         {
             components = new List<Component>();
+            componentsToBeAdded = new List<Component>();
+            componentsToBeRemoved = new List<Component>();
 
             Content = content;
 
@@ -50,6 +56,8 @@ namespace NePlus
             Lighting = new Lighting(this);
 
             SpriteBatch = new SpriteBatch(Global.GraphicsDeviceManager.GraphicsDevice);
+
+            Updating = false;
         }
 
         public void LoadContent(Game game)
@@ -104,10 +112,28 @@ namespace NePlus
                 Camera.Zoom -= 0.01f;
             }
 
+            // flag that we're updating
+            Updating = true;
             foreach (Component c in components)
             {
                 c.Update(gameTime);
             }
+            // remove updating flag
+            Updating = false;
+
+            // handle new components generated during update
+            foreach (Component c in componentsToBeAdded)
+            {
+                AddComponent(c);
+            }
+            componentsToBeAdded.Clear();
+
+            // handle components removed during update
+            foreach (Component c in componentsToBeRemoved)
+            {
+                RemoveComponent(c);
+            }
+            componentsToBeRemoved.Clear();
         }
 
         public void Draw(GameTime gameTime)
@@ -142,6 +168,12 @@ namespace NePlus
 
         public void AddComponent(Component Component)
         {
+            if (Updating)
+            {
+                componentsToBeAdded.Add(Component);
+                return;
+            }
+
             if (!components.Contains(Component))
             {
                 components.Add(Component);
@@ -177,7 +209,14 @@ namespace NePlus
         {
             if (Component != null && components.Contains(Component))
             {
-                components.Remove(Component);
+                if (Updating)
+                {
+                    componentsToBeRemoved.Add(Component);
+                }
+                else
+                {
+                    components.Remove(Component);
+                }
             }
         }
     }

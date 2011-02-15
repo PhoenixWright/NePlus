@@ -15,6 +15,7 @@ namespace NePlus.GameObjects
             : base(engine)
         {
             enemyPhysicsComponent = new EnemyPhysicsComponent(engine, position);
+            enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
 
             engine.AddComponent(this);
         }

@@ -104,8 +104,6 @@ namespace NePlus.ScreenManagement.Screens
 
             spriteBatch.End();
         }
-
-
         #endregion
     }
 }
