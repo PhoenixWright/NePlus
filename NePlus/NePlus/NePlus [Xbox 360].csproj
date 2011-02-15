@@ -67,10 +67,12 @@
     <Compile Include="Components\EngineComponents\Lighting.cs" />
     <Compile Include="Components\EngineComponents\Physics.cs" />
     <Compile Include="Components\EngineComponents\Video.cs" />
+    <Compile Include="Components\GameComponents\Animation.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
     <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\EnemyPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
@@ -79,11 +81,25 @@
     <Compile Include="Components\PhysicsComponents\SensorPhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameObjects\Level.cs" />
-    <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
-    <Compile Include="GameObjects\LightObjects\Light.cs" />
-    <Compile Include="GameObjects\LightObjects\NullLight.cs" />
-    <Compile Include="GameObjects\Player.cs" />
+    <Compile Include="GameObjects\Enemies\RotatingBoxEnemy.cs" />
+    <Compile Include="GameObjects\Enemy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameObjects\Level.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameObjects\LightObjects\GravityLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameObjects\LightObjects\Light.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameObjects\LightObjects\NullLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameObjects\Player.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="Krypton\Common\BoundingRect.cs" />
     <Compile Include="Krypton\KryptonEngine.cs" />

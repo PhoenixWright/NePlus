@@ -17,7 +17,7 @@ namespace NePlus.Components.PhysicsComponents
         private FixedAngleJoint playerFAJ;
         private RevoluteJoint wheelMotorRevJoint;
 
-        public PlayerPhysicsComponent(Engine engine, Vector2 gameWorldPosition, bool dynamic)
+        public PlayerPhysicsComponent(Engine engine, Vector2 gameWorldPosition)
             : base(engine)
         {
             CreatePlayerPhysicsObjects(gameWorldPosition);

@@ -29,7 +29,7 @@ namespace NePlus.Components.GraphicsComponents
             Light.Position = position;
             Light.Range = range;
 
-            Light.Texture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
+            Light.Texture = Engine.Lighting.PointLightTexture;
 
             Engine.Lighting.Krypton.Lights.Add(Light);
         }

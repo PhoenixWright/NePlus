@@ -17,6 +17,7 @@ using NePlus;
 using NePlus.Components.EngineComponents;
 using NePlus.Components.GraphicsComponents;
 using NePlus.GameObjects;
+using NePlus.GameObjects.Enemies;
 using NePlus.GameObjects.LightObjects;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
@@ -25,8 +26,9 @@ namespace NePlus.GameObjects
 {
     public class Level : Component
     {
+        public List<Enemy> Enemies { get; private set; }
         public List<Light> Lights { get; private set; }
-        
+
         private string mapFilePath;
         private Map map;
         private List<ParticleEffectComponent> levelParticleEffects;
@@ -39,6 +41,7 @@ namespace NePlus.GameObjects
         public Level(Engine engine, string mapPath) : base(engine)
         {
             mapFilePath = mapPath;
+            Enemies = new List<Enemy>();
             Lights = new List<Light>();
             levelParticleEffects = new List<ParticleEffectComponent>();
 
@@ -110,6 +113,13 @@ namespace NePlus.GameObjects
             foreach (MapObject lightObject in lightLayer.Objects)
             {
                 CreateLight(lightObject);
+            }
+
+            // create enemies
+            MapObjectLayer enemyLayer = map.GetLayer("EnemyObjects") as MapObjectLayer;
+            foreach (MapObject enemyObject in enemyLayer.Objects)
+            {
+                CreateEnemy(enemyObject);
             }
         }
 
@@ -220,6 +230,19 @@ namespace NePlus.GameObjects
             fixture.Body.BodyType = BodyType.Static;
             fixture.Restitution = 0.0f;
             // TODO: add collision categories to game
+        }
+
+        public void CreateEnemy(MapObject enemyObject)
+        {
+            switch (enemyObject.Type)
+            {
+                case "RotatingBoxEnemy":
+                    RotatingBoxEnemy rbe = new RotatingBoxEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y));
+                    Enemies.Add(rbe);
+                    break;
+                default:
+                    throw new Exception("Failed to instantiate enemy with type of " + enemyObject.Type + " in map " + mapFilePath);
+            }
         }
 
         public void CreateLight(MapObject lightObject)

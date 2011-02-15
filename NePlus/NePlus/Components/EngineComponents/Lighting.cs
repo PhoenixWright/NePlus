@@ -11,6 +11,7 @@ namespace NePlus.Components.EngineComponents
     public class Lighting : Component
     {
         public KryptonEngine Krypton;
+        public Texture2D PointLightTexture;
 
         public Lighting(Engine engine) : base(engine)
         {
@@ -21,6 +22,8 @@ namespace NePlus.Components.EngineComponents
             Krypton.CullMode = CullMode.None;
             Krypton.Matrix = Engine.Camera.CameraMatrix;
             Krypton.SpriteBatchCompatablityEnabled = true;
+
+            PointLightTexture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
 
             this.DrawOrder = int.MaxValue / 2;
         }

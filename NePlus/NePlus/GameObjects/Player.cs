@@ -42,7 +42,7 @@ namespace NePlus.GameObjects
             Position = position;
 
             LightComponent = new LightComponent(engine, position, MathHelper.TwoPi, 0, 250, Color.White);
-            PhysicsComponent = new PlayerPhysicsComponent(Engine, position, true);
+            PhysicsComponent = new PlayerPhysicsComponent(Engine, position);
 
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
