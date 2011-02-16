@@ -20,6 +20,7 @@ namespace NePlus.Components.PhysicsComponents
             SensorFixture = FixtureFactory.CreatePolygon(Engine.Physics.World, farseerVertices, 0.0f);
             SensorFixture.Body.BodyType = BodyType.Static;
             SensorFixture.IsSensor = true;
+            SensorFixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Light;
         }
     }
 }

@@ -17,7 +17,8 @@ namespace NePlus
             PlayerBullet = Category.Cat2,
             Enemy = Category.Cat3,
             EnemyBullet = Category.Cat4,
-            Light = Category.Cat5
+            Light = Category.Cat5,
+            Structure = Category.Cat6
         }
 
         public static Configuration Configuration { get; private set; }

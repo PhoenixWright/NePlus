@@ -229,7 +229,7 @@ namespace NePlus.GameObjects
             fixture.Body.Position = position;
             fixture.Body.BodyType = BodyType.Static;
             fixture.Restitution = 0.0f;
-            // TODO: add collision categories to game
+            fixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Structure;
         }
 
         public void CreateEnemy(MapObject enemyObject)

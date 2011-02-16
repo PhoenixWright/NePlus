@@ -17,6 +17,7 @@ namespace NePlus.Components.PhysicsComponents
             bulletVelocityX = Global.Configuration.GetFloatConfig("Physics", "BulletVelocityX");
 
             MainFixture = FixtureFactory.CreateCircle(Engine.Physics.World, 0.05f, 1.0f);
+            Bodies.Add(MainFixture.Body);
             MainFixture.Body.BodyType = BodyType.Dynamic;
             MainFixture.Body.IgnoreGravity = true;
             MainFixture.Body.IsBullet = true;
@@ -43,9 +44,6 @@ namespace NePlus.Components.PhysicsComponents
 
         public override void Dispose(bool disposing)
         {
-            Engine.Physics.World.RemoveBody(MainFixture.Body);
-            Engine.RemoveComponent(this);
-
             base.Dispose(disposing);
         }
     }

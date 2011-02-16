@@ -30,5 +30,15 @@ namespace NePlus.Components.PhysicsComponents
 
             Engine.AddComponent(this);
         }
+
+        public override void Dispose(bool disposing)
+        {
+            foreach (Body body in Bodies)
+            {
+                Engine.Physics.World.RemoveBody(body);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

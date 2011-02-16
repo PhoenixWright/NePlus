@@ -39,6 +39,9 @@ namespace NePlus
 
         public virtual void Draw(GameTime gameTime) { }
 
-        public virtual void Dispose(bool disposing) { }
+        public virtual void Dispose(bool disposing)
+        {
+            Engine.RemoveComponent(this);
+        }
     }
 }

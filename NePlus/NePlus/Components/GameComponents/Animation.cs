@@ -101,5 +101,10 @@ namespace NePlus.Components.GameComponents
 
             base.Draw(gameTime);
         }
+
+        public override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
 }

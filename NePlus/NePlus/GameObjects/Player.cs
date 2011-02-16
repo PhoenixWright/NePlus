@@ -111,10 +111,10 @@ namespace NePlus.GameObjects
                     switch (LastDirection)
                     {
                         case Global.Directions.Left:
-                            bulletPosition = Position + new Vector2(-20.0f, 0.0f);
+                            bulletPosition = Position + new Vector2(-40.0f, 0.0f);
                             break;
                         case Global.Directions.Right:
-                            bulletPosition = Position + new Vector2(20.0f, 0.0f);
+                            bulletPosition = Position + new Vector2(40.0f, 0.0f);
                             break;
                         default:
                             bulletPosition = Position;
