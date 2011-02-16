@@ -93,7 +93,6 @@ namespace NePlus.GameObjects.LightObjects
             switch (motionType)
             {
                 case "None":
-                    //PhysicsComponent = new RectanglePhysicsComponent(new Rectangle((int)Position.X, (int)Position.Y, 10, 10), Position, false);
                     break;
                 case "Pendulum":                    
                     Point pivotPoint = new Point((int)Math.Round(Position.X), (int)Math.Round(Position.Y - 200));

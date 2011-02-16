@@ -16,10 +16,10 @@ namespace NePlus.GameObjects
 
         public int Health { get; protected set; }
 
-        public Enemy(Engine engine, Vector2 position)
+        public Enemy(Engine engine, Vector2 position, Global.Shapes shape)
             : base(engine)
         {
-            enemyPhysicsComponent = new EnemyPhysicsComponent(engine, position);
+            enemyPhysicsComponent = new EnemyPhysicsComponent(engine, position, shape);
             enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
             enemyPhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
             enemyPhysicsComponent.MainFixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Enemy;
@@ -34,8 +34,12 @@ namespace NePlus.GameObjects
             if (Health <= 0)
             {
                 // enemy died, stop playing standard animation
-                animation.Dispose(true);
-                animation = null;
+                if (animation != null)
+                {
+                    animation.Dispose(true);
+                    animation = null;
+                }
+
                 enemyPhysicsComponent.Dispose(true);
                 enemyPhysicsComponent = null;
 

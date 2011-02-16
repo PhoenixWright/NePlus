@@ -144,11 +144,11 @@
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PlayerPhysicsComponent.cs" />
-    <Compile Include="Components\PhysicsComponents\RectanglePhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\SensorPhysicsComponent.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameObjects\Enemies\RollingCircleEnemy.cs" />
     <Compile Include="GameObjects\Enemies\RotatingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs" />
     <Compile Include="GameObjects\Level.cs" />

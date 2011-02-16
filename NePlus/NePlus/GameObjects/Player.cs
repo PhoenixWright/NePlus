@@ -30,6 +30,7 @@ namespace NePlus.GameObjects
         public bool CanFire { get; private set; }
         private List<Bullet> bullets;
 
+        public bool Crouching { get; private set; }
         public Global.Directions LastDirection = Global.Directions.Right;
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
@@ -82,6 +83,12 @@ namespace NePlus.GameObjects
                     // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
                     PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -100.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
                 }
+
+                Crouching = Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "DownButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "DownKey"));
+            }
+            else
+            {
+                Crouching = false;
             }
 
             if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
@@ -119,6 +126,11 @@ namespace NePlus.GameObjects
                         default:
                             bulletPosition = Position;
                             break;
+                    }
+
+                    if (Crouching)
+                    {
+                        bulletPosition.Y += 40.0f;
                     }
 
                     // create bullet

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="256" height="64" tilewidth="32" tileheight="32">
  <properties>
   <property name="BackgroundTrack" value="Rain"/>
@@ -366,6 +367,7 @@
  </layer>
  <objectgroup name="EnemyObjects" width="256" height="64">
   <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="1088" y="384" width="128" height="64"/>
+  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="1440" y="672" width="128" height="64"/>
  </objectgroup>
  <objectgroup name="CollisionObjects" width="256" height="64">
   <object name="StartWall" type="CollisionObject" x="608" y="0" width="32" height="768"/>

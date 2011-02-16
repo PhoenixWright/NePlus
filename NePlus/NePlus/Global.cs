@@ -20,6 +20,11 @@ namespace NePlus
             Light = Category.Cat5,
             Structure = Category.Cat6
         }
+        public enum Shapes
+        {
+            Circle,
+            Square
+        }
 
         public static Configuration Configuration { get; private set; }
         public static Game Game { get; private set; }

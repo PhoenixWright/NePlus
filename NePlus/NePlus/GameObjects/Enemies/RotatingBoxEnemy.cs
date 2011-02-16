@@ -22,8 +22,8 @@ namespace NePlus.GameObjects.Enemies
         float timeBetweenAttacks = 7.0f;
         float timeSinceLastAttack = 0.0f;
 
-        public RotatingBoxEnemy(Engine engine, Vector2 position)
-            : base(engine, position)
+        public RotatingBoxEnemy(Engine engine, Vector2 position, Global.Shapes shape)
+            : base(engine, position, shape)
         {
             animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9);
             animation.DrawOrder = int.MaxValue - 1;
@@ -43,7 +43,7 @@ namespace NePlus.GameObjects.Enemies
             // manipulate the physics object to float around and make dives at the player
             if (attacking)
             {
-                // try to hit the player
+                // TODO: try to hit the player
             }
             else
             {

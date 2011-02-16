@@ -236,8 +236,12 @@ namespace NePlus.GameObjects
         {
             switch (enemyObject.Type)
             {
+                case "RollingCircleEnemy":
+                    RollingCircleEnemy rce = new RollingCircleEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y), Global.Shapes.Circle);
+                    Enemies.Add(rce);
+                    break;
                 case "RotatingBoxEnemy":
-                    RotatingBoxEnemy rbe = new RotatingBoxEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y));
+                    RotatingBoxEnemy rbe = new RotatingBoxEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y), Global.Shapes.Square);
                     Enemies.Add(rbe);
                     break;
                 default:
