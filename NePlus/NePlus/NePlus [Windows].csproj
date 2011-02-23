@@ -149,7 +149,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameObjects\Enemies\RollingCircleEnemy.cs" />
-    <Compile Include="GameObjects\Enemies\RotatingBoxEnemy.cs" />
+    <Compile Include="GameObjects\Enemies\FlyingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs" />
     <Compile Include="GameObjects\Level.cs" />
     <Compile Include="GameObjects\LightObjects\GravityLight.cs" />

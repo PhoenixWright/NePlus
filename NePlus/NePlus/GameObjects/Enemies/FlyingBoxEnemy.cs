@@ -7,7 +7,7 @@ using NePlus.Components.GraphicsComponents;
 
 namespace NePlus.GameObjects.Enemies
 {
-    public class RotatingBoxEnemy : Enemy
+    public class FlyingBoxEnemy : Enemy
     {
         // state management
         // an "attack" from the rotating box enemy is to dive at the player
@@ -22,10 +22,10 @@ namespace NePlus.GameObjects.Enemies
         float timeBetweenAttacks = 7.0f;
         float timeSinceLastAttack = 0.0f;
 
-        public RotatingBoxEnemy(Engine engine, Vector2 position, Global.Shapes shape)
+        public FlyingBoxEnemy(Engine engine, Vector2 position, Global.Shapes shape)
             : base(engine, position, shape)
         {
-            animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9);
+            animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9, Global.Animations.Repeat);
             animation.DrawOrder = int.MaxValue - 1;
 
             attacking = false;
@@ -44,6 +44,7 @@ namespace NePlus.GameObjects.Enemies
             if (attacking)
             {
                 // TODO: try to hit the player
+                Attack();
             }
             else
             {
@@ -87,7 +88,10 @@ namespace NePlus.GameObjects.Enemies
                 if (Math.Abs((enemyPhysicsComponent.Position.Y - Engine.Player.Position.Y)) < minY)
                 {
                     // absolutely must float upward
-                    y = -random.Next(25, 50);
+                    if (enemyPhysicsComponent.MainFixture.Body.LinearVelocity.Y > -4.0f)
+                    {
+                        y = -random.Next(25, 50);
+                    }
                 }
                 else
                 {
@@ -103,6 +107,56 @@ namespace NePlus.GameObjects.Enemies
             }
 
             base.Update(gameTime);
+        }
+
+        private void Attack()
+        {
+            MoveTowardPlayerX();
+            MoveTowardPlayerY();
+        }
+
+        private void MoveTowardPlayerX()
+        {
+            float x;
+
+            if (enemyPhysicsComponent.Position.X > Engine.Player.Position.X)
+            {
+                // then we need to move left
+                x = -10;
+            }
+            else
+            {
+                // move right
+                x = 10;
+            }
+
+            enemyPhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(x, 0));
+        }
+
+        private void MoveTowardPlayerY()
+        {
+            float y;
+
+            if (enemyPhysicsComponent.Position.Y > Engine.Player.Position.Y)
+            {
+                // move down
+                y = -10;
+            }
+            else
+            {
+                y = 10;
+            }
+
+            enemyPhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0, y));
+        }
+
+        protected override void OnEnemyPlayerCollision()
+        {
+            // reset attack variables
+            timeSinceLastAttack = 0.0f;
+            attacking = false;
+
+            base.OnEnemyPlayerCollision();
         }
     }
 }

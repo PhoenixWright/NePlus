@@ -82,8 +82,8 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameObjects\Enemies\FlyingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemies\RollingCircleEnemy.cs" />
-    <Compile Include="GameObjects\Enemies\RotatingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs">
       <SubType>Code</SubType>
     </Compile>

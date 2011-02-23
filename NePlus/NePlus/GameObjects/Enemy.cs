@@ -59,6 +59,13 @@ namespace NePlus.GameObjects
 
         private bool EnemyOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            // check if the player collided with the enemy
+            if (fixtureB.CollisionFilter.IsInCollisionCategory((Category)Global.CollisionCategories.Player))
+            {
+                // player collided with enemy
+                OnEnemyPlayerCollision();
+            }
+
             // check if a bullet hit the enemy
             if (fixtureB.CollisionFilter.IsInCollisionCategory((Category)Global.CollisionCategories.PlayerBullet))
             {
@@ -73,5 +80,7 @@ namespace NePlus.GameObjects
         {
             base.Dispose(disposing);
         }
+
+        protected virtual void OnEnemyPlayerCollision() { }
     }
 }

@@ -22,6 +22,7 @@ namespace NePlus.Components.GameComponents
         private float timePerFrame;
         private List<Rectangle> frames;
         private Vector2 spriteOrigin;
+        Global.Animations type;
 
         // state information
         private int currentFrame;
@@ -31,7 +32,7 @@ namespace NePlus.Components.GameComponents
         public Vector2 Position { get; set; }
 
         public Animation(Engine engine, string spriteSheetFilePath, int frameWidth, int frameHeight,
-                         int rows, int cols, int frameCount, int framesPerSecond)
+                         int rows, int cols, int frameCount, int framesPerSecond, Global.Animations type)
             : base(engine)
         {
             this.filePath = spriteSheetFilePath;
@@ -41,6 +42,7 @@ namespace NePlus.Components.GameComponents
             this.columns = cols;
             this.frameCount = frameCount;
             this.framesPerSecond = framesPerSecond;
+            this.type = type;
 
             timePerFrame = 1.0f / framesPerSecond;
             spriteOrigin = new Vector2(frameWidth / 2, frameHeight / 2);
@@ -78,19 +80,31 @@ namespace NePlus.Components.GameComponents
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             totalElapsedTime += elapsed;
 
             if (totalElapsedTime > timePerFrame)
             {
                 ++currentFrame;
+
+                // check to see if we're done with a oneshot animation
+                if (type == Global.Animations.PlayOnce)
+                {
+                    if (currentFrame == frameCount)
+                    {
+                        // get rid of the animation object
+                        Dispose(true);
+                        return;
+                    }
+                }
+
                 currentFrame = currentFrame % frameCount;
 
                 // reset the total elapsed time
                 totalElapsedTime -= timePerFrame;
             }
-
-            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)

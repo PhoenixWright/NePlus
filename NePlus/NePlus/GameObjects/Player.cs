@@ -63,13 +63,7 @@ namespace NePlus.GameObjects
             // check if the player needs to be reset
             if (Position.Y > 2000.0f)
             {
-                PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
-                groundCache.Clear();
-                wallCache.Clear();
-                OnGround = false;
-                OnWall = false;
-                PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
-                PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
+                ResetPlayer();
             }
 
             Position = PhysicsComponent.Position;
@@ -88,6 +82,7 @@ namespace NePlus.GameObjects
             }
             else
             {
+                // can't crouch while in the air
                 Crouching = false;
             }
 
@@ -143,6 +138,17 @@ namespace NePlus.GameObjects
         {
             Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.SpriteBatch.End();
+        }
+
+        private void ResetPlayer()
+        {
+            PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
+            groundCache.Clear();
+            wallCache.Clear();
+            OnGround = false;
+            OnWall = false;
+            PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
+            PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
         }
 
         private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)

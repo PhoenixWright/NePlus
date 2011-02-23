@@ -10,7 +10,18 @@ namespace NePlus
 {
     public static class Global
     {
-        public enum Directions { Up, Down, Left, Right }
+        public enum Animations
+        {
+            PlayOnce,
+            Repeat
+        }
+        public enum Directions
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
         public enum CollisionCategories
         {
             Player = Category.Cat1,
