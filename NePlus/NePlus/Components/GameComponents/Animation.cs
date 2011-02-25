@@ -31,6 +31,18 @@ namespace NePlus.Components.GameComponents
         public float Angle { get; set; }
         public Vector2 Position { get; set; }
 
+        /// <summary>
+        /// Constructs an animation from information about the spritesheet.
+        /// </summary>
+        /// <param name="engine">The game engine reference.</param>
+        /// <param name="spriteSheetFilePath">The spritesheet filepath.</param>
+        /// <param name="frameWidth">The width of a frame in the spritesheet.</param>
+        /// <param name="frameHeight">The height of a frame in the spritesheet.</param>
+        /// <param name="rows">The number of rows in the spritesheet.</param>
+        /// <param name="cols">The number of columns in the spritesheet.</param>
+        /// <param name="frameCount">The number of frames to play in the spritesheet.</param>
+        /// <param name="framesPerSecond">The number of frames to display per second.</param>
+        /// <param name="type">The type of animation (repeat, play once, etc.).</param>
         public Animation(Engine engine, string spriteSheetFilePath, int frameWidth, int frameHeight,
                          int rows, int cols, int frameCount, int framesPerSecond, Global.Animations type)
             : base(engine)
