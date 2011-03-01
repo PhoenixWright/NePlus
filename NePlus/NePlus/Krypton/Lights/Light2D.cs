@@ -9,6 +9,13 @@ using Krypton.Common;
 
 namespace Krypton.Lights
 {
+    public enum ShadowType
+    {
+        Solid = 1,
+        Illuminated = 2,
+        Occluded = 3
+    };
+
     public class Light2D : ILight2D
     {
         private bool mIsOn = true;
@@ -19,6 +26,7 @@ namespace Krypton.Lights
         private float mRange = 1;
         private float mFov = MathHelper.TwoPi;
         private float mIntensity = 1;
+        private ShadowType mShadowType = ShadowType.Solid;
 
         #region Parameters
 
@@ -106,6 +114,15 @@ namespace Krypton.Lights
             set { this.mIntensity = MathHelper.Clamp(value, 0.01f, 3f); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating what type of shadows this light should cast
+        /// </summary>
+        public ShadowType ShadowType
+        {
+            get { return this.mShadowType; }
+            set { this.mShadowType = value; }
+        }
+
         #endregion Parameters
 
         /// <summary>
@@ -143,18 +160,49 @@ namespace Krypton.Lights
                 }
             }
 
-            var shadowEffect = helper.Effect.Techniques["PointLight_Shadow_Fast"];
-            helper.Effect.CurrentTechnique = shadowEffect;
-            // Set the effect parameters
+            // Set the effect and parameters
             helper.Effect.Parameters["LightPosition"].SetValue(this.mPosition);
             helper.Effect.Parameters["Texture0"].SetValue(this.mTexture);
             helper.Effect.Parameters["LightIntensityFactor"].SetValue(1 / (this.mIntensity * this.mIntensity));
 
-            shadowEffect.Passes["ShadowStencil"].Apply();
-            helper.BufferDraw();
 
-            shadowEffect.Passes["Light"].Apply();
-            helper.DrawClippedFov(this.mPosition, this.mAngle, this.mRange * 2, this.mColor, this.mFov);
+            switch (this.mShadowType)
+            {
+                case (ShadowType.Solid):
+                    helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow_Solid"];
+                    break;
+
+                case (ShadowType.Illuminated):
+                    helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow_Illuminated"];
+                    break;
+
+                case (ShadowType.Occluded):
+                    helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Shadow_Occluded"];
+                    break;
+
+                default:
+                    throw new NotImplementedException("Shadow Type does not exist: " + this.mShadowType);
+            }
+
+            foreach (var pass in helper.Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                helper.BufferDraw();
+            }
+
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["PointLight_Light"];
+            foreach (var pass in helper.Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                helper.DrawClippedFov(this.mPosition, this.mAngle, this.mRange * 2, this.mColor, this.mFov);
+            }
+
+            helper.Effect.CurrentTechnique = helper.Effect.Techniques["ClearTarget_Alpha"];
+            foreach (var pass in helper.Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                helper.GraphicsDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, KryptonRenderHelper.UnitQuad, 0, 2);
+            }
         }
 
         /// <summary>
@@ -165,10 +213,8 @@ namespace Krypton.Lights
         /// <returns></returns>
         private static bool IsInRange(Vector2 offset, float dist)
         {
-            if (offset.X * offset.X + offset.Y * offset.Y < dist * dist)
-                return true;
-
-            return false;
+            // a^2 + b^2 < c^2 ?
+            return offset.X * offset.X + offset.Y * offset.Y < dist * dist;
         }
 
         /// <summary>

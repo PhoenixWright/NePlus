@@ -56,13 +56,6 @@ struct VertexPositionColor
 	float4 Color	: COLOR0;
 };
 
-struct VertexPositionNormalTexture
-{
-	float4 Position	: POSITION0;
-	float4 Normal	: NORMAL0;
-	float2 TexCoord	: TEXCOORD0;
-};
-
 struct VertexPositionColorTexture
 {
 	float4 Position	: POSITION0;
@@ -76,126 +69,38 @@ struct VertexPositionTexture
 	float2 TexCoord : TEXCOORD0;
 };
 
-// ------------------------------------------------------------------------------------------------ //
-// ----- Techniques ------------------------------------------------------------------------------- //
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: TextureToTarget ---------------------------------------------------------------
-
-VertexPositionTexture VS_ScreenCopy(VertexPositionTexture input)
+struct Color2
 {
-	VertexPositionTexture output;
-	
-	output.Position = input.Position;
-	output.TexCoord = input.TexCoord;
-	
+	float4 Color0 : COLOR0;
+	float4 Color1 : COLOR1;
+};
+
+// ------------------------------------------------------------------------------------------------ //
+// ----- Vertex Shaders --------------------------------------------------------------------------- //
+
+VertexPositionTexture VS_TextureNoTransform(VertexPositionTexture input)
+{
 	return input;
 };
 
-float4 PS_ScreenCopy(VertexPositionTexture input) : COLOR0
+VertexPositionColorTexture VS_ColorTexture(VertexPositionColorTexture input)
 {
-	return tex2D(tex0, input.TexCoord + TexelBias);
+	input.Position = mul(input.Position, Matrix);
+
+	return input;
 };
 
-technique TextureToTarget_Add
+VertexPositionColor VS_Hull(ShadowHullVertex input)
 {
-	pass Pass1
-	{
-		StencilEnable = False;
-
-		BlendOp = Add;
-		SrcBlend = One;
-		DestBlend = One;
-
-		AlphaBlendEnable = True;
-		
-		CullMode = CCW;
-
-		VertexShader = compile vs_2_0 VS_ScreenCopy();
-		PixelShader = compile ps_2_0 PS_ScreenCopy();
-	}
-};
-
-technique TextureToTarget_Multiply
-{
-	pass Pass1
-	{
-		StencilEnable = False;
-
-		BlendOp = Add;
-		SrcBlend = Zero;
-		DestBlend = SrcColor;
-
-		AlphaBlendEnable = True;
-		
-		CullMode = CCW;
-
-		VertexShader = compile vs_2_0 VS_ScreenCopy();
-		PixelShader = compile ps_2_0 PS_ScreenCopy();
-	}
-};
-
-float4 PS_ClearTarget() : COLOR0
-{
-	return float4(0, 0, 0, 1);
-}
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: SimpleTexture -----------------------------------------------------------------
-
-VertexPositionColorTexture VS_SimpleTexture(VertexPositionColorTexture input)
-{
-	VertexPositionColorTexture output;
+	VertexPositionColor output;
 
 	output.Position = mul(input.Position, Matrix);
 	output.Color = input.Color;
-	output.TexCoord = input.TexCoord;
 
 	return output;
 };
 
-float4 PS_SimpleTexture(VertexPositionColorTexture input) : COLOR0
-{
-	return tex2D(tex0, input.TexCoord) * input.Color;
-};
-
-float4 PS_LightTexture(VertexPositionColorTexture input) : COLOR0
-{
-	return pow(tex2D(tex0, input.TexCoord) * input.Color, LightIntensityFactor);
-};
-
-technique SimpleTexture
-{
-	pass Pass1
-	{
-		StencilEnable = False;
-
-		VertexShader = compile vs_2_0 VS_SimpleTexture();
-		PixelShader = compile ps_2_0 PS_SimpleTexture();
-	}
-};
-
-technique LightTexture
-{
-	pass Pass1
-	{
-		StencilEnable = False;
-
-		BlendOp = Add;
-		DestBlend = Zero;
-		SrcBlend = SrcAlpha;
-		
-		AlphaBlendEnable = True;
-
-		VertexShader = compile vs_2_0 VS_SimpleTexture();
-		PixelShader = compile ps_2_0 PS_LightTexture();
-	}
-};
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: PointLight_Shadow -------------------------------------------------------------
-
-VertexPositionColor VS_PointLight_Shadow(ShadowHullVertex input)
+VertexPositionColor VS_Hull_RadialStretch(ShadowHullVertex input)
 {
     float2 direction = normalize(LightPosition.xy - input.Position.xy);
     
@@ -213,134 +118,46 @@ VertexPositionColor VS_PointLight_Shadow(ShadowHullVertex input)
 	return output;
 };
 
-float4 PS_PointLight_Shadow(float4 input : COLOR0) : COLOR0
+// ------------------------------------------------------------------------------------------------ //
+// ----- Pixel Shaders ---------------------------------------------------------------------------- //
+
+// ------------------------------------------------------------------------------------------------ //
+// ----- Techniques ------------------------------------------------------------------------------- //
+
+float4 PS_Texture(in float2 texCoord : TEXCOORD0) : COLOR0
 {
-	return input;
+	return tex2D(tex0, texCoord + TexelBias);
 };
 
-VertexPositionColor VS_Shadow_HullIllumination(ShadowHullVertex input)
+float4 PS_ColorTexture(in float4 color : COLOR0, in float2 texCoord : TEXCOORD0) : COLOR0
 {
-	VertexPositionColor output;
-
-	output.Position = mul(input.Position, Matrix);
-	output.Color = input.Color;
-
-	return output;
+	return tex2D(tex0, texCoord) * color;
 };
 
-float4 PS_Shadow_HullIllumination() : COLOR0
+float4 PS_LightTexture(VertexPositionColorTexture input) : COLOR0
+{
+	return pow(abs(tex2D(tex0, input.TexCoord)) * input.Color, LightIntensityFactor);
+};
+
+float4 PS_Color(in float4 color : COLOR0) : COLOR0
+{
+	return color;
+};
+
+float4 PS_White() : COLOR0
 {
 	return float4(1, 1, 1, 1);
 };
 
-technique PointLight_Shadow
+float4 PS_Black() : COLOR0
 {
-	pass Shadow
-	{
-		StencilEnable = False;
-
-		AlphaBlendEnable = True;
-
-		BlendOp = RevSubtract;
-		SrcBlend = One;
-		DestBlend = One;
-
-		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
-		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
-	}
+	return float4(0, 0, 0, 1);
 };
 
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: PointLight_ShadowWithIllumination ---------------------------------------------
-
-technique PointLight_ShadowWithIllumination
+float4 PS_Debug() : COLOR0
 {
-	pass Shadow_Illumination
-	{
-		// This outlines where our hulls are currently, so we don't draw shadows there
-		StencilEnable = True;
-		StencilFunc = Never;
-		StencilFail = Incr;
-
-		AlphaBlendEnable = False;
-
-		VertexShader = compile vs_2_0 VS_Shadow_HullIllumination();
-		PixelShader = compile ps_2_0 PS_Shadow_HullIllumination();
-	}
-
-	pass Shadow
-	{
-		// Only draw where the Stencil hasn't touched
-		StencilEnable = True;
-		StencilFunc = Equal;
-		StencilRef = 0;
-		StencilFail = Incr;
-
-		AlphaBlendEnable = True;
-
-		BlendOp = RevSubtract;
-		SrcBlend = One;
-		DestBlend = One;
-
-		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
-		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
-	}
-	
+	return float4(1, 0, 0, 1);
 };
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: PointLight_ShadowWithOcclusion ------------------------------------------------
-
-technique PointLight_ShadowWithOcclusion
-{
-	pass Shadow_HullStencil
-	{
-		// This outlines where our hulls are currently, so we don't draw shadows there, unless the hull is occluded
-		StencilEnable = True;
-		StencilFunc = Never;
-		StencilFail = Incr;
-
-		VertexShader = compile vs_2_0 VS_Shadow_HullIllumination();
-		PixelShader = compile ps_2_0 PS_Shadow_HullIllumination();
-	}
-
-	pass Shadow
-	{
-		// This allows us to draw shadows on hulls behind other hulls
-		StencilEnable = True;
-		StencilFunc = NotEqual;
-		StencilRef = 1;
-		StencilPass = Keep;
-		StencilFail = Incr;
-
-		AlphaBlendEnable = True;
-
-		BlendOp = RevSubtract;
-		SrcBlend = One;
-		DestBlend = One;
-
-		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
-		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
-	}
-};
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: DebugDraw ---------------------------------------------------------------------
-
-technique DebugDraw
-{
-	pass Solid
-	{
-		StencilEnable = False;
-		AlphaBlendEnable = False;
-
-		VertexShader = compile vs_2_0 VS_Shadow_HullIllumination();
-		PixelShader = compile ps_2_0 PS_Shadow_HullIllumination();
-	}
-};
-
-// ------------------------------------------------------------------------------------------------
-// ----- Technique: Blur --------------------------------------------------------------------------
 
 float4 PS_BlurH(in float2 texCoord : TEXCOORD0) : COLOR0
 {
@@ -374,41 +191,92 @@ float4 PS_BlurV(in float2 texCoord : TEXCOORD0) : COLOR0
 		tex2D(tex0, float2(texCoord.x, texCoord.y + blurFactor * 4)	+ TexelBias) * 0.05f;
 }
 
-technique Blur
+// ------------------------------------------------------------------------------------------------
+// ----- Technique: TextureToTarget ---------------------------------------------------------------
+
+technique TextureToTarget_Add
 {
-    pass HorizontalBlur
-    {
-		ScissorTestEnable = False;
-		StencilEnable = False;
-		AlphaBlendEnable = False;
-
-		CullMode = CCW;
-
-		VertexShader = compile vs_2_0 VS_ScreenCopy();
-        PixelShader = compile ps_2_0 PS_BlurH();
-    }
-    
-    pass VerticalBlur
-    {
-		ScissorTestEnable = False;
-		StencilEnable = False;
-		AlphaBlendEnable = False;
-
-		CullMode = CCW;
-
-		VertexShader = compile vs_2_0 VS_ScreenCopy();
-        PixelShader = compile ps_2_0 PS_BlurV();
-    }
-}
-
-
-technique PointLight_Shadow_Fast
-{
-	pass ShadowStencil
+	pass Pass1
 	{
-		StencilEnable = True;
-		StencilFunc = Always;
-		StencilPass = Incr;
+		StencilEnable = False;
+
+		BlendOp = Add;
+		SrcBlend = One;
+		DestBlend = One;
+
+		AlphaBlendEnable = True;
+		
+		CullMode = CCW;
+
+		VertexShader = compile vs_2_0 VS_TextureNoTransform();
+		PixelShader = compile ps_2_0 PS_Texture();
+	}
+};
+
+technique TextureToTarget_Multiply
+{
+	pass Pass1
+	{
+		StencilEnable = False;
+
+		BlendOp = Add;
+		SrcBlend = Zero;
+		DestBlend = SrcColor;
+
+		AlphaBlendEnable = True;
+		
+		CullMode = CCW;
+
+		VertexShader = compile vs_2_0 VS_TextureNoTransform();
+		PixelShader = compile ps_2_0 PS_Texture();
+	}
+};
+
+technique LightTexture
+{
+	pass Pass1
+	{
+		StencilEnable = False;
+
+		BlendOp = Add;
+		DestBlend = Zero;
+		SrcBlend = SrcAlpha;
+		
+		AlphaBlendEnable = True;
+
+		VertexShader = compile vs_2_0 VS_ColorTexture();
+		PixelShader = compile ps_2_0 PS_LightTexture();
+	}
+};
+
+// ------------------------------------------------------------------------------------------------
+// ----- Technique: PointLight_Shadow -------------------------------------------------------------
+
+technique PointLight_Shadow_Solid
+{
+	pass Shadow
+	{
+		StencilEnable = False;
+
+		ScissorTestEnable = True;
+
+		AlphaBlendEnable = True;
+		BlendOp = Add;
+		SrcBlend = DestColor;
+		DestBlend = Zero;
+
+		ColorWriteEnable = Alpha;
+
+		VertexShader = compile vs_2_0 VS_Hull_RadialStretch();
+		PixelShader = compile ps_2_0 PS_Color();
+	}
+};
+
+technique PointLight_Shadow_Illuminated
+{
+	pass Shadow
+	{
+		StencilEnable = False;
 
 		ScissorTestEnable = True;
 
@@ -419,11 +287,51 @@ technique PointLight_Shadow_Fast
 
 		ColorWriteEnable = Alpha;
 
-		VertexShader = compile vs_2_0 VS_PointLight_Shadow();
-		PixelShader = compile ps_2_0 PS_PointLight_Shadow();
+		VertexShader = compile vs_2_0 VS_Hull_RadialStretch();
+		PixelShader = compile ps_2_0 PS_Color();
 	}
 
-	pass Light
+	pass Hull
+	{
+		StencilEnable = False;
+
+		ScissorTestEnable = True;
+
+		AlphaBlendEnable = True;
+		BlendOp = Add;
+		SrcBlend = One;
+		DestBlend = Zero;
+
+		ColorWriteEnable = Alpha;
+
+		VertexShader = compile vs_2_0 VS_Hull();
+		PixelShader = compile ps_2_0 PS_White();
+	}
+};
+
+technique PointLight_Shadow_Occluded
+{
+	pass Shadow
+	{
+		StencilEnable = True;
+		StencilFunc = Always;
+		StencilPass = IncrSat;
+		StencilFail = Keep;
+
+		ScissorTestEnable = True;
+
+		AlphaBlendEnable = True;
+		BlendOp = Add;
+		SrcBlend = DestAlpha;
+		DestBlend = Zero;
+
+		ColorWriteEnable = Alpha;
+
+		VertexShader = compile vs_2_0 VS_Hull_RadialStretch();
+		PixelShader = compile ps_2_0 PS_Color();
+	}
+
+	pass Hull
 	{
 		StencilEnable = True;
 		StencilFunc = Equal;
@@ -435,44 +343,96 @@ technique PointLight_Shadow_Fast
 		AlphaBlendEnable = True;
 		BlendOp = Add;
 		SrcBlend = One;
-		DestBlend = One;
-		
-		ColorWriteEnable = Red | Green | Blue;
+		DestBlend = Zero;
 
-		VertexShader = compile vs_2_0 VS_SimpleTexture();
-		PixelShader = compile ps_2_0 PS_LightTexture();
+		ColorWriteEnable = Alpha;
+
+		VertexShader = compile vs_2_0 VS_Hull();
+		PixelShader = compile ps_2_0 PS_White();
 	}
+};
 
-	pass LightAlpha
+technique PointLight_Light
+{
+	pass Light
 	{
-		StencilEnable = True;
-		StencilFunc = NotEqual;
-		StencilRef = 1;
-		StencilPass = Keep;
+		StencilEnable = False;
 
-		ScissorTestEnable = True;
+		ScissorTestEnable = False;
 
 		AlphaBlendEnable = True;
 		BlendOp = Add;
 		SrcBlend = DestAlpha;
 		DestBlend = One;
+		
+		ColorWriteEnable = Red | Green | Blue;
 
-		VertexShader = compile vs_2_0 VS_SimpleTexture();
+		VertexShader = compile vs_2_0 VS_ColorTexture();
 		PixelShader = compile ps_2_0 PS_LightTexture();
 	}
+};
 
-	pass ClearAlpha
+technique ClearTarget_Alpha
+{
+	pass Pass1
 	{
 		StencilEnable = False;
 
+		AlphaBlendEnable = True;
+		BlendOp = Add;
+		SrcBlend = One;
+		DestBlend = One;
+		
+		ScissorTestEnable = True;
+		
+		ColorWriteEnable = Red | Green | Blue | Alpha;
+		
+		VertexShader = compile vs_2_0 VS_TextureNoTransform();
+		PixelShader = compile ps_2_0 PS_Black();
+	}
+};
+
+// ------------------------------------------------------------------------------------------------
+// ----- Technique: Blur --------------------------------------------------------------------------
+
+technique Blur
+{
+    pass HorizontalBlur
+    {
+		ScissorTestEnable = False;
+		StencilEnable = False;
 		AlphaBlendEnable = False;
 
 		CullMode = CCW;
-		
-		ColorWriteEnable = Alpha;
 
-		VertexShader = compile vs_2_0 VS_ScreenCopy();
-		PixelShader = compile ps_2_0 PS_ClearTarget();
+		VertexShader = compile vs_2_0 VS_TextureNoTransform();
+        PixelShader = compile ps_2_0 PS_BlurH();
+    }
+    
+    pass VerticalBlur
+    {
+		ScissorTestEnable = False;
+		StencilEnable = False;
+		AlphaBlendEnable = False;
+
+		CullMode = CCW;
+
+		VertexShader = compile vs_2_0 VS_TextureNoTransform();
+        PixelShader = compile ps_2_0 PS_BlurV();
+    }
+}
+
+// ------------------------------------------------------------------------------------------------
+// ----- Technique: DebugDraw ---------------------------------------------------------------------
+
+technique DebugDraw
+{
+	pass Solid
+	{
+		StencilEnable = False;
+		AlphaBlendEnable = False;
+
+		VertexShader = compile vs_2_0 VS_Hull();
+		PixelShader = compile ps_2_0 PS_Debug();
 	}
-
 };

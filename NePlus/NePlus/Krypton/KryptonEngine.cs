@@ -43,12 +43,12 @@ namespace Krypton
         private BoundingRect mBounds = BoundingRect.MinMax;
 
         // Blur
-        private float mBluriness = 0.25f;
+        private float mBluriness = 0f;
         private RenderTarget2D mMapBlur;
 
         // Light maps
         private RenderTarget2D mMap;
-        private Color mAmbientColor = new Color(35,35,35);
+        private Color mAmbientColor = new Color(0, 0, 0);
         private LightMapSize mLightMapSize = LightMapSize.Full;
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Krypton
 
             // Set and clear the target
             Engine.Video.GraphicsDevice.SetRenderTarget(this.mMap);
-            Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, Color.Black, 0, 1);
+            Engine.Video.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil, this.mAmbientColor, 0, 1);
 
             // Make sure we're culling the right way!
             Engine.Video.GraphicsDevice.RasterizerState = KryptonEngine.RasterizerStateGetFromCullMode(this.mCullMode);
@@ -282,7 +282,7 @@ namespace Krypton
                 if (light.Bounds.Intersects(this.mBounds))
                 {
                     // Clear the stencil and set the scissor rect (because we're stretching geometry past the light's reach)
-                    Engine.Video.GraphicsDevice.Clear(ClearOptions.Stencil, Color.Black, 0, 1);
+                    Engine.Video.GraphicsDevice.Clear(ClearOptions.Stencil, Color.Black, 0, 0);
                     Engine.Video.GraphicsDevice.ScissorRectangle = KryptonEngine.ScissorRectCreateForLight(light, lightMapMatrix, targetSize);
                     
                     // Draw the light!

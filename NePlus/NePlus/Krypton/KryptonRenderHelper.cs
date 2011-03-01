@@ -26,7 +26,7 @@ namespace Krypton
     {
         #region Static Unit Quad
 
-        private static VertexPositionTexture[] UnitQuad = new VertexPositionTexture[]
+        public static readonly VertexPositionTexture[] UnitQuad = new VertexPositionTexture[]
         {
             new VertexPositionTexture()
             {
@@ -123,7 +123,7 @@ namespace Krypton
                 Vector2.Transform(ref point.Position, ref vertexMatrix, out hullVertex.Position);
                 Vector2.TransformNormal(ref point.Normal, ref normalMatrix, out hullVertex.Normal);
 
-                hullVertex.Color = Color.Black;
+                hullVertex.Color = new Color(0, 0, 0, 1-hull.Opacity);
 
                 this.mShadowHullVertices.Add(hullVertex); // could this be sped up... ?
             }

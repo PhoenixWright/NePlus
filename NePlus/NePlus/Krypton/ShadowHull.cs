@@ -64,6 +64,11 @@ namespace Krypton
         /// </summary>
         public Vector2 Scale = Vector2.One;
 
+        /// <summary>
+        /// A value indicating how opaque the shadow is, and inversely how much light goes through the hull
+        /// </summary>
+        public float Opacity = 1f;
+
         #endregion
 
         private ShadowHull(){}

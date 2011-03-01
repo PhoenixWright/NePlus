@@ -12,6 +12,7 @@ using FarseerPhysics.Dynamics.Contacts;
 
 using NePlus;
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GameComponents;
 using NePlus.Components.GraphicsComponents;
 using NePlus.Components.PhysicsComponents;
 using NePlus.GameComponents;
@@ -39,6 +40,9 @@ namespace NePlus.GameObjects
 
         public Vector2 Position { get; private set; }
 
+        // animations
+        Animation playerWalkingRight;
+
         public Player(Engine engine, Vector2 position)
             : base(engine)
         {
@@ -55,11 +59,16 @@ namespace NePlus.GameObjects
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
 
+            // test
+            playerWalkingRight = new Animation(engine, @"Characters\Player\PlayerWalkingRight", 128, 192, 2, 4, 8, 4, Global.Animations.Repeat);
+
             Engine.AddComponent(this);
         }
 
         public override void Update(GameTime gameTime)
         {
+            playerWalkingRight.Position = Position;
+
             // check if the player needs to be reset
             if (Position.Y > 2000.0f)
             {
