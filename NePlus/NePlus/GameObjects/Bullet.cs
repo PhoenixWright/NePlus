@@ -15,10 +15,10 @@ namespace NePlus.GameObjects
         Sprite bulletSprite;
         LightComponent light;
 
-        public Bullet(Engine engine, Vector2 position, Global.Directions direction, Global.CollisionCategories category)
+        public Bullet(Engine engine, Vector2 position, Vector2 direction, float angle, Global.CollisionCategories category)
             : base(engine)
         {
-            bulletPhysicsComponent = new BulletPhysicsComponent(engine, position, direction, category);
+            bulletPhysicsComponent = new BulletPhysicsComponent(engine, position, direction, angle, category);
             bulletPhysicsComponent.MainFixture.OnCollision += BulletOnCollision;
 
             bulletSprite = new Sprite(engine, @"Miscellaneous\RedBullet");

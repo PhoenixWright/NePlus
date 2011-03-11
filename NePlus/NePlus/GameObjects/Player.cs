@@ -32,7 +32,7 @@ namespace NePlus.GameObjects
         private double airTimer;
         private double airMovementWindow;
         private List<Bullet> bullets;
-        private double lastGameTime;
+        private double bulletTimer;
         private bool releasedFire { get; set; }
 
         public bool Crouching { get; private set; }
@@ -47,6 +47,7 @@ namespace NePlus.GameObjects
 
         // animations
         Sprite playerStandingRight;
+        Sprite playerArmShootingRight;
         Sprite playerCrouchingRight;
         Sprite playerJumpingRight;
         Sprite playerFallingRight;
@@ -58,6 +59,7 @@ namespace NePlus.GameObjects
             airMovementForce = new Vector2(1.0f, 0.0f);
             airMovementWindow = 3000.0d;
             bullets = new List<Bullet>();
+            bulletTimer = double.MaxValue / 2;
             releasedFire = true;
             groundCache = new List<Fixture>();
             wallCache = new List<Fixture>();
@@ -71,6 +73,7 @@ namespace NePlus.GameObjects
             PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
 
             // load visuals
+            playerArmShootingRight = new Sprite(engine, @"Characters\Player\PlayerArmShootingRight");
             playerStandingRight = new Sprite(engine, @"Characters\Player\PlayerStandingRight");
             playerCrouchingRight = new Sprite(engine, @"Characters\Player\PlayerCrouchingRight");
             playerJumpingRight = new Sprite(engine, @"Characters\Player\PlayerJumpingRight");
@@ -82,7 +85,7 @@ namespace NePlus.GameObjects
 
         public override void Update(GameTime gameTime)
         {
-            double timeSinceLastUpdate = gameTime.ElapsedGameTime.TotalMilliseconds - lastGameTime;
+            bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // update whether or not the player can fire
             UpdateProjectiles();
@@ -103,7 +106,7 @@ namespace NePlus.GameObjects
             }
             else
             {
-                airTimer += timeSinceLastUpdate;
+                airTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
             }
 
             // check to see if the player is even allowed to jump before we do anything
@@ -118,47 +121,58 @@ namespace NePlus.GameObjects
 
             if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
             {
-                PhysicsComponent.MoveLeft();
                 LastDirection = Global.Directions.Left;
 
-                if (!OnGround)
+                if (!Crouching)
                 {
-                    // apply a bit of force in the air if the air timer is still under the air movement window
-                    if (airTimer < airMovementWindow)
-                    {
-                        PhysicsComponent.MainFixture.Body.ApplyForce(-airMovementForce);
-                    }
-                }
+                    PhysicsComponent.MoveLeft();
 
-                // we're only walking if we're on the ground
-                Walking = OnGround;
+                    if (!OnGround)
+                    {
+                        // apply a bit of force in the air if the air timer is still under the air movement window
+                        if (airTimer < airMovementWindow)
+                        {
+                            PhysicsComponent.MainFixture.Body.ApplyForce(-airMovementForce);
+                        }
+                    }
+
+                    // we're only walking if we're on the ground
+                    Walking = OnGround;
+                }
+                else
+                {
+                    PhysicsComponent.StopMoving();
+                    Walking = false;
+                }
             }
             else if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
             {
-                PhysicsComponent.MoveRight();
                 LastDirection = Global.Directions.Right;
 
-                if (!OnGround)
+                if (!Crouching)
                 {
-                    // apply a bit of force in the air if the air timer is still under the air movement window
-                    if (airTimer < airMovementWindow)
-                    {
-                        PhysicsComponent.MainFixture.Body.ApplyForce(airMovementForce);
-                    }
-                }
+                    PhysicsComponent.MoveRight();
 
-                // we're only walking if we're on the ground
-                Walking = OnGround;
-            }
-            else
-            {
-                PhysicsComponent.StopMoving();
-                Walking = false;
+                    if (!OnGround)
+                    {
+                        // apply a bit of force in the air if the air timer is still under the air movement window
+                        if (airTimer < airMovementWindow)
+                        {
+                            PhysicsComponent.MainFixture.Body.ApplyForce(airMovementForce);
+                        }
+                    }
+
+                    // we're only walking if we're on the ground
+                    Walking = OnGround;
+                }
+                else
+                {
+                    PhysicsComponent.StopMoving();
+                    Walking = false;
+                }
             }
 
             UpdateAllArt();
-
-            lastGameTime = gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
         public override void Draw(GameTime gameTime)
@@ -201,19 +215,31 @@ namespace NePlus.GameObjects
                     releasedFire = false;
 
                     Vector2 bulletPosition;
+                    float bulletX = 0.0f;
+                    float bulletY = 0.0f;
+                    float bulletAngle = 0.0f;
 
-                    //determine bullet position
+                    // determine bullet position and direction
                     switch (LastDirection)
                     {
                         case Global.Directions.Left:
-                            bulletPosition = Position + new Vector2(-40.0f, 0.0f);
+                            bulletPosition = Position + new Vector2(-40.0f, 9.0f);
+                            bulletX = -16.0f;
                             break;
                         case Global.Directions.Right:
-                            bulletPosition = Position + new Vector2(40.0f, 0.0f);
+                            bulletPosition = Position + new Vector2(40.0f, 9.0f);
+                            bulletX = 16.0f;
                             break;
                         default:
                             bulletPosition = Position;
                             break;
+                    }
+
+                    // determine bullet vertical movement and angle
+                    if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "UpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "UpKey")))
+                    {
+                        bulletY = -13.0f;
+                        bulletAngle = 90.0f;
                     }
 
                     if (Crouching)
@@ -221,9 +247,9 @@ namespace NePlus.GameObjects
                         bulletPosition.Y += 40.0f;
                     }
 
-                    // create bullet
-                    Bullet bullet = new Bullet(Engine, bulletPosition, LastDirection, Global.CollisionCategories.PlayerBullet);
+                    Bullet bullet = new Bullet(Engine, bulletPosition, new Vector2(bulletX, bulletY), bulletAngle, Global.CollisionCategories.PlayerBullet);
                     bullets.Add(bullet);
+                    bulletTimer = 0.0f;
                 }
                 else
                 {
@@ -234,6 +260,7 @@ namespace NePlus.GameObjects
 
         private void ChangeArtDirectionLeft()
         {
+            playerArmShootingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerStandingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerCrouchingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerJumpingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
@@ -243,6 +270,7 @@ namespace NePlus.GameObjects
 
         private void ChangeArtDirectionRight()
         {
+            playerArmShootingRight.SpriteEffect = SpriteEffects.None;
             playerStandingRight.SpriteEffect = SpriteEffects.None;
             playerCrouchingRight.SpriteEffect = SpriteEffects.None;
             playerJumpingRight.SpriteEffect = SpriteEffects.None;
@@ -252,6 +280,7 @@ namespace NePlus.GameObjects
 
         private void HideAllArt()
         {
+            playerArmShootingRight.Visible = false;
             playerStandingRight.Visible = false;
             playerCrouchingRight.Visible = false;
             playerJumpingRight.Visible = false;
@@ -268,6 +297,37 @@ namespace NePlus.GameObjects
             playerJumpingRight.Position = Position + artOffsetVector;
             playerFallingRight.Position = Position + artOffsetVector;
             playerWalkingRight.Position = Position + artOffsetVector;
+
+            if (Crouching)
+            {
+                playerArmShootingRight.Position = Position + artOffsetVector + new Vector2(0.0f, 35.0f);
+            }
+            else
+            {
+                playerArmShootingRight.Position = Position + artOffsetVector;
+            }
+
+            // arm angle
+            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "UpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "UpKey")))
+            {
+                if (LastDirection == Global.Directions.Right)
+                {
+                    playerArmShootingRight.Angle = -MathHelper.PiOver4;
+
+                    // offset to right to account for angle
+                    playerArmShootingRight.Position += new Vector2(5.0f, 0.0f);
+                }
+                else
+                {
+                    playerArmShootingRight.Angle = MathHelper.PiOver4;
+
+                    playerArmShootingRight.Position += new Vector2(-5.0f, 0.0f);
+                }
+            }
+            else
+            {
+                playerArmShootingRight.Angle = 0.0f;
+            }
 
             // update art directions
             if (LastDirection == Global.Directions.Right)
@@ -319,6 +379,15 @@ namespace NePlus.GameObjects
                         playerJumpingRight.Visible = true;
                     }
                 }
+            }
+
+            if (bulletTimer < 250.0d)
+            {
+                playerArmShootingRight.Visible = true;
+            }
+            else
+            {
+                playerArmShootingRight.Visible = false;
             }
         }
 

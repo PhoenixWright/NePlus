@@ -8,10 +8,10 @@ namespace NePlus.Components.GameComponents
         private Texture2D sprite;
         private Vector2 spriteOrigin;
 
-        public float Angle;
-        public Vector2 Position;
-        public SpriteEffects SpriteEffect;
-        public bool Visible;
+        public float Angle { get; set; }
+        public Vector2 Position { get; set; }
+        public SpriteEffects SpriteEffect { get; set; }
+        public bool Visible { get; set; }
 
         public Sprite(Engine engine, string spriteFilepath)
             : base(engine)
