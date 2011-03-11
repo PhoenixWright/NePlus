@@ -69,6 +69,7 @@
     <Compile Include="Components\EngineComponents\Video.cs" />
     <Compile Include="Components\GameComponents\Animation.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
+    <Compile Include="Components\GameComponents\Sprite.cs" />
     <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="GameObjects\LightObjects\NullLight.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameObjects\LightObjects\VelocityLight.cs" />
     <Compile Include="GameObjects\Player.cs">
       <SubType>Code</SubType>
     </Compile>

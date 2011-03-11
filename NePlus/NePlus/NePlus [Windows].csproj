@@ -128,6 +128,7 @@
   <ItemGroup>
     <Compile Include="Component.cs" />
     <Compile Include="Components\GameComponents\Animation.cs" />
+    <Compile Include="Components\GameComponents\Sprite.cs" />
     <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
     <Compile Include="GameObjects\LightObjects\Light.cs" />
     <Compile Include="GameObjects\LightObjects\NullLight.cs" />
+    <Compile Include="GameObjects\LightObjects\VelocityLight.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Krypton\Common\BoundingRect.cs" />

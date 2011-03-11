@@ -9,12 +9,15 @@ namespace NePlus
     {
         public Engine Engine;
 
+        public bool Disposed { get; private set; }
+
         // this is the component's draw order
         int drawOrder;
 
         public Component(Engine engine)
         {
             Engine = engine;
+            Disposed = false;
             drawOrder = 0;
         }
 
@@ -42,6 +45,7 @@ namespace NePlus
         public virtual void Dispose(bool disposing)
         {
             Engine.RemoveComponent(this);
+            Disposed = true;
         }
     }
 }

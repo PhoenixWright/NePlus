@@ -83,6 +83,11 @@ namespace NePlus.GameObjects.LightObjects
             LightingComponent.Light.Position = Position;
         }
 
+        public override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+
         private void CreateLightComponent(Vector2 position, float fov, float angle, float range, Color color)
         {
             LightingComponent = new LightComponent(Engine, position, fov, angle, range, color);

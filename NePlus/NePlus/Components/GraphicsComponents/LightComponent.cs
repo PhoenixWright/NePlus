@@ -25,13 +25,21 @@ namespace NePlus.Components.GraphicsComponents
             Light.Angle = angle;
             Light.Color = color;
             Light.Fov = fov;
-            Light.Intensity = 1f;
+            Light.Intensity = 1.0f;
             Light.Position = position;
             Light.Range = range;
 
             Light.Texture = Engine.Lighting.PointLightTexture;
 
             Engine.Lighting.Krypton.Lights.Add(Light);
+        }
+
+        public override void Dispose(bool disposing)
+        {
+            Engine.Lighting.Krypton.Lights.Remove(Light);
+            Light = null;
+
+            base.Dispose(disposing);
         }
     }
 }

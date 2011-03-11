@@ -15,6 +15,7 @@ namespace NePlus
             PlayOnce,
             Repeat
         }
+
         public enum Directions
         {
             Up,

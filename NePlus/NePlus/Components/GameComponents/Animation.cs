@@ -27,9 +27,12 @@ namespace NePlus.Components.GameComponents
         // state information
         private int currentFrame;
         float totalElapsedTime;
+        public bool Playing { get; private set; }
 
         public float Angle { get; set; }
         public Vector2 Position { get; set; }
+        public float Speed { get; set; }
+        public SpriteEffects SpriteEffect { get; set; }
 
         /// <summary>
         /// Constructs an animation from information about the spritesheet.
@@ -60,6 +63,12 @@ namespace NePlus.Components.GameComponents
             spriteOrigin = new Vector2(frameWidth / 2, frameHeight / 2);
 
             frames = new List<Rectangle>();
+
+            this.Speed = 1.0f;
+            SpriteEffect = SpriteEffects.None;
+
+            // defaults to not playing
+            Playing = false;
 
             engine.AddComponent(this);
         }
@@ -94,36 +103,42 @@ namespace NePlus.Components.GameComponents
         {
             base.Update(gameTime);
 
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            totalElapsedTime += elapsed;
-
-            if (totalElapsedTime > timePerFrame)
+            if (Playing)
             {
-                ++currentFrame;
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                totalElapsedTime += elapsed;
 
-                // check to see if we're done with a oneshot animation
-                if (type == Global.Animations.PlayOnce)
+                if (totalElapsedTime > timePerFrame * (1.0 / Speed))
                 {
-                    if (currentFrame == frameCount)
+                    ++currentFrame;
+
+                    // check to see if we're done with a oneshot animation
+                    if (type == Global.Animations.PlayOnce)
                     {
-                        // get rid of the animation object
-                        Dispose(true);
-                        return;
+                        if (currentFrame == frameCount)
+                        {
+                            // get rid of the animation object
+                            Dispose(true);
+                            return;
+                        }
                     }
+
+                    currentFrame = currentFrame % frameCount;
+
+                    // reset the total elapsed time
+                    totalElapsedTime -= timePerFrame;
                 }
-
-                currentFrame = currentFrame % frameCount;
-
-                // reset the total elapsed time
-                totalElapsedTime -= timePerFrame;
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-            Engine.SpriteBatch.Draw(spriteSheet, Position, frames[currentFrame], Color.White, Angle, spriteOrigin, 1.0f, SpriteEffects.None, 1.0f);
-            Engine.SpriteBatch.End();
+            if (Playing)
+            {
+                Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
+                Engine.SpriteBatch.Draw(spriteSheet, Position, frames[currentFrame], Color.White, Angle, spriteOrigin, 1.0f, SpriteEffect, 1.0f);
+                Engine.SpriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }
@@ -131,6 +146,19 @@ namespace NePlus.Components.GameComponents
         public override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+        }
+
+        public void Play()
+        {
+            Playing = true;
+        }
+
+        public void Stop()
+        {
+            Playing = false;
+
+            totalElapsedTime = 0.0f;
+            currentFrame = 0;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace NePlus.GameObjects.Enemies
             : base(engine, position, shape)
         {
             animation = new Animation(engine, @"Characters\FlickeringCircle", 64, 64, 1, 2, 2, 15, Global.Animations.Repeat);
+            animation.Play();
 
             engine.AddComponent(this);
         }

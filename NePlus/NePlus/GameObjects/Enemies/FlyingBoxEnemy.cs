@@ -27,6 +27,7 @@ namespace NePlus.GameObjects.Enemies
         {
             animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9, Global.Animations.Repeat);
             animation.DrawOrder = int.MaxValue - 1;
+            animation.Play();
 
             attacking = false;
 
