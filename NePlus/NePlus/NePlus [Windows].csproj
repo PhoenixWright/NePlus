@@ -129,7 +129,6 @@
     <Compile Include="Component.cs" />
     <Compile Include="Components\GameComponents\Animation.cs" />
     <Compile Include="Components\GameComponents\Sprite.cs" />
-    <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />
@@ -153,6 +152,7 @@
     <Compile Include="GameObjects\Enemies\FlyingBoxEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs" />
     <Compile Include="GameObjects\Level.cs" />
+    <Compile Include="GameObjects\LightObjects\EffectLight.cs" />
     <Compile Include="GameObjects\LightObjects\GravityLight.cs" />
     <Compile Include="GameObjects\LightObjects\Light.cs" />
     <Compile Include="GameObjects\LightObjects\NullLight.cs" />

@@ -17,7 +17,7 @@ using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects.LightObjects
 {
-    public class GravityLight : Light
+    public class GravityLight : EffectLight
     {
         // components
         private ParticleEffectComponent particleEffectComponent;
@@ -25,7 +25,8 @@ namespace NePlus.GameObjects.LightObjects
         public float GravityValue { get; private set; }
         public Vector2 GravityVector { get; protected set; }
 
-        public GravityLight(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motionType, float gravityValue) : base(engine, position, fov, angle, range, color, motionType)
+        public GravityLight(Engine engine, float gravityValue)
+            : base(engine)
         {
             particleEffectComponent = new ParticleEffectComponent(engine, "BeamMeUp", Position);
 

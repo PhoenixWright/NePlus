@@ -5,8 +5,8 @@ using System.Text;
 
 namespace NePlus.GameObjects.LightObjects
 {
-    public class VelocityLight
-    {
+    //public class VelocityLight : EffectLight
+    //{
 
-    }
+    //}
 }

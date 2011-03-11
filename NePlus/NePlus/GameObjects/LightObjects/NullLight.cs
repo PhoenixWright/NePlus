@@ -13,18 +13,19 @@ using NePlus.ScreenManagement;
 
 namespace NePlus.GameObjects.LightObjects
 {
-    class NullLight : Light
+    class NullLight : EffectLight
     {
-        List<Light> WorldLights;
+        List<EffectLight> WorldLights;
 
-        public NullLight(Engine engine, Vector2 position, float fov, float angle, float range, Color color, string motionType, List<Light> worldLights) : base(engine, position, fov, angle, range, color, motionType)
+        public NullLight(Engine engine, List<EffectLight> worldLights)
+            : base(engine)
         {
             WorldLights = worldLights;
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (Light light in WorldLights)
+            foreach (EffectLight light in WorldLights)
             {
                 if (light == this)
                 {
@@ -55,7 +56,7 @@ namespace NePlus.GameObjects.LightObjects
 
             if (EffectActive)
             {
-                foreach (Light light in AffectedLights)
+                foreach (EffectLight light in AffectedLights)
                 {
                     light.EffectActive = false;
                     light.IsOn = false;

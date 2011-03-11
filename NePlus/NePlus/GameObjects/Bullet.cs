@@ -4,8 +4,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 
 using NePlus.Components.GameComponents;
-using NePlus.Components.GraphicsComponents;
 using NePlus.Components.PhysicsComponents;
+
+using NePlus.GameObjects.LightObjects;
 
 namespace NePlus.GameObjects
 {
@@ -13,7 +14,7 @@ namespace NePlus.GameObjects
     {
         BulletPhysicsComponent bulletPhysicsComponent;
         Sprite bulletSprite;
-        LightComponent light;
+        Light light;
 
         public Bullet(Engine engine, Vector2 position, Vector2 direction, float angle, Global.CollisionCategories category)
             : base(engine)
@@ -22,8 +23,13 @@ namespace NePlus.GameObjects
             bulletPhysicsComponent.MainFixture.OnCollision += BulletOnCollision;
 
             bulletSprite = new Sprite(engine, @"Miscellaneous\RedBullet");
-            light = new LightComponent(engine, bulletPhysicsComponent.Position, MathHelper.TwoPi, 0, 200, Color.Red);
-            light.Light.Intensity = 0.8f;
+
+            light = new Light(engine);
+            light.Color = Color.Red;
+            light.Fov = MathHelper.TwoPi;
+            light.Intensity = 0.8f;
+            light.Position = bulletPhysicsComponent.Position;
+            light.Range = 200;
 
             switch (category)
             {
@@ -41,7 +47,7 @@ namespace NePlus.GameObjects
         public override void Update(GameTime gameTime)
         {
             bulletSprite.Position = bulletPhysicsComponent.Position;
-            light.Light.Position = bulletPhysicsComponent.Position;
+            light.Position = bulletPhysicsComponent.Position;
 
             // if the bullets aren't in view anymore then get rid of them
             if (!Engine.Camera.VisibleArea.Contains((int)bulletPhysicsComponent.Position.X, (int)bulletPhysicsComponent.Position.Y))

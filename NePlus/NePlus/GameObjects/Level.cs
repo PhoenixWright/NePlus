@@ -27,7 +27,7 @@ namespace NePlus.GameObjects
     public class Level : Component
     {
         public List<Enemy> Enemies { get; private set; }
-        public List<Light> Lights { get; private set; }
+        public List<EffectLight> Lights { get; private set; }
 
         private string mapFilePath;
         private Map map;
@@ -42,7 +42,7 @@ namespace NePlus.GameObjects
         {
             mapFilePath = mapPath;
             Enemies = new List<Enemy>();
-            Lights = new List<Light>();
+            Lights = new List<EffectLight>();
             levelParticleEffects = new List<ParticleEffectComponent>();
 
             DrawOrder = int.MaxValue - 1;
@@ -306,11 +306,29 @@ namespace NePlus.GameObjects
                     }
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    Lights.Add(new GravityLight(Engine, position, lightFovValue, lightAngleValue, lightRangeValue, lightColor, lightMotion.RawValue, gravityValue));
+                    EffectLight gravityLight = new GravityLight(Engine, gravityValue);
+                    gravityLight.Angle = lightAngleValue;
+                    gravityLight.Color = lightColor;
+                    gravityLight.Fov = lightFovValue;
+                    gravityLight.Intensity = 1.0f;
+                    gravityLight.Position = position;
+                    gravityLight.Range = lightRangeValue;
+                    gravityLight.Activate( lightMotion.RawValue);
+
+                    Lights.Add(gravityLight);
                     break;
                     
                 case "Null":
-                    Lights.Add(new NullLight(Engine, position, lightFovValue, lightAngleValue, lightRangeValue, lightColor, lightMotion.RawValue, Lights));
+                    EffectLight nullLight = new NullLight(Engine, Lights);
+                    nullLight.Angle = lightAngleValue;
+                    nullLight.Color = lightColor;
+                    nullLight.Fov = lightFovValue;
+                    nullLight.Intensity = 1.0f;
+                    nullLight.Position = position;
+                    nullLight.Range = lightRangeValue;
+                    nullLight.Activate(lightMotion.RawValue);
+
+                    Lights.Add(nullLight);
                     break;
 
                 default:

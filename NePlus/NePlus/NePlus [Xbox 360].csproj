@@ -70,7 +70,6 @@
     <Compile Include="Components\GameComponents\Animation.cs" />
     <Compile Include="Components\GameComponents\RotatedRectangle.cs" />
     <Compile Include="Components\GameComponents\Sprite.cs" />
-    <Compile Include="Components\GraphicsComponents\LightComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
     <Compile Include="Components\PhysicsComponents\BulletPhysicsComponent.cs" />
@@ -91,6 +90,7 @@
     <Compile Include="GameObjects\Level.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameObjects\LightObjects\EffectLight.cs" />
     <Compile Include="GameObjects\LightObjects\GravityLight.cs">
       <SubType>Code</SubType>
     </Compile>

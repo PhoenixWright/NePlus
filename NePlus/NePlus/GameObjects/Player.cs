@@ -16,6 +16,7 @@ using NePlus.Components.GameComponents;
 using NePlus.Components.GraphicsComponents;
 using NePlus.Components.PhysicsComponents;
 using NePlus.GameComponents;
+using NePlus.GameObjects.LightObjects;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
 
@@ -24,7 +25,7 @@ namespace NePlus.GameObjects
     public class Player : Component
     {
         // components
-        public LightComponent LightComponent { get; private set; }
+        public Light light { get; private set; }
         public PlayerPhysicsComponent PhysicsComponent { get; private set; }
 
         // variables/state management
@@ -66,7 +67,11 @@ namespace NePlus.GameObjects
 
             Position = position;
 
-            LightComponent = new LightComponent(engine, position, MathHelper.TwoPi, 0, 250, Color.White);
+            light = new Light(engine);
+            light.Color = Color.White;
+            light.Fov = MathHelper.TwoPi;
+            light.Position = position;
+            light.Range = 250;
             PhysicsComponent = new PlayerPhysicsComponent(Engine, position);
 
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
@@ -97,7 +102,7 @@ namespace NePlus.GameObjects
             }
 
             Position = PhysicsComponent.Position;
-            LightComponent.Light.Position = Position + new Vector2(0, 25);
+            light.Position = Position + new Vector2(0, 25);
 
             if (OnGround)
             {
@@ -170,6 +175,11 @@ namespace NePlus.GameObjects
                     PhysicsComponent.StopMoving();
                     Walking = false;
                 }
+            }
+            else
+            {
+                PhysicsComponent.StopMoving();
+                Walking = false;
             }
 
             UpdateAllArt();
