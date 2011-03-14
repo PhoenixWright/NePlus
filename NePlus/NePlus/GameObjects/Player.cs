@@ -260,6 +260,7 @@ namespace NePlus.GameObjects
                     Bullet bullet = new Bullet(Engine, bulletPosition, new Vector2(bulletX, bulletY), bulletAngle, Global.CollisionCategories.PlayerBullet);
                     bullets.Add(bullet);
                     bulletTimer = 0.0f;
+                    Engine.Audio.PlaySound("LazerShot");
                 }
                 else
                 {

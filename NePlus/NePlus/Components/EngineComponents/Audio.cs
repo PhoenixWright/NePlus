@@ -39,6 +39,20 @@ namespace NePlus.Components.EngineComponents
 
         public override void Update(GameTime gameTime)
         {
+            int idx = 0;
+            while (idx < cues.Count)
+            {
+                if (cues[idx].IsStopped)
+                {
+                    cues[idx].Dispose();
+                    cues.RemoveAt(idx);
+
+                    continue;
+                }
+
+                ++idx;
+            }
+
             if (paused)
             {
                 // resume all cues

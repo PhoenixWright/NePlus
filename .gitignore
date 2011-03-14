@@ -6,5 +6,6 @@
 *.xgs
 *.xsb
 *.xwb
+NePlus/NePlusContent/Audio/buildlog.txt
 bin
 obj
