@@ -31,6 +31,14 @@ namespace NePlus.Components.GameComponents
 
         public float Angle { get; set; }
         public Vector2 Position { get; set; }
+        public float Progress
+        {
+            get
+            {
+                return (float)currentFrame / (float)frameCount;
+            }
+        }
+        public float Scale { get; set; }
         public float Speed { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
 
@@ -64,6 +72,7 @@ namespace NePlus.Components.GameComponents
 
             frames = new List<Rectangle>();
 
+            this.Scale = 1.0f;
             this.Speed = 1.0f;
             SpriteEffect = SpriteEffects.None;
 
@@ -119,6 +128,7 @@ namespace NePlus.Components.GameComponents
                         {
                             // get rid of the animation object
                             Dispose(true);
+                            Playing = false;
                             return;
                         }
                     }
@@ -136,7 +146,7 @@ namespace NePlus.Components.GameComponents
             if (Playing)
             {
                 Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
-                Engine.SpriteBatch.Draw(spriteSheet, Position, frames[currentFrame], Color.White, Angle, spriteOrigin, 1.0f, SpriteEffect, 1.0f);
+                Engine.SpriteBatch.Draw(spriteSheet, Position, frames[currentFrame], Color.White, Angle, spriteOrigin, Scale, SpriteEffect, 1.0f);
                 Engine.SpriteBatch.End();
             }
 

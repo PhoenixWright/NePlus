@@ -31,11 +31,25 @@ namespace NePlus.GameObjects.Enemies
 
             attacking = false;
 
+            enemySound = Engine.Audio.GetCue("WeirdHoverSound");
+
             engine.AddComponent(this);
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (Health <= 0)
+            {
+                Dispose(true);
+                return;
+            }
+
+            if (!enemySound.IsPlaying && !enemySound.IsDisposed)
+            {
+                enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
+                enemySound.Play();
+            }
+
             if (timeSinceLastAttack > timeBetweenAttacks)
             {
                 attacking = true;
@@ -105,6 +119,11 @@ namespace NePlus.GameObjects.Enemies
                 }
 
                 enemyPhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(x, y));
+            }
+
+            if (!enemySound.IsDisposed)
+            {
+                enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
             }
 
             base.Update(gameTime);

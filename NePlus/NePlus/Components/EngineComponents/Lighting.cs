@@ -16,8 +16,7 @@ namespace NePlus.Components.EngineComponents
         public Lighting(Engine engine) : base(engine)
         {
             Krypton = new KryptonEngine(engine, @"Krypton\KryptonEffect");
-            engine.AddComponent(this);
-
+            
             Krypton.Bluriness = 3;
             Krypton.CullMode = CullMode.None;
             Krypton.Matrix = Engine.Camera.CameraMatrix;
@@ -25,7 +24,8 @@ namespace NePlus.Components.EngineComponents
 
             PointLightTexture = LightTextureBuilder.CreatePointLight(Engine.Video.GraphicsDevice, 512);
 
-            this.DrawOrder = int.MaxValue / 2;
+            this.DrawOrder = (int)Global.Layers.Lighting;
+            engine.AddComponent(this);
         }
 
         public override void Initialize()

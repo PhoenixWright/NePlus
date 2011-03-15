@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
@@ -10,6 +11,10 @@ namespace NePlus.GameObjects
 {
     public class Enemy : Component
     {
+        // audio
+        protected AudioEmitter audioEmitter;
+        protected Cue enemySound;
+
         // components
         protected Animation animation;
         protected EnemyPhysicsComponent enemyPhysicsComponent;
@@ -19,6 +24,8 @@ namespace NePlus.GameObjects
         public Enemy(Engine engine, Vector2 position, Global.Shapes shape)
             : base(engine)
         {
+            audioEmitter = new AudioEmitter();
+
             enemyPhysicsComponent = new EnemyPhysicsComponent(engine, position, shape);
             enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
             enemyPhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
@@ -31,20 +38,10 @@ namespace NePlus.GameObjects
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            audioEmitter.Position = new Vector3(enemyPhysicsComponent.Position, 0);
+
             if (Health <= 0)
             {
-                // enemy died, stop playing standard animation
-                if (animation != null)
-                {
-                    animation.Dispose(true);
-                    animation = null;
-                }
-
-                enemyPhysicsComponent.Dispose(true);
-                enemyPhysicsComponent = null;
-
-                // start playing a death animation
-                // if deathAnimation == done
                 Dispose(true);
             }
 
@@ -78,6 +75,22 @@ namespace NePlus.GameObjects
 
         public override void Dispose(bool disposing)
         {
+            if (enemySound != null)
+            {
+                enemySound.Stop(AudioStopOptions.Immediate);
+                enemySound.Dispose();
+                enemySound = null;
+            }
+
+            if (animation != null)
+            {
+                animation.Dispose(true);
+                animation = null;
+            }
+
+            enemyPhysicsComponent.Dispose(true);
+            enemyPhysicsComponent = null;
+
             base.Dispose(disposing);
         }
 

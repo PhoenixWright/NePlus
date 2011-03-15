@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,6 +28,9 @@ namespace NePlus.GameObjects
         // components
         public Light light { get; private set; }
         public PlayerPhysicsComponent PhysicsComponent { get; private set; }
+
+        // audio listener
+        public AudioListener AudioListener { get; private set; }
 
         // variables/state management
         private Vector2 airMovementForce;
@@ -57,6 +61,8 @@ namespace NePlus.GameObjects
         public Player(Engine engine, Vector2 position)
             : base(engine)
         {
+            DrawOrder = (int)Global.Layers.Player;
+
             airMovementForce = new Vector2(1.0f, 0.0f);
             airMovementWindow = 3000.0d;
             bullets = new List<Bullet>();
@@ -67,11 +73,16 @@ namespace NePlus.GameObjects
 
             Position = position;
 
+            AudioListener = new AudioListener();
+            AudioListener.Position = new Vector3(Position, 0);
+
             light = new Light(engine);
             light.Color = Color.White;
             light.Fov = MathHelper.TwoPi;
             light.Position = position;
             light.Range = 250;
+            light.ShadowType = Krypton.Lights.ShadowType.Illuminated;
+
             PhysicsComponent = new PlayerPhysicsComponent(Engine, position);
 
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
@@ -79,11 +90,17 @@ namespace NePlus.GameObjects
 
             // load visuals
             playerArmShootingRight = new Sprite(engine, @"Characters\Player\PlayerArmShootingRight");
+            playerArmShootingRight.DrawOrder = DrawOrder;
             playerStandingRight = new Sprite(engine, @"Characters\Player\PlayerStandingRight");
+            playerStandingRight.DrawOrder = DrawOrder;
             playerCrouchingRight = new Sprite(engine, @"Characters\Player\PlayerCrouchingRight");
+            playerCrouchingRight.DrawOrder = DrawOrder;
             playerJumpingRight = new Sprite(engine, @"Characters\Player\PlayerJumpingRight");
+            playerJumpingRight.DrawOrder = DrawOrder;
             playerFallingRight = new Sprite(engine, @"Characters\Player\PlayerFallingRight");
+            playerFallingRight.DrawOrder = DrawOrder;
             playerWalkingRight = new Animation(engine, @"Characters\Player\PlayerWalkingRight", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
+            playerWalkingRight.DrawOrder = DrawOrder;
 
             Engine.AddComponent(this);
         }
@@ -103,6 +120,7 @@ namespace NePlus.GameObjects
 
             Position = PhysicsComponent.Position;
             light.Position = Position + new Vector2(0, 25);
+            AudioListener.Position = new Vector3(Position, 0);
 
             if (OnGround)
             {
@@ -260,7 +278,8 @@ namespace NePlus.GameObjects
                     Bullet bullet = new Bullet(Engine, bulletPosition, new Vector2(bulletX, bulletY), bulletAngle, Global.CollisionCategories.PlayerBullet);
                     bullets.Add(bullet);
                     bulletTimer = 0.0f;
-                    Engine.Audio.PlaySound("LazerShot");
+                    Cue lazer = Engine.Audio.GetCue("LazerShot");
+                    lazer.Play();
                 }
                 else
                 {

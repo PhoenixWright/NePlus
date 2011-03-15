@@ -17,8 +17,8 @@ Global Settings
     Header File = NePlusAudio.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 3390653855;
-    Last Modified High = 30139022;
+    Last Modified Low = 30139103;
+    Last Modified High = 2432828593;
 
     Category
     {
@@ -210,10 +210,43 @@ Global Settings
         Reserved = 1;
         Read Only = 0;
         Time = 0;
-        Value = 0.000000;
-        Initial Value = 0.000000;
-        Min = 0.000000;
-        Max = 1000000.000000;
+        Value = 1.000000;
+        Initial Value = 1.000000;
+        Min = 1.000000;
+        Max = 3000.000000;
+    }
+
+    RPC
+    {
+        Name = Attenuation RPC;
+
+        RPC Curve
+        {
+            Name = Sound::5a0386e2-5c10-4c53-9920-994075346ee4;
+            Property = 0;
+            Sound = 1;
+            Line Color = 4290967963;
+            Viewable = 1;
+
+            Variable Entry
+            {
+                Name = Distance;
+            }
+
+            RPC Point
+            {
+                X = 1.000000;
+                Y = 600.000000;
+                Curve = 0;
+            }
+
+            RPC Point
+            {
+                X = 3000.000000;
+                Y = -9600.000000;
+                Curve = 0;
+            }
+        }
     }
 }
 
@@ -228,10 +261,12 @@ Wave Bank
     Compression Preset Name = <none>;
     Xbox Bank Last Modified Low = 0;
     Xbox Bank Last Modified High = 0;
-    PC Bank Last Modified Low = 2621618403;
-    PC Bank Last Modified High = 30139029;
-    Bank Last Revised Low = 2503861668;
-    Bank Last Revised High = 30139029;
+    PC Bank Last Modified Low = 2433098608;
+    PC Bank Last Modified High = 30139103;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
+    Bank Last Revised Low = 2258138802;
+    Bank Last Revised High = 30139103;
 
     Wave
     {
@@ -416,6 +451,29 @@ Wave Bank
             Last Modified High = 30139029;
         }
     }
+
+    Wave
+    {
+        Name = WeirdHoverSound;
+        File = Enemies\WeirdHoverSound.wav;
+        Build Settings Last Modified Low = 2202205603;
+        Build Settings Last Modified High = 30139103;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 11025;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 639452;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 1968262468;
+            Last Modified High = 30139103;
+        }
+    }
 }
 
 Sound Bank
@@ -425,8 +483,6 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 2624678578;
-    Bank Last Modified High = 30139029;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
@@ -637,6 +693,7 @@ Sound Bank
 
             Play Wave Event
             {
+                Loop Count = 255;
                 Break Loop = 0;
                 Use Speaker Position = 0;
                 Use Center Speaker = 1;
@@ -771,6 +828,11 @@ Sound Bank
             Name = Default;
         }
 
+        RPC Entry
+        {
+            RPC Name = Attenuation RPC;
+        }
+
         Track
         {
             Volume = 0;
@@ -778,6 +840,7 @@ Sound Bank
 
             Play Wave Event
             {
+                Loop Count = 255;
                 Break Loop = 0;
                 Use Speaker Position = 0;
                 Use Center Speaker = 1;
@@ -799,6 +862,59 @@ Sound Bank
                     Bank Index = 0;
                     Entry Name = EnterTheVoid;
                     Entry Index = 7;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+        }
+    }
+
+    Sound
+    {
+        Name = WeirdHoverSound;
+        Volume = -1200;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        RPC Entry
+        {
+            RPC Name = Attenuation RPC;
+        }
+
+        Track
+        {
+            Volume = 0;
+            Use Filter = 0;
+
+            Play Wave Event
+            {
+                Loop Count = 255;
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaker Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = Wave Bank;
+                    Bank Index = 0;
+                    Entry Name = WeirdHoverSound;
+                    Entry Index = 8;
                     Weight = 255;
                     Weight Min = 0;
                 }
@@ -881,6 +997,26 @@ Sound Bank
         {
             Name = EnterTheVoid;
             Index = 7;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = WeirdHoverSound;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = WeirdHoverSound;
+            Index = 8;
             Weight Min = 0;
             Weight Max = 255;
         }

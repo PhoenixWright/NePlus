@@ -16,13 +16,6 @@ namespace NePlus
             Repeat
         }
 
-        public enum Directions
-        {
-            Up,
-            Down,
-            Left,
-            Right
-        }
         public enum CollisionCategories
         {
             Player = Category.Cat1,
@@ -32,6 +25,23 @@ namespace NePlus
             Light = Category.Cat5,
             Structure = Category.Cat6
         }
+
+        public enum Directions
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+
+        public enum Layers
+        {
+            Background,
+            Player,
+            Projectiles,
+            Lighting
+        }
+
         public enum Shapes
         {
             Circle,

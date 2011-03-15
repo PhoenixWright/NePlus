@@ -104,6 +104,17 @@ namespace NePlus.GameObjects.LightObjects
                 light.Range = value;
             }
         }
+        public ShadowType ShadowType
+        {
+            get
+            {
+                return light.ShadowType;
+            }
+            set
+            {
+                light.ShadowType = value;
+            }
+        }
 
         public Light(Engine engine)
             : base(engine)

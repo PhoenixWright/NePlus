@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 using FarseerPhysics.Common;
@@ -38,14 +39,15 @@ namespace NePlus.GameObjects
         /// </summary>
         /// <param name="game">Game reference.</param>
         /// <param name="mapPath">The relative path to the map.</param>
-        public Level(Engine engine, string mapPath) : base(engine)
+        public Level(Engine engine, string mapPath)
+            : base(engine)
         {
             mapFilePath = mapPath;
             Enemies = new List<Enemy>();
             Lights = new List<EffectLight>();
             levelParticleEffects = new List<ParticleEffectComponent>();
 
-            DrawOrder = int.MaxValue - 1;
+            DrawOrder = (int)Global.Layers.Background;
 
             Engine.AddComponent(this);
         }
@@ -60,7 +62,8 @@ namespace NePlus.GameObjects
                 switch (property.Name)
                 {
                     case "BackgroundTrack":
-                        Engine.Audio.PlaySound("Rain");
+                        Cue backgroundTrack = Engine.Audio.GetCue("Rain");
+                        backgroundTrack.Play();
                         break;
                     case "ParticleEffect":
                         CreateParticleEffect(property.RawValue);
@@ -140,7 +143,7 @@ namespace NePlus.GameObjects
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            Rectangle worldArea;
+            Rectangle worldArea = Engine.Camera.VisibleArea;
 
             int minX;
             int maxX;
@@ -157,26 +160,8 @@ namespace NePlus.GameObjects
 
                 TileLayer tileLayer = layer as TileLayer;
 
-                bool isParallax;
-                float parallaxValue = 1.0f;
-
                 if (!tileLayer.Visible)
                     continue;
-
-                Property isParralax;
-                if (tileLayer.Properties.TryGetValue("IsParallax", out isParralax) == true)
-                {
-                    isParallax = bool.Parse(isParralax.RawValue);
-                    parallaxValue = float.Parse(tileLayer.Properties["ParallaxValue"].RawValue);
-
-                    worldArea = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
-                }
-                else
-                {
-                    isParallax = false;
-
-                    worldArea = Engine.Camera.VisibleArea;
-                }
 
                 // figure out the min and max tile indices to draw
                 minX = Math.Max((int)Math.Floor((float)worldArea.Left / map.TileWidth), 0);
@@ -184,9 +169,6 @@ namespace NePlus.GameObjects
 
                 minY = Math.Max((int)Math.Floor((float)worldArea.Top / map.TileHeight), 0);
                 maxY = Math.Min((int)Math.Ceiling((float)worldArea.Bottom / map.TileHeight), map.Height);
-
-                // get an int to use for including parallax value with the rectangle used below
-                int parallaxOffset = (int)(parallaxValue * Engine.Player.Position.X);
 
                 for (int x = minX; x < maxX; x++)
                 {
@@ -197,16 +179,7 @@ namespace NePlus.GameObjects
                         if (tile == null)
                             continue;
 
-                        Rectangle r;
-
-                        if (isParallax)
-                        {
-                            r = new Rectangle(x * map.TileWidth + parallaxOffset, y * map.TileHeight - tile.Source.Height + map.TileHeight, tile.Source.Width, tile.Source.Height);
-                        }
-                        else
-                        {
-                            r = new Rectangle(x * map.TileWidth, y * map.TileHeight - tile.Source.Height + map.TileHeight, tile.Source.Width, tile.Source.Height);
-                        }
+                        Rectangle r = new Rectangle(x * map.TileWidth, y * map.TileHeight - tile.Source.Height + map.TileHeight, tile.Source.Width, tile.Source.Height);
 
                         tile.DrawOrthographic(Engine.SpriteBatch, r, tileLayer.Opacity, tileLayer.LayerDepth);
                     }

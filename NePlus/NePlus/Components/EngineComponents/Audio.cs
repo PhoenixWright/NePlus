@@ -28,10 +28,9 @@ namespace NePlus.Components.EngineComponents
             Engine.AddComponent(this);
         }
 
-        public Cue PlaySound(string sound)
+        public Cue GetCue(string sound)
         {
             Cue cue = soundBank.GetCue(sound);
-            cue.Play();
             cues.Add(cue);
 
             return cue;
@@ -58,7 +57,10 @@ namespace NePlus.Components.EngineComponents
                 // resume all cues
                 foreach (Cue cue in cues)
                 {
-                    cue.Resume();
+                    if (cue.IsPaused)
+                    {
+                        cue.Resume();
+                    }
                 }
             }
 
@@ -69,7 +71,10 @@ namespace NePlus.Components.EngineComponents
         {
             foreach (Cue cue in cues)
             {
-                cue.Pause();
+                if (cue.IsPlaying)
+                {
+                    cue.Pause();
+                }
             }
 
             paused = true;
