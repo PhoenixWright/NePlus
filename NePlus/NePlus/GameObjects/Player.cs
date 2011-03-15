@@ -434,22 +434,25 @@ namespace NePlus.GameObjects
 
         private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            Vector2 down = new Vector2(0.0f, 1.0f);
-
-            Manifold manifold;
-            contact.GetManifold(out manifold);
-
-            float angle = Math.Abs(Vector2.Dot(manifold.LocalNormal, down));
-
-            if (angle > 0.99f)
+            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
             {
-                OnGround = true;
-                groundCache.Add(fixtureB);
-            }
+                Vector2 down = new Vector2(0.0f, 1.0f);
 
-            if (angle < 0.15f && angle > -0.15f)
-            {
-                OnWall = true;
+                Manifold manifold;
+                contact.GetManifold(out manifold);
+
+                float angle = Math.Abs(Vector2.Dot(manifold.LocalNormal, down));
+
+                if (angle > 0.99f)
+                {
+                    OnGround = true;
+                    groundCache.Add(fixtureB);
+                }
+
+                if (angle < 0.15f && angle > -0.15f)
+                {
+                    OnWall = true;
+                }
             }
 
             return true;
@@ -457,23 +460,26 @@ namespace NePlus.GameObjects
 
         private void PlayerOnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            if (groundCache.Contains(fixtureB))
+            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
             {
-                groundCache.Remove(fixtureB);
-
-                if (groundCache.Count == 0)
+                if (groundCache.Contains(fixtureB))
                 {
-                    OnGround = false;
+                    groundCache.Remove(fixtureB);
+
+                    if (groundCache.Count == 0)
+                    {
+                        OnGround = false;
+                    }
                 }
-            }
 
-            if (wallCache.Contains(fixtureB))
-            {
-                wallCache.Remove(fixtureB);
-
-                if (wallCache.Count == 0)
+                if (wallCache.Contains(fixtureB))
                 {
-                    OnWall = false;
+                    wallCache.Remove(fixtureB);
+
+                    if (wallCache.Count == 0)
+                    {
+                        OnWall = false;
+                    }
                 }
             }
         }

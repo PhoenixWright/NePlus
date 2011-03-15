@@ -135,6 +135,7 @@ namespace NePlus.GameObjects.LightObjects
         public bool OnFixtureCollision(Fixture a, Fixture b, Contact c)
         {
             AffectedFixtures.Add(b);
+            OnLightEntry(b);
 
             return true;
         }
@@ -142,6 +143,15 @@ namespace NePlus.GameObjects.LightObjects
         public void AfterFixtureCollision(Fixture a, Fixture b)
         {
             AffectedFixtures.Remove(b);
+            OnLightExit(b);
+        }
+
+        protected virtual void OnLightEntry(Fixture fixture)
+        {
+        }
+
+        protected virtual void OnLightExit(Fixture fixture)
+        {
         }
     }
 }

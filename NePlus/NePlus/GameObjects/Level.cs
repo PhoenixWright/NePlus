@@ -268,6 +268,8 @@ namespace NePlus.GameObjects
                 throw new Exception("Failed to retrieve light type from " + lightObject.Name + " in map " + mapFilePath);
             }
 
+            EffectLight effectLight;
+
             switch (lightType.RawValue)
             {
                 case "Gravity":
@@ -279,34 +281,38 @@ namespace NePlus.GameObjects
                     }
                     float gravityValue = float.Parse(gravityValueProperty.RawValue);
 
-                    EffectLight gravityLight = new GravityLight(Engine, gravityValue);
-                    gravityLight.Angle = lightAngleValue;
-                    gravityLight.Color = lightColor;
-                    gravityLight.Fov = lightFovValue;
-                    gravityLight.Intensity = 1.0f;
-                    gravityLight.Position = position;
-                    gravityLight.Range = lightRangeValue;
-                    gravityLight.Activate( lightMotion.RawValue);
-
-                    Lights.Add(gravityLight);
+                    effectLight = new GravityLight(Engine, gravityValue);
                     break;
-                    
-                case "Null":
-                    EffectLight nullLight = new NullLight(Engine, Lights);
-                    nullLight.Angle = lightAngleValue;
-                    nullLight.Color = lightColor;
-                    nullLight.Fov = lightFovValue;
-                    nullLight.Intensity = 1.0f;
-                    nullLight.Position = position;
-                    nullLight.Range = lightRangeValue;
-                    nullLight.Activate(lightMotion.RawValue);
 
-                    Lights.Add(nullLight);
+                case "Null":
+                    effectLight = new NullLight(Engine, Lights);
+                    break;
+
+                case "Velocity":
+                    // get velocity value
+                    Property velocityValueProperty;
+                    if (lightObject.Properties.TryGetValue("VelocityValue", out velocityValueProperty) == false)
+                    {
+                        throw new Exception("Failed to retrieve velocity value from " + lightObject.Name + " in map " + mapFilePath);
+                    }
+                    float velocityValue = float.Parse(velocityValueProperty.RawValue);
+
+                    effectLight = new VelocityLight(Engine, velocityValue);
                     break;
 
                 default:
                     throw new Exception("Failed to instantiate light with type of " + lightObject.Name + " in map " + mapFilePath);
             }
+
+            effectLight.Angle = lightAngleValue;
+            effectLight.Color = lightColor;
+            effectLight.Fov = lightFovValue;
+            effectLight.Intensity = 1.0f;
+            effectLight.Position = position;
+            effectLight.Range = lightRangeValue;
+            effectLight.Activate( lightMotion.RawValue);
+
+            Lights.Add(effectLight);
         }
 
         public void CreateParticleEffect(string particleEffectName)
