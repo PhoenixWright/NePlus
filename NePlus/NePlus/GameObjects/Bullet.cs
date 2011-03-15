@@ -17,8 +17,8 @@ namespace NePlus.GameObjects
         private Light light;
 
         private bool collided;
-        Animation flashAnimation;
-        Light flashLight;
+        private Animation flashAnimation;
+        private Light flashLight;
 
         public Bullet(Engine engine, Vector2 position, Vector2 direction, float angle, Global.CollisionCategories category)
             : base(engine)
@@ -30,6 +30,7 @@ namespace NePlus.GameObjects
 
             bulletSprite = new Sprite(engine, @"Miscellaneous\RedBullet");
             bulletSprite.DrawOrder = DrawOrder;
+            bulletSprite.Angle = angle;
 
             light = new Light(engine);
             light.Color = Color.Red;
@@ -54,7 +55,7 @@ namespace NePlus.GameObjects
             flashAnimation = new Animation(Engine, @"Miscellaneous\flash", 512, 512, 3, 3, 6, 20, Global.Animations.PlayOnce);
             flashAnimation.Scale = 0.4f;
             flashAnimation.Position = bulletPhysicsComponent.Position;
-            flashAnimation.DrawOrder = int.MaxValue - 1;
+            flashAnimation.DrawOrder = (int)Global.Layers.Projectiles;
 
             flashLight = new Light(engine);
             flashLight.Color = Color.Yellow;

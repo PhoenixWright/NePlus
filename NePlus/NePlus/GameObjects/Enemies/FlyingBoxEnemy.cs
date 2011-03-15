@@ -26,8 +26,12 @@ namespace NePlus.GameObjects.Enemies
             : base(engine, position, shape)
         {
             animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9, Global.Animations.Repeat);
-            animation.DrawOrder = int.MaxValue - 1;
+            animation.DrawOrder = (int)Global.Layers.AboveLighting;
             animation.Play();
+
+            deathAnimation = new Animation(engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
+            deathAnimation.DrawOrder = int.MaxValue - 1;
+            deathAnimation.Scale = 0.3f;
 
             attacking = false;
 
@@ -38,92 +42,89 @@ namespace NePlus.GameObjects.Enemies
 
         public override void Update(GameTime gameTime)
         {
-            if (Health <= 0)
+            if (!Dead)
             {
-                Dispose(true);
-                return;
-            }
-
-            if (!enemySound.IsPlaying && !enemySound.IsDisposed)
-            {
-                enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
-                enemySound.Play();
-            }
-
-            if (timeSinceLastAttack > timeBetweenAttacks)
-            {
-                attacking = true;
-            }
-
-            // manipulate the physics object to float around and make dives at the player
-            if (attacking)
-            {
-                // TODO: try to hit the player
-                Attack();
-            }
-            else
-            {
-                timeSinceLastAttack += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                // these are the force values to be applied to the enemy for movement
-                float x = 0;
-                float y = 0;
-
-                // move around the player
-                if (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) > minX)
+                if (!enemySound.IsPlaying && !enemySound.IsDisposed)
                 {
-                    if (enemyPhysicsComponent.Position.X > Engine.Player.Position.X)
+                    enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
+                    enemySound.Play();
+                }
+
+                if (timeSinceLastAttack > timeBetweenAttacks)
+                {
+                    attacking = true;
+                }
+
+                // manipulate the physics object to float around and make dives at the player
+                if (attacking)
+                {
+                    // TODO: try to hit the player
+                    Attack();
+                }
+                else
+                {
+                    timeSinceLastAttack += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    // these are the force values to be applied to the enemy for movement
+                    float x = 0;
+                    float y = 0;
+
+                    // move around the player
+                    if (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) > minX)
                     {
-                        // then we need to move left
-                        x = -50;
+                        if (enemyPhysicsComponent.Position.X > Engine.Player.Position.X)
+                        {
+                            // then we need to move left
+                            x = -50;
+                        }
+                        else
+                        {
+                            // move right
+                            x = 50;
+                        }
                     }
                     else
                     {
-                        // move right
-                        x = 50;
+                        // just move around randomly
+                        // could float up a bit, could not, doesn't matter
+                        int randomNumber = random.Next(0, 500);
+                        if (randomNumber < 20)
+                        {
+                            x = -random.Next(20, 40);
+                        }
+
+                        if (randomNumber > 480)
+                        {
+                            x = random.Next(20, 40);
+                        }
                     }
+
+                    // float above the player
+                    if (Math.Abs((enemyPhysicsComponent.Position.Y - Engine.Player.Position.Y)) < minY)
+                    {
+                        // absolutely must float upward
+                        if (enemyPhysicsComponent.MainFixture.Body.LinearVelocity.Y > -4.0f)
+                        {
+                            y = -random.Next(25, 50);
+                        }
+                    }
+                    else
+                    {
+                        // could float up a bit, could not, doesn't matter
+                        int randomNumber = random.Next(0, 1000);
+                        if (randomNumber < 20)
+                        {
+                            y = -random.Next(20, 40);
+                        }
+                    }
+
+                    enemyPhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(x, y));
                 }
-                else
+
+                if (!enemySound.IsDisposed)
                 {
-                    // just move around randomly
-                    // could float up a bit, could not, doesn't matter
-                    int randomNumber = random.Next(0, 500);
-                    if (randomNumber < 20)
-                    {
-                        x = -random.Next(20, 40);
-                    }
-
-                    if (randomNumber > 480)
-                    {
-                        x = random.Next(20, 40);
-                    }
+                    enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
                 }
-
-                // float above the player
-                if (Math.Abs((enemyPhysicsComponent.Position.Y - Engine.Player.Position.Y)) < minY)
-                {
-                    // absolutely must float upward
-                    if (enemyPhysicsComponent.MainFixture.Body.LinearVelocity.Y > -4.0f)
-                    {
-                        y = -random.Next(25, 50);
-                    }
-                }
-                else
-                {
-                    // could float up a bit, could not, doesn't matter
-                    int randomNumber = random.Next(0, 1000);
-                    if (randomNumber < 20)
-                    {
-                        y = -random.Next(20, 40);
-                    }
-                }
-
-                enemyPhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(x, y));
-            }
-
-            if (!enemySound.IsDisposed)
-            {
-                enemySound.Apply3D(Engine.Player.AudioListener, audioEmitter);
             }
 
             base.Update(gameTime);

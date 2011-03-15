@@ -19,7 +19,7 @@
  <tileset firstgid="403" name="Environment3" tilewidth="32" tileheight="32" spacing="1" margin="1">
   <image source="Tilesets/tankbrigade.bmp" trans="000000" width="727" height="397"/>
  </tileset>
- <layer name="Background" width="256" height="64" visible="0">
+ <layer name="Background" width="256" height="64">
   <data encoding="csv">
 547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,
 547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,547,
@@ -224,8 +224,8 @@
 </data>
  </layer>
  <objectgroup name="EnemyObjects" width="256" height="64">
-  <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="1088" y="384" width="128" height="64"/>
-  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="1440" y="672" width="128" height="64"/>
+  <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="1632" y="320" width="128" height="64"/>
+  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="3136" y="608" width="128" height="64"/>
  </objectgroup>
  <objectgroup name="CollisionObjects" width="256" height="64">
   <object name="StartWall" type="CollisionObject" x="608" y="0" width="32" height="768"/>
@@ -236,7 +236,7 @@
   <object name="InitialSpawnPoint" type="SpawnPointObject" x="736" y="576" width="96" height="96"/>
  </objectgroup>
  <objectgroup name="LightObjects" width="256" height="64">
-  <object name="GravityLight1" type="LightObject" x="1856" y="512" width="64" height="32">
+  <object name="GravityLight1" type="LightObject" x="2752" y="544" width="64" height="32">
    <properties>
     <property name="GravityValue" value="-4.0"/>
     <property name="LightAngle" value="1.6"/>
@@ -247,7 +247,7 @@
     <property name="LightType" value="Gravity"/>
    </properties>
   </object>
-  <object name="NullLight1" type="LightObject" x="1856" y="256" width="68" height="32">
+  <object name="NullLight1" type="LightObject" x="2752" y="288" width="68" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="NavajoWhite"/>
@@ -257,7 +257,7 @@
     <property name="LightType" value="Null"/>
    </properties>
   </object>
-  <object name="VelocityLight1" type="LightObject" x="1472" y="544" width="64" height="32">
+  <object name="VelocityLight1" type="LightObject" x="2176" y="544" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Green"/>
@@ -268,7 +268,7 @@
     <property name="VelocityValue" value="0.9"/>
    </properties>
   </object>
-  <object name="VelocityLight2" type="LightObject" x="1280" y="544" width="64" height="32">
+  <object name="VelocityLight2" type="LightObject" x="1760" y="544" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Green"/>

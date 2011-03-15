@@ -38,8 +38,10 @@ namespace NePlus
         {
             Background,
             Player,
+            Enemies,
             Projectiles,
-            Lighting
+            Lighting,
+            AboveLighting
         }
 
         public enum Shapes

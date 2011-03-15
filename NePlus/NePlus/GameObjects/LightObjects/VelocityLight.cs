@@ -53,13 +53,5 @@ namespace NePlus.GameObjects.LightObjects
 
             base.Update(gameTime);
         }
-
-        protected override void OnLightEntry(Fixture fixture)
-        {
-        }
-
-        protected override void OnLightExit(Fixture fixture)
-        {
-        }
     }
 }
