@@ -129,6 +129,8 @@
     <Compile Include="Component.cs" />
     <Compile Include="Components\GameComponents\Animation.cs" />
     <Compile Include="Components\GameComponents\Sprite.cs" />
+    <Compile Include="Components\GraphicsComponents\BloomComponent.cs" />
+    <Compile Include="Components\GraphicsComponents\BloomSettings.cs" />
     <Compile Include="Components\GraphicsComponents\ParticleEffectComponent.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
     <Compile Include="Components\EngineComponents\Camera.cs" />

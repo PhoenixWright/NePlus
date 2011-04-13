@@ -26,6 +26,7 @@ namespace NePlus.GameObjects
     public class Player : Component
     {
         // components
+        public BloomComponent bloomComponent;
         public Light light { get; private set; }
         public PlayerPhysicsComponent PhysicsComponent { get; private set; }
 

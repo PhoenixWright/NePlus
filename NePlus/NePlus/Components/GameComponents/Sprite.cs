@@ -11,7 +11,6 @@ namespace NePlus.Components.GameComponents
         public float Angle { get; set; }
         public Vector2 Position { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
-        public bool Visible { get; set; }
 
         public Sprite(Engine engine, string spriteFilepath)
             : base(engine)

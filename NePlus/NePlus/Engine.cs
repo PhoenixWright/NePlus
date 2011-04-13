@@ -9,6 +9,7 @@ using Krypton;
 using Krypton.Lights;
 
 using NePlus.Components.EngineComponents;
+using NePlus.Components.GraphicsComponents;
 using NePlus.GameObjects;
 using NePlus.ScreenManagement;
 using NePlus.ScreenManagement.Screens;
@@ -36,6 +37,9 @@ namespace NePlus
 
         public bool Updating { get; private set; }
 
+        // components
+        BloomComponent BloomComponent;
+
         public Engine(ContentManager content)
         {
             components = new List<Component>();
@@ -56,6 +60,11 @@ namespace NePlus
             Lighting = new Lighting(this);
 
             SpriteBatch = new SpriteBatch(Global.GraphicsDeviceManager.GraphicsDevice);
+
+            BloomComponent = new BloomComponent(this);
+            BloomComponent.DrawOrder = int.MaxValue;
+            BloomComponent.Settings = BloomSettings.PresetSettings[3];
+            BloomComponent.LoadContent();
 
             Updating = false;
         }
@@ -140,6 +149,8 @@ namespace NePlus
         {
             Lighting.Krypton.LightMapPrepare();
 
+            BloomComponent.BeginDraw();
+
             Video.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // this is placeholder code for testing stuff
@@ -150,6 +161,8 @@ namespace NePlus
             {
                 c.Draw(gameTime);
             }
+
+            BloomComponent.Draw(gameTime);
 
             DebugDraw(gameTime);
         }

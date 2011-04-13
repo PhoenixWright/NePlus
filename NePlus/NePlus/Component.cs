@@ -10,6 +10,7 @@ namespace NePlus
         public Engine Engine;
 
         public bool Disposed { get; private set; }
+        public bool Visible { get; set; }
 
         // this is the component's draw order
         int drawOrder;
@@ -18,6 +19,7 @@ namespace NePlus
         {
             Engine = engine;
             Disposed = false;
+            Visible = true;
             drawOrder = 0;
         }
 
