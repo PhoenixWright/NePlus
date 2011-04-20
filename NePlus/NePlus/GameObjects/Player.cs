@@ -37,11 +37,13 @@ namespace NePlus.GameObjects
         private Vector2 airMovementForce;
         private double airTimer;
         private double airMovementWindow;
+        private BloomSettings bloomSettings;
         private List<Bullet> bullets;
         private double bulletTimer;
         private bool releasedFire { get; set; }
 
         public bool Crouching { get; private set; }
+        public int Health { get; private set; }
         public Global.Directions LastDirection = Global.Directions.Right;
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
@@ -63,11 +65,13 @@ namespace NePlus.GameObjects
             : base(engine)
         {
             DrawOrder = (int)Global.Layers.Player;
+            Health = 100;
 
             airMovementForce = new Vector2(1.0f, 0.0f);
             airMovementWindow = 3000.0d;
             bullets = new List<Bullet>();
             bulletTimer = double.MaxValue / 2;
+            bloomSettings = BloomSettings.PresetSettings[0];
             releasedFire = true;
             groundCache = new List<Fixture>();
             wallCache = new List<Fixture>();
@@ -108,6 +112,8 @@ namespace NePlus.GameObjects
 
         public override void Update(GameTime gameTime)
         {
+            UpdateBloom();
+
             bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // update whether or not the player can fire
@@ -208,6 +214,13 @@ namespace NePlus.GameObjects
         {
             Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.SpriteBatch.End();
+        }
+
+        private void UpdateBloom()
+        {
+            if (Health == 100)
+            {
+            }
         }
 
         private void UpdateProjectiles()
@@ -430,13 +443,15 @@ namespace NePlus.GameObjects
             wallCache.Clear();
             OnGround = false;
             OnWall = false;
+            PhysicsComponent.MainFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
         }
 
         private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
+            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light)
+                && !fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy))
             {
                 Vector2 down = new Vector2(0.0f, 1.0f);
 
@@ -455,6 +470,11 @@ namespace NePlus.GameObjects
                 {
                     OnWall = true;
                 }
+            }
+            else if (fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy))
+            {
+                // decrement player health
+                Health -= 33;
             }
 
             return true;

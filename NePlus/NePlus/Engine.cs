@@ -38,7 +38,7 @@ namespace NePlus
         public bool Updating { get; private set; }
 
         // components
-        BloomComponent BloomComponent;
+        public BloomComponent BloomComponent;
 
         public Engine(ContentManager content)
         {
@@ -63,7 +63,6 @@ namespace NePlus
 
             BloomComponent = new BloomComponent(this);
             BloomComponent.DrawOrder = int.MaxValue;
-            BloomComponent.Settings = BloomSettings.PresetSettings[3];
             BloomComponent.LoadContent();
 
             Updating = false;
