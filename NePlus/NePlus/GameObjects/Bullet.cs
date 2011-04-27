@@ -45,6 +45,9 @@ namespace NePlus.GameObjects
                 case Global.CollisionCategories.PlayerBullet:
                     bulletPhysicsComponent.MainFixture.CollisionFilter.CollidesWith = (Category)(Global.CollisionCategories.Enemy | Global.CollisionCategories.EnemyBullet | Global.CollisionCategories.Light | Global.CollisionCategories.Structure);
                     break;
+                case Global.CollisionCategories.EnemyBullet:
+                    bulletPhysicsComponent.MainFixture.CollisionFilter.CollidesWith = (Category)(Global.CollisionCategories.Player | Global.CollisionCategories.PlayerBullet | Global.CollisionCategories.Light | Global.CollisionCategories.Structure);
+                    break;
                 default:
                     // do nothing
                     break;

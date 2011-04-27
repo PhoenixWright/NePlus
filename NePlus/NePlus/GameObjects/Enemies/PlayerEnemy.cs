@@ -23,27 +23,21 @@ using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.GameObjects
 {
-    public class Player : Component
+    public class PlayerEnemy : Enemy
     {
         // components
-        public BloomComponent bloomComponent;
         public Light light { get; private set; }
-        public PlayerPhysicsComponent PhysicsComponent { get; private set; }
-
-        // audio listener
-        public AudioListener AudioListener { get; private set; }
+        public EnemyPlayerPhysicsComponent PhysicsComponent { get; private set; }
 
         // variables/state management
         private Vector2 airMovementForce;
         private double airTimer;
         private double airMovementWindow;
-        private BloomSettings bloomSettings;
         private List<Bullet> bullets;
         private double bulletTimer;
         private bool releasedFire { get; set; }
 
         public bool Crouching { get; private set; }
-        public int Health { get; private set; }
         public Global.Directions LastDirection = Global.Directions.Right;
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
@@ -54,32 +48,36 @@ namespace NePlus.GameObjects
         public Vector2 Position { get; private set; }
 
         // animations
-        Sprite playerStandingRight;
-        Sprite playerArmShootingRight;
-        Sprite playerCrouchingRight;
-        Sprite playerJumpingRight;
-        Sprite playerFallingRight;
-        Animation playerWalkingRight;
+        Sprite playerEnemyStandingRight;
+        Sprite playerEnemyArmShootingRight;
+        Sprite playerEnemyCrouchingRight;
+        Sprite playerEnemyJumpingRight;
+        Sprite playerEnemyFallingRight;
+        Animation playerEnemyWalkingRight;
 
-        public Player(Engine engine, Vector2 position)
-            : base(engine)
+        Random random;
+
+        public PlayerEnemy(Engine engine, Vector2 position)
+            : base(engine, position)
         {
             DrawOrder = (int)Global.Layers.Player;
             Health = 100;
+
+            PhysicsComponent = new EnemyPlayerPhysicsComponent(Engine, position);
+            PhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
+            PhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
+            PhysicsComponent.WheelFixture.OnCollision += EnemyOnCollision;
+            enemyPhysicsComponent = PhysicsComponent;
 
             airMovementForce = new Vector2(1.0f, 0.0f);
             airMovementWindow = 3000.0d;
             bullets = new List<Bullet>();
             bulletTimer = double.MaxValue / 2;
-            bloomSettings = BloomSettings.PresetSettings[0];
             releasedFire = true;
             groundCache = new List<Fixture>();
             wallCache = new List<Fixture>();
 
             Position = position;
-
-            AudioListener = new AudioListener();
-            AudioListener.Position = new Vector3(Position, 0);
 
             light = new Light(engine);
             light.Color = Color.White;
@@ -88,24 +86,26 @@ namespace NePlus.GameObjects
             light.Range = 250;
             light.ShadowType = Krypton.Lights.ShadowType.Illuminated;
 
-            PhysicsComponent = new PlayerPhysicsComponent(Engine, position);
+            PhysicsComponent = new EnemyPlayerPhysicsComponent(Engine, position);
 
-            PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
-            PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
+            PhysicsComponent.WheelFixture.OnCollision += PlayerEnemyOnCollision;
+            PhysicsComponent.WheelFixture.OnSeparation += PlayerEnemyOnSeparation;
 
             // load visuals
-            playerArmShootingRight = new Sprite(engine, @"Characters\Player\PlayerArmShootingRight");
-            playerArmShootingRight.DrawOrder = DrawOrder;
-            playerStandingRight = new Sprite(engine, @"Characters\Player\PlayerStandingRight");
-            playerStandingRight.DrawOrder = DrawOrder;
-            playerCrouchingRight = new Sprite(engine, @"Characters\Player\PlayerCrouchingRight");
-            playerCrouchingRight.DrawOrder = DrawOrder;
-            playerJumpingRight = new Sprite(engine, @"Characters\Player\PlayerJumpingRight");
-            playerJumpingRight.DrawOrder = DrawOrder;
-            playerFallingRight = new Sprite(engine, @"Characters\Player\PlayerFallingRight");
-            playerFallingRight.DrawOrder = DrawOrder;
-            playerWalkingRight = new Animation(engine, @"Characters\Player\PlayerWalkingRight", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
-            playerWalkingRight.DrawOrder = DrawOrder;
+            playerEnemyArmShootingRight = new Sprite(engine, @"Characters\PlayerEnemy\EnemyArmShootingRight");
+            playerEnemyArmShootingRight.DrawOrder = DrawOrder;
+            playerEnemyStandingRight = new Sprite(engine, @"Characters\PlayerEnemy\EnemyStandingRight");
+            playerEnemyStandingRight.DrawOrder = DrawOrder;
+            playerEnemyCrouchingRight = new Sprite(engine, @"Characters\PlayerEnemy\EnemyCrouchingRight");
+            playerEnemyCrouchingRight.DrawOrder = DrawOrder;
+            playerEnemyJumpingRight = new Sprite(engine, @"Characters\PlayerEnemy\EnemyJumpingRight");
+            playerEnemyJumpingRight.DrawOrder = DrawOrder;
+            playerEnemyFallingRight = new Sprite(engine, @"Characters\PlayerEnemy\EnemyFallingRight");
+            playerEnemyFallingRight.DrawOrder = DrawOrder;
+            playerEnemyWalkingRight = new Animation(engine, @"Characters\PlayerEnemy\EnemyWalkingRight", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
+            playerEnemyWalkingRight.DrawOrder = DrawOrder;
+
+            random = new Random();
 
             Engine.AddComponent(this);
         }
@@ -116,40 +116,41 @@ namespace NePlus.GameObjects
 
             bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // update whether or not the player can fire
+            // update whether or not the PlayerEnemy can fire
             UpdateProjectiles();
-
-            // check if the player needs to be reset
-            if (Position.Y > 2000.0f)
-            {
-                ResetPlayer();
-            }
 
             Position = PhysicsComponent.Position;
             light.Position = Position + new Vector2(0, 25);
-            AudioListener.Position = new Vector3(Position, 0);
 
             if (OnGround)
             {
                 airTimer = 0.0f;
-                Crouching = Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "DownButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "DownKey"));
+
+                if (Crouching)
+                {
+                    Crouching = random.Next(100) > 5;
+                }
+                else
+                {
+                    Crouching = random.Next(100) > 95;
+                }
             }
             else
             {
                 airTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
             }
 
-            // check to see if the player is even allowed to jump before we do anything
+            // check to see if the PlayerEnemy is even allowed to jump before we do anything
             if (!Crouching && OnGround)
             {
-                if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "JumpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "JumpKey")))
+                if (random.Next(100) > 90)
                 {
                     // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
                     PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -80.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
                 }
             }
 
-            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "LeftButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "LeftKey")))
+            if (Engine.Player.Position.X < Position.X)
             {
                 LastDirection = Global.Directions.Left;
 
@@ -175,7 +176,7 @@ namespace NePlus.GameObjects
                     Walking = false;
                 }
             }
-            else if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "RightButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "RightKey")))
+            else if (Engine.Player.Position.X > Position.X)
             {
                 LastDirection = Global.Directions.Right;
 
@@ -237,7 +238,7 @@ namespace NePlus.GameObjects
                 ++idx;
             }
 
-            bool firePressed = Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "FireButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "FireKey"));
+            bool firePressed = random.Next(100) > 95;
 
             if (!releasedFire)
             {
@@ -278,7 +279,7 @@ namespace NePlus.GameObjects
                     }
 
                     // determine bullet vertical movement and angle
-                    if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "UpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "UpKey")))
+                    if (Engine.Player.Position.Y > Position.Y + 20)
                     {
                         bulletY = -13.0f;
                         bulletAngle = 90.0f;
@@ -289,7 +290,7 @@ namespace NePlus.GameObjects
                         bulletPosition.Y += 40.0f;
                     }
 
-                    Bullet bullet = new Bullet(Engine, bulletPosition, new Vector2(bulletX, bulletY), bulletAngle, Global.CollisionCategories.PlayerBullet);
+                    Bullet bullet = new Bullet(Engine, bulletPosition, new Vector2(bulletX, bulletY), bulletAngle, Global.CollisionCategories.EnemyBullet);
                     bullets.Add(bullet);
                     bulletTimer = 0.0f;
 
@@ -305,51 +306,51 @@ namespace NePlus.GameObjects
 
         private void ChangeArtDirectionLeft()
         {
-            playerArmShootingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
-            playerStandingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
-            playerCrouchingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
-            playerJumpingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
-            playerFallingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
-            playerWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyArmShootingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyStandingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyCrouchingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyJumpingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyFallingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerEnemyWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
         }
 
         private void ChangeArtDirectionRight()
         {
-            playerArmShootingRight.SpriteEffect = SpriteEffects.None;
-            playerStandingRight.SpriteEffect = SpriteEffects.None;
-            playerCrouchingRight.SpriteEffect = SpriteEffects.None;
-            playerJumpingRight.SpriteEffect = SpriteEffects.None;
-            playerFallingRight.SpriteEffect = SpriteEffects.None;
-            playerWalkingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyArmShootingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyStandingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyCrouchingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyJumpingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyFallingRight.SpriteEffect = SpriteEffects.None;
+            playerEnemyWalkingRight.SpriteEffect = SpriteEffects.None;
         }
 
         private void HideAllArt()
         {
-            playerArmShootingRight.Visible = false;
-            playerStandingRight.Visible = false;
-            playerCrouchingRight.Visible = false;
-            playerJumpingRight.Visible = false;
-            playerFallingRight.Visible = false;
-            playerWalkingRight.Stop();
+            playerEnemyArmShootingRight.Visible = false;
+            playerEnemyStandingRight.Visible = false;
+            playerEnemyCrouchingRight.Visible = false;
+            playerEnemyJumpingRight.Visible = false;
+            playerEnemyFallingRight.Visible = false;
+            playerEnemyWalkingRight.Stop();
         }
 
         private void UpdateAllArt()
         {
             // update art positions
             Vector2 artOffsetVector = new Vector2(0.0f, 25.0f);
-            playerStandingRight.Position = Position + artOffsetVector;
-            playerCrouchingRight.Position = Position + artOffsetVector;
-            playerJumpingRight.Position = Position + artOffsetVector;
-            playerFallingRight.Position = Position + artOffsetVector;
-            playerWalkingRight.Position = Position + artOffsetVector;
-
+            playerEnemyStandingRight.Position = Position + artOffsetVector;
+            playerEnemyCrouchingRight.Position = Position + artOffsetVector;
+            playerEnemyJumpingRight.Position = Position + artOffsetVector;
+            playerEnemyFallingRight.Position = Position + artOffsetVector;
+            playerEnemyWalkingRight.Position = Position + artOffsetVector;
+            
             if (Crouching)
             {
-                playerArmShootingRight.Position = Position + artOffsetVector + new Vector2(0.0f, 35.0f);
+                playerEnemyArmShootingRight.Position = Position + artOffsetVector + new Vector2(0.0f, 35.0f);
             }
             else
             {
-                playerArmShootingRight.Position = Position + artOffsetVector;
+                playerEnemyArmShootingRight.Position = Position + artOffsetVector;
             }
 
             // arm angle
@@ -357,21 +358,21 @@ namespace NePlus.GameObjects
             {
                 if (LastDirection == Global.Directions.Right)
                 {
-                    playerArmShootingRight.Angle = -MathHelper.PiOver4;
+                    playerEnemyArmShootingRight.Angle = -MathHelper.PiOver4;
 
                     // offset to right to account for angle
-                    playerArmShootingRight.Position += new Vector2(5.0f, 0.0f);
+                    playerEnemyArmShootingRight.Position += new Vector2(5.0f, 0.0f);
                 }
                 else
                 {
-                    playerArmShootingRight.Angle = MathHelper.PiOver4;
+                    playerEnemyArmShootingRight.Angle = MathHelper.PiOver4;
 
-                    playerArmShootingRight.Position += new Vector2(-5.0f, 0.0f);
+                    playerEnemyArmShootingRight.Position += new Vector2(-5.0f, 0.0f);
                 }
             }
             else
             {
-                playerArmShootingRight.Angle = 0.0f;
+                playerEnemyArmShootingRight.Angle = 0.0f;
             }
 
             // update art directions
@@ -387,10 +388,10 @@ namespace NePlus.GameObjects
             // set states appropriately
             if (Walking)
             {
-                if (!playerWalkingRight.Playing)
+                if (!playerEnemyWalkingRight.Playing)
                 {
                     HideAllArt();
-                    playerWalkingRight.Play();
+                    playerEnemyWalkingRight.Play();
                 }
             }
             else
@@ -403,11 +404,11 @@ namespace NePlus.GameObjects
                     if (Crouching)
                     {
                         // unhide crouching sprite
-                        playerCrouchingRight.Visible = true;
+                        playerEnemyCrouchingRight.Visible = true;
                     }
                     else
                     {
-                        playerStandingRight.Visible = true;
+                        playerEnemyStandingRight.Visible = true;
                     }
                 }
                 else
@@ -416,39 +417,39 @@ namespace NePlus.GameObjects
                     if (PhysicsComponent.MainFixture.Body.LinearVelocity.Y > 0.0f)
                     {
                         // going down
-                        playerFallingRight.Visible = true;
+                        playerEnemyFallingRight.Visible = true;
                     }
                     else
                     {
                         // going up
-                        playerJumpingRight.Visible = true;
+                        playerEnemyJumpingRight.Visible = true;
                     }
                 }
             }
 
             if (bulletTimer < 250.0d)
             {
-                playerArmShootingRight.Visible = true;
+                playerEnemyArmShootingRight.Visible = true;
             }
             else
             {
-                playerArmShootingRight.Visible = false;
+                playerEnemyArmShootingRight.Visible = false;
             }
         }
 
-        private void ResetPlayer()
+        private void ResetPlayerEnemy()
         {
             PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
             groundCache.Clear();
             wallCache.Clear();
             OnGround = false;
             OnWall = false;
-            PhysicsComponent.MainFixture.OnCollision += PlayerOnCollision;
-            PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
-            PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
+            PhysicsComponent.MainFixture.OnCollision += PlayerEnemyOnCollision;
+            PhysicsComponent.WheelFixture.OnCollision += PlayerEnemyOnCollision;
+            PhysicsComponent.WheelFixture.OnSeparation += PlayerEnemyOnSeparation;
         }
 
-        private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        private bool PlayerEnemyOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light)
                 && !fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy))
@@ -471,17 +472,16 @@ namespace NePlus.GameObjects
                     OnWall = true;
                 }
             }
-            else if (fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy)
-                  || fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.EnemyBullet))
+            else if (fixtureB.CollisionFilter.CollidesWith.HasFlag((Category)Global.CollisionCategories.PlayerBullet))
             {
-                // decrement player health
+                // decrement enemy health
                 Health -= 33;
             }
 
             return true;
         }
 
-        private void PlayerOnSeparation(Fixture fixtureA, Fixture fixtureB)
+        private void PlayerEnemyOnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
             if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
             {

@@ -11,13 +11,13 @@ using NePlus.ScreenManagement.Screens;
 
 namespace NePlus.Components.PhysicsComponents
 {
-    public class PlayerPhysicsComponent : PhysicsComponent
+    public class EnemyPlayerPhysicsComponent : PhysicsComponent
     {
         public Fixture WheelFixture;
         private FixedAngleJoint playerFAJ;
         private RevoluteJoint wheelMotorRevJoint;
 
-        public PlayerPhysicsComponent(Engine engine, Vector2 gameWorldPosition)
+        public EnemyPlayerPhysicsComponent(Engine engine, Vector2 gameWorldPosition)
             : base(engine)
         {
             CreatePlayerPhysicsObjects(gameWorldPosition);
@@ -32,20 +32,24 @@ namespace NePlus.Components.PhysicsComponents
         private void CreatePlayerPhysicsObjects(Vector2 gameWorldPosition)
         {
             MainFixture = FixtureFactory.CreateRectangle(Engine.Physics.World, 0.5f, 0.5f, 1);
-            MainFixture.CollisionFilter.CollisionCategories = (Category)(Global.CollisionCategories.Player);
             Bodies.Add(MainFixture.Body);
             MainFixture.Body.Position = Engine.Physics.PositionToPhysicsWorld(gameWorldPosition);
             MainFixture.Body.BodyType = BodyType.Dynamic;
             MainFixture.Body.SleepingAllowed = false;
 
+            MainFixture.CollisionFilter.CollisionCategories = (Category)(Global.CollisionCategories.Enemy);
+            MainFixture.CollisionFilter.CollidesWith = (Category)(Global.CollisionCategories.Player | Global.CollisionCategories.PlayerBullet | Global.CollisionCategories.Structure | Global.CollisionCategories.Light);
+
             WheelFixture = FixtureFactory.CreateCircle(Engine.Physics.World, 0.3f, 1.0f);
-            WheelFixture.CollisionFilter.CollisionCategories = (Category)(Global.CollisionCategories.Player);
             Bodies.Add(WheelFixture.Body);
             WheelFixture.Body.Position = MainFixture.Body.Position + new Vector2(0.0f, 0.6f);
             WheelFixture.Body.BodyType = BodyType.Dynamic;
 
             WheelFixture.Body.SleepingAllowed = false;
             WheelFixture.Friction = 0.5f;
+
+            WheelFixture.CollisionFilter.CollisionCategories = (Category)(Global.CollisionCategories.Enemy);
+            WheelFixture.CollisionFilter.CollidesWith = (Category)(Global.CollisionCategories.Player | Global.CollisionCategories.PlayerBullet | Global.CollisionCategories.Structure | Global.CollisionCategories.Light);
 
             playerFAJ = JointFactory.CreateFixedAngleJoint(Engine.Physics.World, MainFixture.Body);
             playerFAJ.BodyB = WheelFixture.Body;

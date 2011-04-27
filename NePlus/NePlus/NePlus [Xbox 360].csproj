@@ -57,7 +57,6 @@
     <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Component.cs" />
     <Compile Include="Components\EngineComponents\Audio.cs" />
@@ -76,6 +75,7 @@
     <Compile Include="Components\GraphicsComponents\ShadowComponent.cs" />
     <Compile Include="Components\PhysicsComponents\BulletPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\EnemyPhysicsComponent.cs" />
+    <Compile Include="Components\PhysicsComponents\EnemyPlayerPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\MovingPlatformPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PendulumPhysicsComponent.cs" />
     <Compile Include="Components\PhysicsComponents\PhysicsComponent.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameObjects\Enemies\FlyingBoxEnemy.cs" />
+    <Compile Include="GameObjects\Enemies\PlayerEnemy.cs" />
     <Compile Include="GameObjects\Enemies\RollingCircleEnemy.cs" />
     <Compile Include="GameObjects\Enemy.cs">
       <SubType>Code</SubType>

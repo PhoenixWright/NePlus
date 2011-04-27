@@ -20,7 +20,7 @@ namespace NePlus.GameObjects
 
         // components
         protected Animation animation;
-        protected EnemyPhysicsComponent enemyPhysicsComponent;
+        protected PhysicsComponent enemyPhysicsComponent;
         protected Animation deathAnimation;
         protected Light deathLight;
 
@@ -28,15 +28,10 @@ namespace NePlus.GameObjects
         public bool Dead { get; private set; }
         public int Health { get; protected set; }
 
-        public Enemy(Engine engine, Vector2 position, Global.Shapes shape)
+        public Enemy(Engine engine, Vector2 position)
             : base(engine)
         {
             audioEmitter = new AudioEmitter();
-
-            enemyPhysicsComponent = new EnemyPhysicsComponent(engine, position, shape);
-            enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
-            enemyPhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
-            enemyPhysicsComponent.MainFixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Enemy;
 
             deathLight = new Light(engine);
             deathLight.Color = Color.Orange;
@@ -97,7 +92,7 @@ namespace NePlus.GameObjects
             base.Update(gameTime);
         }
 
-        private bool EnemyOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        protected bool EnemyOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             // check if the player collided with the enemy
             if (fixtureB.CollisionFilter.IsInCollisionCategory((Category)Global.CollisionCategories.Player))

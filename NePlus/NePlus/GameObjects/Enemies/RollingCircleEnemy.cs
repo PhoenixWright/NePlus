@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 
+using FarseerPhysics.Dynamics;
+
 using NePlus.Components.GameComponents;
+using NePlus.Components.PhysicsComponents;
 using NePlus.GameObjects.LightObjects;
 
 namespace NePlus.GameObjects.Enemies
@@ -11,11 +14,16 @@ namespace NePlus.GameObjects.Enemies
         Light light;
         float timer;
 
-        public RollingCircleEnemy(Engine engine, Vector2 position, Global.Shapes shape)
-            : base(engine, position, shape)
+        public RollingCircleEnemy(Engine engine, Vector2 position)
+            : base(engine, position)
         {
             animation = new Animation(engine, @"Characters\FlickeringCircle", 64, 64, 1, 2, 2, 15, Global.Animations.Repeat);
             animation.Play();
+
+            enemyPhysicsComponent = new EnemyPhysicsComponent(Engine, position, Global.Shapes.Circle);
+            enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
+            enemyPhysicsComponent.MainFixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Enemy;
+            enemyPhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
 
             deathAnimation = new Animation(engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
             deathAnimation.Scale = 0.3f;

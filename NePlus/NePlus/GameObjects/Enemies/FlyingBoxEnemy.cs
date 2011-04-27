@@ -2,7 +2,10 @@
 
 using Microsoft.Xna.Framework;
 
+using FarseerPhysics.Dynamics;
+
 using NePlus.Components.GameComponents;
+using NePlus.Components.PhysicsComponents;
 using NePlus.Components.GraphicsComponents;
 
 namespace NePlus.GameObjects.Enemies
@@ -22,12 +25,17 @@ namespace NePlus.GameObjects.Enemies
         float timeBetweenAttacks = 7.0f;
         float timeSinceLastAttack = 0.0f;
 
-        public FlyingBoxEnemy(Engine engine, Vector2 position, Global.Shapes shape)
-            : base(engine, position, shape)
+        public FlyingBoxEnemy(Engine engine, Vector2 position)
+            : base(engine, position)
         {
             animation = new Animation(engine, @"Characters\GrayRotatingBox", 128, 128, 4, 4, 16, 9, Global.Animations.Repeat);
             animation.DrawOrder = (int)Global.Layers.AboveLighting;
             animation.Play();
+
+            enemyPhysicsComponent = new EnemyPhysicsComponent(Engine, position, Global.Shapes.Square);
+            enemyPhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
+            enemyPhysicsComponent.MainFixture.CollisionFilter.CollisionCategories = (Category)Global.CollisionCategories.Enemy;
+            enemyPhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
 
             deathAnimation = new Animation(engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
             deathAnimation.DrawOrder = int.MaxValue - 1;

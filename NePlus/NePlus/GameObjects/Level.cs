@@ -17,6 +17,7 @@ using Krypton;
 using NePlus;
 using NePlus.Components.EngineComponents;
 using NePlus.Components.GraphicsComponents;
+using NePlus.Components.PhysicsComponents;
 using NePlus.GameObjects;
 using NePlus.GameObjects.Enemies;
 using NePlus.GameObjects.LightObjects;
@@ -207,14 +208,21 @@ namespace NePlus.GameObjects
 
         public void CreateEnemy(MapObject enemyObject)
         {
+            Vector2 enemyPosition = new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y);
+
             switch (enemyObject.Type)
             {
+                case "PlayerEnemy":
+                    PlayerEnemy pe = new PlayerEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y));
+                    Enemies.Add(pe);
+                    break;
                 case "RollingCircleEnemy":
-                    RollingCircleEnemy rce = new RollingCircleEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y), Global.Shapes.Circle);
+                    
+                    RollingCircleEnemy rce = new RollingCircleEnemy(Engine, enemyPosition);
                     Enemies.Add(rce);
                     break;
                 case "RotatingBoxEnemy":
-                    FlyingBoxEnemy rbe = new FlyingBoxEnemy(Engine, new Vector2(enemyObject.Bounds.X, enemyObject.Bounds.Y), Global.Shapes.Square);
+                    FlyingBoxEnemy rbe = new FlyingBoxEnemy(Engine, enemyPosition);
                     Enemies.Add(rbe);
                     break;
                 default:

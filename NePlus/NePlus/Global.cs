@@ -13,7 +13,7 @@ namespace NePlus
         public enum Animations
         {
             PlayOnce,
-            Repeat
+            Repeat,
         }
 
         public enum CollisionCategories
@@ -23,7 +23,7 @@ namespace NePlus
             Enemy = Category.Cat3,
             EnemyBullet = Category.Cat4,
             Light = Category.Cat5,
-            Structure = Category.Cat6
+            Structure = Category.Cat6,
         }
 
         public enum Directions
@@ -31,7 +31,7 @@ namespace NePlus
             Up,
             Down,
             Left,
-            Right
+            Right,
         }
 
         public enum Layers
@@ -41,13 +41,14 @@ namespace NePlus
             Enemies,
             Projectiles,
             Lighting,
-            AboveLighting
+            AboveLighting,
         }
 
         public enum Shapes
         {
             Circle,
-            Square
+            Player,
+            Square,
         }
 
         public static Configuration Configuration { get; private set; }
