@@ -43,7 +43,7 @@ namespace NePlus.GameObjects
         private bool releasedFire { get; set; }
 
         public bool Crouching { get; private set; }
-        public int Health { get; private set; }
+        public float Health { get; private set; }
         public Global.Directions LastDirection = Global.Directions.Right;
         public bool OnGround { get; private set; }
         public bool OnWall { get; private set; }
@@ -63,6 +63,8 @@ namespace NePlus.GameObjects
         Animation playerFrontArmWalkingRight;
         Animation playerBackArmWalkingRight;
         Animation deathAnimation;
+
+        float deathTimer;
 
         public Player(Engine engine, Vector2 position)
             : base(engine)
@@ -114,6 +116,10 @@ namespace NePlus.GameObjects
             playerBackArmWalkingRight = new Animation(engine, @"Characters\Player\PlayerBackArm", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
             playerBackArmWalkingRight.DrawOrder = DrawOrder;
 
+            deathAnimation = new Animation(engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
+            deathAnimation.Scale = 0.3f;
+            deathAnimation.DrawOrder = int.MaxValue - 1;
+
             Engine.AddComponent(this);
         }
 
@@ -122,7 +128,13 @@ namespace NePlus.GameObjects
             if (Health <= 0)
             {
                 // handle death
-
+                HideAllArt();
+                UpdateDeath();
+                return;
+            }
+            else if (Health < 100)
+            {
+                Health += 0.1f;
             }
 
             UpdateBloom();
@@ -231,8 +243,48 @@ namespace NePlus.GameObjects
 
         private void UpdateBloom()
         {
-            if (Health == 100)
+            Engine.BloomComponent.Settings.BlurAmount = 2;
+
+            Engine.BloomComponent.Settings.BaseIntensity = 1.0f;
+
+            if (Health < 80)
             {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.8f;
+            }
+
+            if (Health < 70)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.6f;
+            }
+
+            if (Health < 60)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.5f;
+            }
+
+            if (Health < 50)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.4f;
+            }
+
+            if (Health < 40)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.3f;
+            }
+
+            if (Health < 30)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.2f;
+            }
+
+            if (Health < 20)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.15f;
+            }
+
+            if (Health < 10)
+            {
+                Engine.BloomComponent.Settings.BaseIntensity = 0.1f;
             }
         }
 
@@ -363,6 +415,7 @@ namespace NePlus.GameObjects
             playerWalkingRight.Position = Position + artOffsetVector;
             playerBackArmWalkingRight.Position = Position + artOffsetVector;
             playerFrontArmWalkingRight.Position = Position + artOffsetVector;
+            deathAnimation.Position = Position;
 
             if (Crouching)
             {
@@ -452,16 +505,43 @@ namespace NePlus.GameObjects
             if (bulletTimer < 250.0d)
             {
                 playerArmShootingRight.Visible = true;
+                playerFrontArmWalkingRight.Visible = false;
+                playerBackArmWalkingRight.Visible = false;
             }
             else
             {
                 playerArmShootingRight.Visible = false;
+                playerFrontArmWalkingRight.Visible = true;
+                playerBackArmWalkingRight.Visible = true;
             }
         }
 
         // returns true if death is over, false if not
         private bool UpdateDeath()
         {
+            if (deathAnimation != null)
+            {
+                if (!deathAnimation.Playing && !deathAnimation.Disposed)
+                {
+                    deathAnimation.Play();
+                }
+                else
+                {
+                    ++deathTimer;
+
+                    if (deathTimer > 100)
+                    {
+                        Health = 100;
+                        deathAnimation = new Animation(Engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
+                        deathAnimation.Scale = 0.3f;
+                        deathAnimation.DrawOrder = int.MaxValue - 1;
+                        ResetPlayer();
+                        deathTimer = 0;
+                        return true;
+                    }
+                }
+            }
+
             return false;
         }
 
@@ -475,6 +555,8 @@ namespace NePlus.GameObjects
             PhysicsComponent.MainFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnCollision += PlayerOnCollision;
             PhysicsComponent.WheelFixture.OnSeparation += PlayerOnSeparation;
+
+            Health = 100;
         }
 
         private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)

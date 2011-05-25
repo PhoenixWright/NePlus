@@ -143,7 +143,7 @@ namespace NePlus.Components.GameComponents
 
         public override void Draw(GameTime gameTime)
         {
-            if (Playing)
+            if (Playing && Visible)
             {
                 Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
                 Engine.SpriteBatch.Draw(spriteSheet, Position, frames[currentFrame], Color.White, Angle, spriteOrigin, Scale, SpriteEffect, 1.0f);

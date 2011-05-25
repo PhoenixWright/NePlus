@@ -348,7 +348,7 @@ namespace NePlus.GameObjects
             MapObjectLayer spawnPointLayer = map.GetLayer("SpawnPointObjects") as MapObjectLayer;
 
             // find the spawn point closest to the player on the left
-            Vector2 position = new Vector2(0, 0);
+            Vector2 position = new Vector2(700, 400);
             foreach (MapObject spawnPoint in spawnPointLayer.Objects)
             {
                 if (Engine.Player == null)
