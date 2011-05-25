@@ -115,7 +115,7 @@ namespace NePlus.ScreenManagement.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 175f);
+            Vector2 position = new Vector2(0f, 600f);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)

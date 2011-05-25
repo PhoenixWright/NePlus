@@ -66,7 +66,6 @@ namespace NePlus.GameObjects.Enemies
                 // manipulate the physics object to float around and make dives at the player
                 if (attacking)
                 {
-                    // TODO: try to hit the player
                     Attack();
                 }
                 else
@@ -78,17 +77,20 @@ namespace NePlus.GameObjects.Enemies
                     float y = 0;
 
                     // move around the player
-                    if (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) > minX)
+                    if (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) < 1200)
                     {
-                        if (enemyPhysicsComponent.Position.X > Engine.Player.Position.X)
+                        if (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) > minX)
                         {
-                            // then we need to move left
-                            x = -50;
-                        }
-                        else
-                        {
-                            // move right
-                            x = 50;
+                            if (enemyPhysicsComponent.Position.X > Engine.Player.Position.X)
+                            {
+                                // then we need to move left
+                                x = -50;
+                            }
+                            else
+                            {
+                                // move right
+                                x = 50;
+                            }
                         }
                     }
                     else

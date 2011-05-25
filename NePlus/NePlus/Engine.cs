@@ -40,8 +40,12 @@ namespace NePlus
         // components
         public BloomComponent BloomComponent;
 
-        public Engine(ContentManager content)
+        public ScreenManager ScreenManager;
+
+        public Engine(ContentManager content, ScreenManager screenManager)
         {
+            this.ScreenManager = screenManager;
+
             components = new List<Component>();
             componentsToBeAdded = new List<Component>();
             componentsToBeRemoved = new List<Component>();

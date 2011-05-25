@@ -60,15 +60,10 @@ namespace NePlus.Components.PhysicsComponents
             Engine.Physics.World.AddJoint(wheelMotorRevJoint);
         }
 
-        private void DestroyPlayerPhysicsObjects()
+        public void DestroyPlayerPhysicsObjects()
         {
             MainFixture.CollisionFilter.CollidesWith = Category.None;
             WheelFixture.CollisionFilter.CollidesWith = Category.None;
-
-            Engine.Physics.World.RemoveJoint(playerFAJ);
-            Engine.Physics.World.RemoveJoint(wheelMotorRevJoint);
-            Engine.Physics.World.RemoveBody(WheelFixture.Body);
-            Engine.Physics.World.RemoveBody(MainFixture.Body);
         }
 
         public void MoveLeft()

@@ -21,7 +21,7 @@
  </tileset>
  <layer name="Background" width="512" height="64" opacity="0.9">
   <data encoding="base64" compression="zlib">
-   eJzt2jFO3kAUhVErWyFLYgMsgIKCtaXN0kikIGgY7B8zN75zitO58Pg96dNIvvuxbXcAAAAA//zexp63/DsCAOfSfwBYj/4DwHr0HwDWo/8AsB79B4D16D8ArEf/AWA9+g8A69F/AFiP/gPAevQfANaj/wCwHv0HgPXoP2n3f3bssUj6ewLsof+k3Rft2K+iswDd9J80/QeYT/9J03+A+fSfNP0HmE//SdN/gPn0/3wz/idP/+N+Jv0HmE//z/f0yTc9In0WjtF/4Co+60/6bnhVX+3+q/R+cIz+s6qf7+x55iPpc6zkrE7xPdL7wTH63+lhm3d3uGof97T9LOn73R7peeyRaBr630r/Oz2YK4XSfUP/m+h/J/2nUbpv6H8T/e+k/zRK9w39b6L/nfSfRum+of9N9L+T/tMk3TX0v5H+d9J/WqSbhv630v9O+k+LdNPQ/1b630n/aZFuGvrfSv876T8t0k1D/1vpfyf9p0W6aeh/K/3vpP+0SDcN/W+l/530nxZn9CjdxVWkd4Vj9L+T/sObdBdXkJ4xx+l/J/2HN+k2tkvPl9vofyf9h69JN/VK0rPiNvrfSf9hnnR/dZ9b6H8n/Yd5NJgr0v9O+g/z6D5XpP+d9B/m0X2uSP876T8AI/rfSf8BGNH/TvoPwIj+d9J/AEb0v5P+AzCi/530H4AR/e+k/wCM6H8n/QdgRP876T8AI/rfSf8BGNH/TvoPwIj+d9J/AEb0v5P+AzCi/530H4AR/e+k/wCM6H8n/Qdg5G//H6mj/wAAAAD8L14AZMIOqQ==
+   eJzt3b1NxEAUhVFDRh1Q0jawBRAQUBspdAYSBATwQGjw8953gpM5mB9bn0YaybfX23YLAAAA8OF5qz1u/WMEANbSfwCYR/8BYB79B4B59B8A5tF/AJhH/wFgHv0HgHn0HwDm0X8AmEf/AWAe/QeAefQfAObRfwCYR//pdnp7x+6DdK8nwG/oP91OQe/YU9BcgGz6Tzf9B9if/tNN/wH2p/9003+A/ek/3fQfYH/6v94e98m777ivpP8A+9P/9R6s2Vj6D1yKn/rffTa8VN37Sg/9Z6q7T37zzHe65wHwF/qf6exsAEBB/zOdF+3ry1X/XABYT/8z6T8AFf3PpP8AVPQ/k/4DUNH/TPoPQEX/M+k/ABX9z6T/AFT0P5P+A1DR/0z6D0BF/zPpPwAV/c+k/wBU9D+T/gNQ0f9M+g9ARf8z6T8AFf3PpP8AVPQ/k/4DUNH/TPoPQEX/M+k/ABX9z6T//W62d93jAPiK/mfS/376DxyZ/mfS/376DxyZ/mda2f/7Df5P97cCU+l/plX9ByCT/mfSfwAq+p9J/wGo6H8m/Qegov+Z9B+Aiv5n0n8AKvqfSf8BqOh/Jv0HoKL/mfQfgIr+Z9J/ACr6n0n/Aajofyb9B6Ci/5n0H4DK0wH+/8V6+g8AAADAUbwCSV2xKw==
   </data>
  </layer>
  <layer name="Level" width="512" height="64" opacity="0">
@@ -35,10 +35,15 @@
   </data>
  </layer>
  <objectgroup name="EnemyObjects" width="512" height="64">
-  <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="8139" y="190" width="128" height="64"/>
-  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="8088" y="1820" width="128" height="64"/>
-  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="1817" y="635" width="128" height="64"/>
-  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="8532" y="1820" width="128" height="64"/>
+  <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="11227" y="294" width="128" height="64"/>
+  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="8499" y="1823" width="128" height="64"/>
+  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="2882" y="618" width="128" height="64"/>
+  <object name="RollingCircleEnemy1" type="RollingCircleEnemy" x="9009" y="1821" width="128" height="64"/>
+  <object name="EnemyObject2" type="PlayerEnemy" x="12803" y="1365" width="95" height="73"/>
+  <object name="EnemyObject2" type="PlayerEnemy" x="14372" y="1349" width="95" height="73"/>
+  <object name="EnemyObject2" type="PlayerEnemy" x="13270" y="1350" width="95" height="73"/>
+  <object name="RotatingBoxEnemy1" type="RotatingBoxEnemy" x="11387" y="284" width="128" height="64"/>
+  <object name="EnemyObject2" type="PlayerEnemy" x="15084" y="1344" width="95" height="73"/>
  </objectgroup>
  <objectgroup name="CollisionObjects" width="512" height="64">
   <object name="StartWall" type="CollisionObject" x="608" y="0" width="32" height="768"/>
@@ -47,13 +52,17 @@
   <object name="FirstStepPlatform" type="CollisionObject" x="3872" y="704" width="1632" height="32"/>
   <object name="FirstStepPlatform" type="CollisionObject" x="5536" y="512" width="1632" height="32"/>
   <object name="FirstStepPlatform" type="CollisionObject" x="7168" y="1952" width="3744" height="32"/>
-  <object name="FirstStepPlatform" type="CollisionObject" x="10944" y="800" width="832" height="32"/>
-  <object name="FirstStepPlatform" type="CollisionObject" x="14112" y="800" width="1312" height="32"/>
+  <object name="FirstStepPlatform" type="CollisionObject" x="10944" y="800" width="576" height="32"/>
+  <object name="FirstStepPlatform" type="CollisionObject" x="11488" y="832" width="32" height="704"/>
+  <object name="FirstStepPlatform" type="CollisionObject" x="11523" y="1503" width="12288" height="32"/>
+  <object name="Box" type="CollisionObject" x="14016" y="1408" width="64" height="96"/>
  </objectgroup>
  <objectgroup name="SpawnPointObjects" width="512" height="64">
   <object name="InitialSpawnPoint" type="SpawnPointObject" x="713" y="569" width="96" height="96"/>
-  <object name="SpawnPoint" type="SpawnPointObject" x="11481" y="593" width="96" height="96"/>
+  <object name="SpawnPoint" type="SpawnPointObject" x="12137" y="1368" width="96" height="96"/>
   <object name="SpawnPoint" type="SpawnPointObject" x="3537" y="533" width="96" height="96"/>
+  <object name="SpawnPoint" type="SpawnPointObject" x="11004" y="654" width="96" height="96"/>
+  <object name="InitialSpawnPoint" type="SpawnPointObject" x="14696" y="1386" width="96" height="96"/>
  </objectgroup>
  <objectgroup name="LightObjects" width="512" height="64">
   <object name="GravityLight1" type="LightObject" x="5356" y="433" width="64" height="64">
@@ -121,17 +130,6 @@
     <property name="VelocityValue" value="0.9"/>
    </properties>
   </object>
-  <object name="VelocityLight1" type="LightObject" x="10240" y="1760" width="64" height="32">
-   <properties>
-    <property name="LightAngle" value="1.6"/>
-    <property name="LightColor" value="Green"/>
-    <property name="LightFov" value="1.2"/>
-    <property name="LightMotion" value="None"/>
-    <property name="LightRange" value="300"/>
-    <property name="LightType" value="Velocity"/>
-    <property name="VelocityValue" value="0.9"/>
-   </properties>
-  </object>
   <object name="VelocityLight2" type="LightObject" x="10784" y="1664" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
@@ -154,7 +152,7 @@
     <property name="LightType" value="Gravity"/>
    </properties>
   </object>
-  <object name="VelocityLight1" type="LightObject" x="6368" y="288" width="64" height="32">
+  <object name="VelocityLight1" type="LightObject" x="2559" y="539" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Green"/>
@@ -165,7 +163,7 @@
     <property name="VelocityValue" value="0.9"/>
    </properties>
   </object>
-  <object name="VelocityLight2" type="LightObject" x="11776" y="608" width="64" height="32">
+  <object name="VelocityLight2" type="LightObject" x="12602" y="1348" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Green"/>
@@ -176,37 +174,81 @@
     <property name="VelocityValue" value="1.1"/>
    </properties>
   </object>
-  <object name="VelocityLight1" type="LightObject" x="14720" y="608" width="64" height="32">
+  <object name="GravityLight1" type="LightObject" x="4556" y="433" width="64" height="64">
+   <properties>
+    <property name="GravityValue" value="-4.0"/>
+    <property name="LightAngle" value="1.6"/>
+    <property name="LightColor" value="Blue"/>
+    <property name="LightFov" value="1.2"/>
+    <property name="LightMotion" value="None"/>
+    <property name="LightRange" value="300"/>
+    <property name="LightType" value="Gravity"/>
+   </properties>
+  </object>
+  <object name="GravityLight1" type="LightObject" x="12807" y="1233" width="64" height="64">
+   <properties>
+    <property name="GravityValue" value="-4.0"/>
+    <property name="LightAngle" value="1.6"/>
+    <property name="LightColor" value="Blue"/>
+    <property name="LightFov" value="1.2"/>
+    <property name="LightMotion" value="None"/>
+    <property name="LightRange" value="300"/>
+    <property name="LightType" value="Gravity"/>
+   </properties>
+  </object>
+  <object name="GravityLight1" type="LightObject" x="13330" y="1189" width="64" height="64">
+   <properties>
+    <property name="GravityValue" value="-4.0"/>
+    <property name="LightAngle" value="1.6"/>
+    <property name="LightColor" value="Blue"/>
+    <property name="LightFov" value="1.2"/>
+    <property name="LightMotion" value="None"/>
+    <property name="LightRange" value="300"/>
+    <property name="LightType" value="Gravity"/>
+   </properties>
+  </object>
+  <object name="GravityLight1" type="LightObject" x="13111" y="1305" width="64" height="64">
+   <properties>
+    <property name="GravityValue" value="-4.0"/>
+    <property name="LightAngle" value="1.6"/>
+    <property name="LightColor" value="Blue"/>
+    <property name="LightFov" value="1.2"/>
+    <property name="LightMotion" value="None"/>
+    <property name="LightRange" value="300"/>
+    <property name="LightType" value="Gravity"/>
+   </properties>
+  </object>
+  <object name="GravityLight1" type="LightObject" x="14174" y="1359" width="64" height="64">
+   <properties>
+    <property name="GravityValue" value="-4.0"/>
+    <property name="LightAngle" value="1.6"/>
+    <property name="LightColor" value="Blue"/>
+    <property name="LightFov" value="1.2"/>
+    <property name="LightMotion" value="None"/>
+    <property name="LightRange" value="300"/>
+    <property name="LightType" value="Gravity"/>
+   </properties>
+  </object>
+  <object name="VelocityLight1" type="LightObject" x="11701" y="877" width="64" height="32">
    <properties>
     <property name="LightAngle" value="1.6"/>
     <property name="LightColor" value="Green"/>
     <property name="LightFov" value="1.2"/>
     <property name="LightMotion" value="None"/>
-    <property name="LightRange" value="300"/>
+    <property name="LightRange" value="600"/>
     <property name="LightType" value="Velocity"/>
     <property name="VelocityValue" value="0.9"/>
    </properties>
   </object>
-  <object name="VelocityLight1" type="LightObject" x="14112" y="608" width="64" height="32">
+  <object name="GravityLight1" type="LightObject" x="14016" y="1280" width="64" height="64">
    <properties>
+    <property name="GravityValue" value="-4.0"/>
     <property name="LightAngle" value="1.6"/>
-    <property name="LightColor" value="Green"/>
+    <property name="LightColor" value="Blue"/>
     <property name="LightFov" value="1.2"/>
     <property name="LightMotion" value="None"/>
     <property name="LightRange" value="300"/>
-    <property name="LightType" value="Velocity"/>
-    <property name="VelocityValue" value="0.9"/>
-   </properties>
-  </object>
-  <object name="VelocityLight1" type="LightObject" x="15168" y="608" width="64" height="32">
-   <properties>
-    <property name="LightAngle" value="1.6"/>
-    <property name="LightColor" value="Green"/>
-    <property name="LightFov" value="1.2"/>
-    <property name="LightMotion" value="None"/>
-    <property name="LightRange" value="300"/>
-    <property name="LightType" value="Velocity"/>
-    <property name="VelocityValue" value="0.9"/>
+    <property name="LightType" value="Gravity"/>
    </properties>
   </object>
  </objectgroup>

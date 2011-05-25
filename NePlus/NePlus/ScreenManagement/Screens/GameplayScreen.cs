@@ -46,7 +46,7 @@ namespace NePlus.ScreenManagement.Screens
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            Engine = new Engine(content);
+            Engine = new Engine(content, ScreenManager);
 
             Level = new Level(Engine, @"Maps\TestMap");
 

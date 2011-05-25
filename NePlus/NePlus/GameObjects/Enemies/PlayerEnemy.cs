@@ -118,8 +118,6 @@ namespace NePlus.GameObjects
         {
             if (!Dead)
             {
-                UpdateBloom();
-
                 bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
                 // update whether or not the PlayerEnemy can fire
@@ -131,15 +129,6 @@ namespace NePlus.GameObjects
                 if (OnGround)
                 {
                     airTimer = 0.0f;
-
-                    if (Crouching)
-                    {
-                        Crouching = random.Next(100) > 5;
-                    }
-                    else
-                    {
-                        Crouching = random.Next(100) > 95;
-                    }
                 }
                 else
                 {
@@ -156,7 +145,7 @@ namespace NePlus.GameObjects
                     }
                 }
 
-                if (Engine.Player.Position.X < Position.X)
+                if (Engine.Player.Position.X < Position.X && Math.Abs(Engine.Player.Position.X - Position.X) < 800)
                 {
                     LastDirection = Global.Directions.Left;
 
@@ -182,7 +171,7 @@ namespace NePlus.GameObjects
                         Walking = false;
                     }
                 }
-                else if (Engine.Player.Position.X > Position.X)
+                else if (Engine.Player.Position.X > Position.X && Math.Abs(Engine.Player.Position.X - Position.X) < 800)
                 {
                     LastDirection = Global.Directions.Right;
 
@@ -218,7 +207,9 @@ namespace NePlus.GameObjects
             }
             else
             {
+                light.IsOn = false;
                 HideAllArt();
+                PhysicsComponent.DestroyPlayerPhysicsObjects();
             }
 
             base.Update(gameTime);
@@ -228,13 +219,6 @@ namespace NePlus.GameObjects
         {
             Engine.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Engine.Camera.CameraMatrix);
             Engine.SpriteBatch.End();
-        }
-
-        private void UpdateBloom()
-        {
-            if (Health == 100)
-            {
-            }
         }
 
         private void UpdateProjectiles()
@@ -266,7 +250,7 @@ namespace NePlus.GameObjects
             // handle firing projectiles
             if (canFire)
             {
-                if (firePressed)
+                if (firePressed && Math.Abs(Engine.Player.Position.X - Position.X) < 800)
                 {
                     releasedFire = false;
 
@@ -356,7 +340,9 @@ namespace NePlus.GameObjects
             playerEnemyJumpingRight.Position = Position + artOffsetVector;
             playerEnemyFallingRight.Position = Position + artOffsetVector;
             playerEnemyWalkingRight.Position = Position + artOffsetVector;
-            
+            deathAnimation.Position = Position + artOffsetVector;
+            deathLight.Position = Position + artOffsetVector;
+
             if (Crouching)
             {
                 playerEnemyArmShootingRight.Position = Position + artOffsetVector + new Vector2(0.0f, 35.0f);
@@ -364,28 +350,6 @@ namespace NePlus.GameObjects
             else
             {
                 playerEnemyArmShootingRight.Position = Position + artOffsetVector;
-            }
-
-            // arm angle
-            if (Engine.Input.IsButtonDown(Global.Configuration.GetButtonConfig("GameControls", "UpButton")) || Engine.Input.IsKeyDown(Global.Configuration.GetKeyConfig("GameControls", "UpKey")))
-            {
-                if (LastDirection == Global.Directions.Right)
-                {
-                    playerEnemyArmShootingRight.Angle = -MathHelper.PiOver4;
-
-                    // offset to right to account for angle
-                    playerEnemyArmShootingRight.Position += new Vector2(5.0f, 0.0f);
-                }
-                else
-                {
-                    playerEnemyArmShootingRight.Angle = MathHelper.PiOver4;
-
-                    playerEnemyArmShootingRight.Position += new Vector2(-5.0f, 0.0f);
-                }
-            }
-            else
-            {
-                playerEnemyArmShootingRight.Angle = 0.0f;
             }
 
             // update art directions

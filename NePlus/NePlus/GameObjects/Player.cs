@@ -55,10 +55,13 @@ namespace NePlus.GameObjects
 
         // animations
         Sprite playerStandingRight;
+        Sprite playerArmStandingRight;
         Sprite playerArmShootingRight;
         Sprite playerCrouchingRight;
+        Sprite playerArmCrouchingRight;
         Sprite playerJumpingRight;
         Sprite playerFallingRight;
+        Sprite playerArmAirRight;
         Animation playerWalkingRight;
         Animation playerFrontArmWalkingRight;
         Animation playerBackArmWalkingRight;
@@ -103,12 +106,18 @@ namespace NePlus.GameObjects
             playerArmShootingRight.DrawOrder = DrawOrder;
             playerStandingRight = new Sprite(engine, @"Characters\Player\PlayerStandingRight");
             playerStandingRight.DrawOrder = DrawOrder;
+            playerArmStandingRight = new Sprite(engine, @"Characters\Player\PlayerArmStanding");
+            playerArmStandingRight.DrawOrder = DrawOrder + 1;
             playerCrouchingRight = new Sprite(engine, @"Characters\Player\PlayerCrouchingRight");
             playerCrouchingRight.DrawOrder = DrawOrder;
+            playerArmCrouchingRight = new Sprite(engine, @"Characters\Player\PlayerArmCrouchingRight");
+            playerArmCrouchingRight.DrawOrder = DrawOrder + 1;
             playerJumpingRight = new Sprite(engine, @"Characters\Player\PlayerJumpingRight");
             playerJumpingRight.DrawOrder = DrawOrder;
             playerFallingRight = new Sprite(engine, @"Characters\Player\PlayerFallingRight");
             playerFallingRight.DrawOrder = DrawOrder;
+            playerArmAirRight = new Sprite(engine, @"Characters\Player\PlayerArmAirRight");
+            playerArmAirRight.DrawOrder = DrawOrder;
             playerWalkingRight = new Animation(engine, @"Characters\Player\PlayerWalkingRight", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
             playerWalkingRight.DrawOrder = DrawOrder;
             playerFrontArmWalkingRight = new Animation(engine, @"Characters\Player\PlayerFrontArm", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
@@ -148,6 +157,12 @@ namespace NePlus.GameObjects
             if (Position.Y > 2000.0f)
             {
                 ResetPlayer();
+            }
+
+            if (Position.X > 16000.0f)
+            {
+                LoadingScreen.Load(Engine.ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen());
             }
 
             Position = PhysicsComponent.Position;
@@ -372,7 +387,9 @@ namespace NePlus.GameObjects
         {
             playerArmShootingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerStandingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerArmStandingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerCrouchingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerArmCrouchingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerJumpingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerFallingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
@@ -384,9 +401,12 @@ namespace NePlus.GameObjects
         {
             playerArmShootingRight.SpriteEffect = SpriteEffects.None;
             playerStandingRight.SpriteEffect = SpriteEffects.None;
+            playerArmStandingRight.SpriteEffect = SpriteEffects.None;
             playerCrouchingRight.SpriteEffect = SpriteEffects.None;
+            playerArmCrouchingRight.SpriteEffect = SpriteEffects.None;
             playerJumpingRight.SpriteEffect = SpriteEffects.None;
             playerFallingRight.SpriteEffect = SpriteEffects.None;
+            playerArmAirRight.SpriteEffect = SpriteEffects.None;
             playerWalkingRight.SpriteEffect = SpriteEffects.None;
             playerBackArmWalkingRight.SpriteEffect = SpriteEffects.None;
             playerFrontArmWalkingRight.SpriteEffect = SpriteEffects.None;
@@ -396,9 +416,12 @@ namespace NePlus.GameObjects
         {
             playerArmShootingRight.Visible = false;
             playerStandingRight.Visible = false;
+            playerArmStandingRight.Visible = false;
             playerCrouchingRight.Visible = false;
+            playerArmCrouchingRight.Visible = false;
             playerJumpingRight.Visible = false;
             playerFallingRight.Visible = false;
+            playerArmAirRight.Visible = false;
             playerWalkingRight.Stop();
             playerBackArmWalkingRight.Stop();
             playerFrontArmWalkingRight.Stop();
@@ -409,9 +432,12 @@ namespace NePlus.GameObjects
             // update art positions
             Vector2 artOffsetVector = new Vector2(0.0f, 25.0f);
             playerStandingRight.Position = Position + artOffsetVector;
+            playerArmStandingRight.Position = Position + artOffsetVector;
             playerCrouchingRight.Position = Position + artOffsetVector;
+            playerArmCrouchingRight.Position = Position + artOffsetVector;
             playerJumpingRight.Position = Position + artOffsetVector;
             playerFallingRight.Position = Position + artOffsetVector;
+            playerArmAirRight.Position = Position + artOffsetVector;
             playerWalkingRight.Position = Position + artOffsetVector;
             playerBackArmWalkingRight.Position = Position + artOffsetVector;
             playerFrontArmWalkingRight.Position = Position + artOffsetVector;
@@ -480,10 +506,12 @@ namespace NePlus.GameObjects
                     {
                         // unhide crouching sprite
                         playerCrouchingRight.Visible = true;
+                        playerArmCrouchingRight.Visible = true;
                     }
                     else
                     {
                         playerStandingRight.Visible = true;
+                        playerArmStandingRight.Visible = true;
                     }
                 }
                 else
@@ -499,12 +527,17 @@ namespace NePlus.GameObjects
                         // going up
                         playerJumpingRight.Visible = true;
                     }
+
+                    playerArmAirRight.Visible = true;
                 }
             }
 
             if (bulletTimer < 250.0d)
             {
                 playerArmShootingRight.Visible = true;
+                playerArmAirRight.Visible = false;
+                playerArmCrouchingRight.Visible = false;
+                playerArmStandingRight.Visible = false;
                 playerFrontArmWalkingRight.Visible = false;
                 playerBackArmWalkingRight.Visible = false;
             }

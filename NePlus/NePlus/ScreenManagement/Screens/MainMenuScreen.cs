@@ -12,23 +12,18 @@ namespace NePlus.ScreenManagement.Screens
         /// Constructor fills in the menu contents.
         /// </summary>
         public MainMenuScreen()
-            : base("Main Menu")
+            : base("")
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
-            MenuEntry introductionEntry = new MenuEntry("Watch Introduction");
-            MenuEntry optionsMenuEntry = new MenuEntry("Options");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
-            introductionEntry.Selected += IntroductionMenuEntrySelected;
-            optionsMenuEntry.Selected += OptionsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
-            MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
         }
 
@@ -39,11 +34,6 @@ namespace NePlus.ScreenManagement.Screens
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                                new GameplayScreen());
-        }
-
-        void IntroductionMenuEntrySelected(object sender, EventArgs e)
-        {
-            //LoadingScreen.Load(ScreenManager, false, new IntroductionScreen());
         }
 
         /// <summary>
