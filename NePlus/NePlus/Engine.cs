@@ -124,6 +124,11 @@ namespace NePlus
             Updating = true;
             foreach (Component c in components)
             {
+                if (c.Disposed)
+                {
+                    RemoveComponent(c);
+                }
+
                 c.Update(gameTime);
             }
             // remove updating flag

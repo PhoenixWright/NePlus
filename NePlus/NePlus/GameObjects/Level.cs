@@ -346,15 +346,31 @@ namespace NePlus.GameObjects
         public Vector2 GetSpawnPoint() // TODO: override this function to get the appropriate spawn point based on where the player died
         {
             MapObjectLayer spawnPointLayer = map.GetLayer("SpawnPointObjects") as MapObjectLayer;
+
+            // find the spawn point closest to the player on the left
+            Vector2 position = new Vector2(0, 0);
             foreach (MapObject spawnPoint in spawnPointLayer.Objects)
             {
-                if (spawnPoint.Name == "InitialSpawnPoint")
+                if (Engine.Player == null)
                 {
-                    return new Vector2(spawnPoint.Bounds.X, spawnPoint.Bounds.Y);
+                    if (spawnPoint.Name == "InitialSpawnPoint")
+                    {
+                        return new Vector2(spawnPoint.Bounds.X, spawnPoint.Bounds.Y);
+                    }
+                }
+                else
+                {
+                    if (spawnPoint.Bounds.X < Engine.Player.Position.X)
+                    {
+                        if (spawnPoint.Bounds.X > position.X)
+                        {
+                            position = new Vector2(spawnPoint.Bounds.X, spawnPoint.Bounds.Y);
+                        }
+                    }
                 }
             }
 
-            throw new Exception("No InitialSpawnPoint defined in " + mapFilePath);
+            return position;
         }
     }
 }

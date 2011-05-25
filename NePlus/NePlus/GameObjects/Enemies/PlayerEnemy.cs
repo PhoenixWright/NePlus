@@ -63,6 +63,10 @@ namespace NePlus.GameObjects
             DrawOrder = (int)Global.Layers.Player;
             Health = 100;
 
+            deathAnimation = new Animation(engine, @"Miscellaneous\Explosion", 512, 512, 3, 4, 9, 20, Global.Animations.PlayOnce);
+            deathAnimation.DrawOrder = int.MaxValue - 1;
+            deathAnimation.Scale = 0.3f;
+
             PhysicsComponent = new EnemyPlayerPhysicsComponent(Engine, position);
             PhysicsComponent.MainFixture.Body.LinearDamping = 2.0f;
             PhysicsComponent.MainFixture.OnCollision += EnemyOnCollision;
@@ -112,103 +116,112 @@ namespace NePlus.GameObjects
 
         public override void Update(GameTime gameTime)
         {
-            UpdateBloom();
-
-            bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            // update whether or not the PlayerEnemy can fire
-            UpdateProjectiles();
-
-            Position = PhysicsComponent.Position;
-            light.Position = Position + new Vector2(0, 25);
-
-            if (OnGround)
+            if (!Dead)
             {
-                airTimer = 0.0f;
+                UpdateBloom();
 
-                if (Crouching)
+                bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                // update whether or not the PlayerEnemy can fire
+                UpdateProjectiles();
+
+                Position = PhysicsComponent.Position;
+                light.Position = Position + new Vector2(0, 25);
+
+                if (OnGround)
                 {
-                    Crouching = random.Next(100) > 5;
+                    airTimer = 0.0f;
+
+                    if (Crouching)
+                    {
+                        Crouching = random.Next(100) > 5;
+                    }
+                    else
+                    {
+                        Crouching = random.Next(100) > 95;
+                    }
                 }
                 else
                 {
-                    Crouching = random.Next(100) > 95;
+                    airTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
-            }
-            else
-            {
-                airTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            }
 
-            // check to see if the PlayerEnemy is even allowed to jump before we do anything
-            if (!Crouching && OnGround)
-            {
-                if (random.Next(100) > 90)
+                // check to see if the PlayerEnemy is even allowed to jump before we do anything
+                if (!Crouching && OnGround)
                 {
-                    // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
-                    PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -80.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
-                }
-            }
-
-            if (Engine.Player.Position.X < Position.X)
-            {
-                LastDirection = Global.Directions.Left;
-
-                if (!Crouching)
-                {
-                    PhysicsComponent.MoveLeft();
-
-                    if (!OnGround)
+                    if (random.Next(100) > 90)
                     {
-                        // apply a bit of force in the air if the air timer is still under the air movement window
-                        if (airTimer < airMovementWindow)
-                        {
-                            PhysicsComponent.MainFixture.Body.ApplyForce(-airMovementForce);
-                        }
+                        // using world center as the point to apply force to; this makes the point of the force application the center of the fixture
+                        PhysicsComponent.MainFixture.Body.ApplyForce(new Vector2(0.0f, -80.0f), PhysicsComponent.MainFixture.Body.WorldCenter);
                     }
+                }
 
-                    // we're only walking if we're on the ground
-                    Walking = OnGround;
+                if (Engine.Player.Position.X < Position.X)
+                {
+                    LastDirection = Global.Directions.Left;
+
+                    if (!Crouching)
+                    {
+                        PhysicsComponent.MoveLeft();
+
+                        if (!OnGround)
+                        {
+                            // apply a bit of force in the air if the air timer is still under the air movement window
+                            if (airTimer < airMovementWindow)
+                            {
+                                PhysicsComponent.MainFixture.Body.ApplyForce(-airMovementForce);
+                            }
+                        }
+
+                        // we're only walking if we're on the ground
+                        Walking = OnGround;
+                    }
+                    else
+                    {
+                        PhysicsComponent.StopMoving();
+                        Walking = false;
+                    }
+                }
+                else if (Engine.Player.Position.X > Position.X)
+                {
+                    LastDirection = Global.Directions.Right;
+
+                    if (!Crouching)
+                    {
+                        PhysicsComponent.MoveRight();
+
+                        if (!OnGround)
+                        {
+                            // apply a bit of force in the air if the air timer is still under the air movement window
+                            if (airTimer < airMovementWindow)
+                            {
+                                PhysicsComponent.MainFixture.Body.ApplyForce(airMovementForce);
+                            }
+                        }
+
+                        // we're only walking if we're on the ground
+                        Walking = OnGround;
+                    }
+                    else
+                    {
+                        PhysicsComponent.StopMoving();
+                        Walking = false;
+                    }
                 }
                 else
                 {
                     PhysicsComponent.StopMoving();
                     Walking = false;
                 }
-            }
-            else if (Engine.Player.Position.X > Position.X)
-            {
-                LastDirection = Global.Directions.Right;
 
-                if (!Crouching)
-                {
-                    PhysicsComponent.MoveRight();
-
-                    if (!OnGround)
-                    {
-                        // apply a bit of force in the air if the air timer is still under the air movement window
-                        if (airTimer < airMovementWindow)
-                        {
-                            PhysicsComponent.MainFixture.Body.ApplyForce(airMovementForce);
-                        }
-                    }
-
-                    // we're only walking if we're on the ground
-                    Walking = OnGround;
-                }
-                else
-                {
-                    PhysicsComponent.StopMoving();
-                    Walking = false;
-                }
+                UpdateAllArt();
             }
             else
             {
-                PhysicsComponent.StopMoving();
-                Walking = false;
+                HideAllArt();
             }
 
-            UpdateAllArt();
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -451,8 +464,8 @@ namespace NePlus.GameObjects
 
         private bool PlayerEnemyOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light)
-                && !fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy))
+            if (!((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Light) == (Category)Global.CollisionCategories.Light)
+                && !((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Enemy) == (Category)Global.CollisionCategories.Enemy))
             {
                 Vector2 down = new Vector2(0.0f, 1.0f);
 
@@ -472,10 +485,11 @@ namespace NePlus.GameObjects
                     OnWall = true;
                 }
             }
-            else if (fixtureB.CollisionFilter.CollidesWith.HasFlag((Category)Global.CollisionCategories.PlayerBullet))
+
+            if ((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.PlayerBullet) == (Category)Global.CollisionCategories.PlayerBullet)
             {
                 // decrement enemy health
-                Health -= 33;
+                Health -= 50;
             }
 
             return true;
@@ -483,7 +497,7 @@ namespace NePlus.GameObjects
 
         private void PlayerEnemyOnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
+            if (!((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Light) == (Category)Global.CollisionCategories.Light))
             {
                 if (groundCache.Contains(fixtureB))
                 {

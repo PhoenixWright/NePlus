@@ -226,10 +226,8 @@ namespace Krypton.Lights
             {
                 BoundingRect rect;
 
-                rect.Min.X = this.mPosition.X - this.mRange;
-                rect.Min.Y = this.mPosition.Y - this.mRange;
-                rect.Max.X = this.mPosition.X + this.mRange;
-                rect.Max.Y = this.mPosition.Y + this.mRange;
+                rect.Min = new Vector2(this.mPosition.X - this.mRange, this.mPosition.Y - this.mRange);
+                rect.Max = new Vector2(this.mPosition.X + this.mRange, rect.Max.Y = this.mPosition.Y + this.mRange);
 
                 return rect;
             }

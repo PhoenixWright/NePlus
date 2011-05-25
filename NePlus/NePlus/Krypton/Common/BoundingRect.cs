@@ -64,10 +64,8 @@ namespace Krypton.Common
 
         public BoundingRect(float x, float y, float width, float height)
         {
-            this.Min.X = x;
-            this.Min.Y = y;
-            this.Max.X = x + width;
-            this.Max.Y = y + height;
+            this.Min = new Vector2(x, y);
+            this.Max = new Vector2(x + width, y + height);
         }
 
         public BoundingRect(Vector2 min, Vector2 max)
@@ -154,18 +152,14 @@ namespace Krypton.Common
 
             if ((num4 > num2) && (num3 > num))
             {
-                result.Min.X = num2;
-                result.Min.Y = num;
-                result.Max.X = num4;
-                result.Max.Y = num3;
+                result.Min = new Vector2(num2, num);
+                result.Max = new Vector2(num4, num3);
 
                 return result;
             }
 
-            result.Min.X = 0;
-            result.Min.Y = 0;
-            result.Max.X = 0;
-            result.Max.Y = 0;
+            result.Min = Vector2.Zero;
+            result.Max = Vector2.Zero;
 
             return result;
         }
@@ -183,16 +177,14 @@ namespace Krypton.Common
 
             if ((num4 > num2) && (num3 > num))
             {
-                result.Min.X = num2;
-                result.Min.Y = num;
-                result.Max.X = num4;
-                result.Max.Y = num3;
+                result.Min = new Vector2(num2, num);
+                result.Max = new Vector2(num4, num3);
+
+                return;
             }
 
-            result.Min.X = 0;
-            result.Min.Y = 0;
-            result.Max.X = 0;
-            result.Max.Y = 0;
+            result.Min = Vector2.Zero;
+            result.Max = Vector2.Zero;
         }
 
         public static BoundingRect Union(BoundingRect rect1, BoundingRect rect2)
@@ -208,10 +200,8 @@ namespace Krypton.Common
             float num8 = (num6 > num5) ? num6 : num5;
             float num7 = (num4 > num3) ? num4 : num3;
 
-            result.Min.X = num2;
-            result.Min.Y = num;
-            result.Max.X = num8;
-            result.Max.Y = num7;
+            result.Min = new Vector2(num2, num);
+            result.Max = new Vector2(num8, num7);
 
             return result;
         }
@@ -227,10 +217,8 @@ namespace Krypton.Common
             float num8 = (num6 > num5) ? num6 : num5;
             float num7 = (num4 > num3) ? num4 : num3;
 
-            result.Min.X = num2;
-            result.Min.Y = num;
-            result.Max.X = num8;
-            result.Max.Y = num7;
+            result.Min = new Vector2(num2, num);
+            result.Max = new Vector2(num8, num7);
         }
 
         public bool Equals(BoundingRect other)

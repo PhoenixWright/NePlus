@@ -53,7 +53,8 @@ namespace NePlus.GameObjects
 
             if (!Dead)
             {
-                Active = Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) < 1000.0d;
+                Active = (Math.Abs(enemyPhysicsComponent.Position.X - Engine.Player.Position.X) < 1000.0d)
+                       && (Math.Abs(enemyPhysicsComponent.Position.Y - Engine.Player.Position.Y) < 1000.0d);
 
                 audioEmitter.Position = new Vector3(enemyPhysicsComponent.Position, 0);
                 deathAnimation.Position = enemyPhysicsComponent.Position;
@@ -71,7 +72,10 @@ namespace NePlus.GameObjects
                 {
                     if (!deathAnimation.Playing && !deathAnimation.Disposed)
                     {
-                        animation.Stop();
+                        if (animation != null)
+                        {
+                            animation.Stop();
+                        }
                         deathAnimation.Play();
                         deathLight.IsOn = true;
                     }

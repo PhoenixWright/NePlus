@@ -62,6 +62,9 @@ namespace NePlus.Components.PhysicsComponents
 
         private void DestroyPlayerPhysicsObjects()
         {
+            MainFixture.CollisionFilter.CollidesWith = Category.None;
+            WheelFixture.CollisionFilter.CollidesWith = Category.None;
+
             Engine.Physics.World.RemoveJoint(playerFAJ);
             Engine.Physics.World.RemoveJoint(wheelMotorRevJoint);
             Engine.Physics.World.RemoveBody(WheelFixture.Body);
@@ -81,6 +84,16 @@ namespace NePlus.Components.PhysicsComponents
         public void StopMoving()
         {
             wheelMotorRevJoint.MotorSpeed = 0;
+        }
+
+        public override void Dispose(bool disposing)
+        {
+            if (!Disposed)
+            {
+                DestroyPlayerPhysicsObjects();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

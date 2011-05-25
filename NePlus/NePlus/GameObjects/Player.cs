@@ -60,6 +60,9 @@ namespace NePlus.GameObjects
         Sprite playerJumpingRight;
         Sprite playerFallingRight;
         Animation playerWalkingRight;
+        Animation playerFrontArmWalkingRight;
+        Animation playerBackArmWalkingRight;
+        Animation deathAnimation;
 
         public Player(Engine engine, Vector2 position)
             : base(engine)
@@ -106,12 +109,22 @@ namespace NePlus.GameObjects
             playerFallingRight.DrawOrder = DrawOrder;
             playerWalkingRight = new Animation(engine, @"Characters\Player\PlayerWalkingRight", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
             playerWalkingRight.DrawOrder = DrawOrder;
+            playerFrontArmWalkingRight = new Animation(engine, @"Characters\Player\PlayerFrontArm", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
+            playerFrontArmWalkingRight.DrawOrder = DrawOrder + 1;
+            playerBackArmWalkingRight = new Animation(engine, @"Characters\Player\PlayerBackArm", 88, 132, 2, 4, 8, 4, Global.Animations.Repeat);
+            playerBackArmWalkingRight.DrawOrder = DrawOrder;
 
             Engine.AddComponent(this);
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (Health <= 0)
+            {
+                // handle death
+
+            }
+
             UpdateBloom();
 
             bulletTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -311,6 +324,8 @@ namespace NePlus.GameObjects
             playerJumpingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerFallingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
             playerWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerBackArmWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
+            playerFrontArmWalkingRight.SpriteEffect = SpriteEffects.FlipHorizontally;
         }
 
         private void ChangeArtDirectionRight()
@@ -321,6 +336,8 @@ namespace NePlus.GameObjects
             playerJumpingRight.SpriteEffect = SpriteEffects.None;
             playerFallingRight.SpriteEffect = SpriteEffects.None;
             playerWalkingRight.SpriteEffect = SpriteEffects.None;
+            playerBackArmWalkingRight.SpriteEffect = SpriteEffects.None;
+            playerFrontArmWalkingRight.SpriteEffect = SpriteEffects.None;
         }
 
         private void HideAllArt()
@@ -331,6 +348,8 @@ namespace NePlus.GameObjects
             playerJumpingRight.Visible = false;
             playerFallingRight.Visible = false;
             playerWalkingRight.Stop();
+            playerBackArmWalkingRight.Stop();
+            playerFrontArmWalkingRight.Stop();
         }
 
         private void UpdateAllArt()
@@ -342,6 +361,8 @@ namespace NePlus.GameObjects
             playerJumpingRight.Position = Position + artOffsetVector;
             playerFallingRight.Position = Position + artOffsetVector;
             playerWalkingRight.Position = Position + artOffsetVector;
+            playerBackArmWalkingRight.Position = Position + artOffsetVector;
+            playerFrontArmWalkingRight.Position = Position + artOffsetVector;
 
             if (Crouching)
             {
@@ -391,6 +412,8 @@ namespace NePlus.GameObjects
                 {
                     HideAllArt();
                     playerWalkingRight.Play();
+                    playerFrontArmWalkingRight.Play();
+                    playerBackArmWalkingRight.Play();
                 }
             }
             else
@@ -436,6 +459,12 @@ namespace NePlus.GameObjects
             }
         }
 
+        // returns true if death is over, false if not
+        private bool UpdateDeath()
+        {
+            return false;
+        }
+
         private void ResetPlayer()
         {
             PhysicsComponent.ResetPlayerPosition(Engine.Level.GetSpawnPoint());
@@ -450,8 +479,8 @@ namespace NePlus.GameObjects
 
         private bool PlayerOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light)
-                && !fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy))
+            if (!((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Light) == (Category)Global.CollisionCategories.Light)
+                && !((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Enemy) == (Category)Global.CollisionCategories.Enemy))
             {
                 Vector2 down = new Vector2(0.0f, 1.0f);
 
@@ -471,8 +500,8 @@ namespace NePlus.GameObjects
                     OnWall = true;
                 }
             }
-            else if (fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Enemy)
-                  || fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.EnemyBullet))
+            else if ((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Enemy) == (Category)Global.CollisionCategories.Enemy
+                  || ((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.EnemyBullet) == (Category)Global.CollisionCategories.EnemyBullet))
             {
                 // decrement player health
                 Health -= 33;
@@ -483,7 +512,7 @@ namespace NePlus.GameObjects
 
         private void PlayerOnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            if (!fixtureB.CollisionFilter.CollisionCategories.HasFlag((Category)Global.CollisionCategories.Light))
+            if (!((fixtureB.CollisionFilter.CollisionCategories & (Category)Global.CollisionCategories.Light) == (Category)Global.CollisionCategories.Light))
             {
                 if (groundCache.Contains(fixtureB))
                 {
